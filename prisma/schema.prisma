@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Guru {
+  id        String   @id @default(cuid())
+  nama      String
+  nip       String?  @unique
+  jabatan   String
+  foto      String?
+  email     String?
+  telepon   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Berita {
+  id        String   @id @default(cuid())
+  judul     String
+  slug      String   @unique
+  konten    String
+  gambar    String?
+  penulis   String
+  kategori  String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Galeri {
+  id        String   @id @default(cuid())
+  judul     String
+  deskripsi String?
+  gambar    String
+  kategori  String
+  createdAt DateTime @default(now())
+}
+
+model PPDB {
+  id                     String   @id @default(cuid())
+  namaLengkap            String
+  namaPanggilan          String
+  jenisKelamin           String
+  tempatLahir            String
+  tanggalLahir           String
+  agama                  String
+  kewarganegaraan        String
+  bahasaSehari           String
+  bahasaLainnya          String?
+  jumlahSaudaraKandung   Int?
+  jumlahSaudaraTiri      Int?
+  jumlahSaudaraAngkat    Int?
+  tinggiBadan            Int?
+  beratBadan             Int?
+  golonganDarah          String?
+  penyakitPernah         String?
+  kelainanFisik          String?
+  alamatRumah            String
+  nomorHandphone         String
+  jarakRumahSekolah      String
+  masukKelas             String
+  asalSekolah            String
+  namaLengkapAyah        String
+  tempatTanggalLahirAyah String
+  pendidikanTerakhirAyah String
+  agamaAyah              String
+  nomorHandphoneAyah     String
+  pekerjaanAyah          String
+  penghasilanAyah        String
+  namaLengkapIbu         String
+  tempatTanggalLahirIbu  String
+  pendidikanTerakhirIbu  String
+  agamaIbu               String
+  nomorHandphoneIbu      String
+  pekerjaanIbu           String
+  penghasilanIbu         String
+  scanAktaKelahiran      String?
+  pasFoto                String?
+  scanKTPAyah            String?
+  scanKTPIbu             String?
+  scanKartuKeluarga      String?
+  tahunAjaran            String
+  gelombang              String
+  status                 String   @default("pending")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GelombangPPDB {
+  id             String   @id @default(cuid())
+  tahunAjaran    String
+  gelombang      String
+  tanggalMulai   String
+  tanggalSelesai String
+  kuota          Int?
+  aktif          Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
