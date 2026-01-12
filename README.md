@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SDIT An-Najm - Website Sekolah
 
-## Getting Started
+Website resmi SDIT An-Najm yang dibangun dengan Next.js, TypeScript, Tailwind CSS, dan Prisma.
 
-First, run the development server:
+## Fitur
 
+- 🏠 Halaman Beranda dengan Hero Section
+- 📖 Profil Sekolah (Visi, Misi, Fasilitas)
+- 👨‍🏫 Daftar Guru
+- 📰 Berita & Artikel
+- 🖼️ Galeri Foto
+- 📝 Pendaftaran Online (PPDB)
+- 📞 Halaman Kontak
+- 🔌 REST API untuk CRUD data
+
+## Teknologi
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **Database**: SQLite dengan Prisma ORM
+- **Deployment**: Vercel (recommended)
+
+## Instalasi
+
+1. Clone repository ini
+2. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Setup database:
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Jalankan development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. Buka [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+## Struktur Database
 
-To learn more about Next.js, take a look at the following resources:
+### Tabel Guru
+- id, nama, nip, jabatan, foto, email, telepon
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Tabel Berita
+- id, judul, slug, konten, gambar, penulis, kategori, published
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Tabel Galeri
+- id, judul, deskripsi, gambar, kategori
 
-## Deploy on Vercel
+### Tabel PPDB
+- id, namaLengkap, tempatLahir, tanggalLahir, jenisKelamin, alamat, namaOrangTua, teleponOrangTua, email, status
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Guru
+- GET `/api/guru` - Ambil semua data guru
+- POST `/api/guru` - Tambah guru baru
+- DELETE `/api/guru?id={id}` - Hapus guru
+
+### Berita
+- GET `/api/berita` - Ambil semua berita
+- POST `/api/berita` - Tambah berita baru
+- DELETE `/api/berita?id={id}` - Hapus berita
+
+### Galeri
+- GET `/api/galeri` - Ambil semua foto
+- POST `/api/galeri` - Tambah foto baru
+- DELETE `/api/galeri?id={id}` - Hapus foto
+
+### PPDB
+- GET `/api/ppdb` - Ambil semua pendaftaran
+- POST `/api/ppdb` - Tambah pendaftaran baru
+- DELETE `/api/ppdb?id={id}` - Hapus pendaftaran
+
+## Deployment
+
+Deploy ke Vercel dengan satu klik atau gunakan Vercel CLI:
+
+```bash
+npm install -g vercel
+vercel
+```
+
+Jangan lupa setup environment variables di Vercel dashboard.
+
+## Lisensi
+
+© 2025 SDIT An-Najm. All rights reserved.
