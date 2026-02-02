@@ -29,8 +29,8 @@ export async function GET(request: NextRequest) {
       'Jenis Kelamin',
       'Alamat',
       'Nama Orang Tua',
-      'Telepon Orang Tua',
-      'Email',
+      'Nomor HP',
+      'Kontak',
       'Tahun Ajaran',
       'Status',
       'Tanggal Daftar'
@@ -45,10 +45,10 @@ export async function GET(request: NextRequest) {
         `"${item.tempatLahir}"`,
         `"${item.tanggalLahir}"`,
         `"${item.jenisKelamin}"`,
-        `"${item.alamat}"`,
-        `"${item.namaOrangTua}"`,
-        `"${item.teleponOrangTua}"`,
-        `"${item.email}"`,
+        `"${item.alamatRumah}"`, // Menggunakan alamatRumah bukan alamat
+        `"${item.namaLengkapAyah} / ${item.namaLengkapIbu}"`, // Gabungan nama orang tua
+        `"${item.nomorHandphone}"`, // Menggunakan nomorHandphone
+        `"${item.nomorHandphone}"`, // Email tidak ada di schema, gunakan nomor HP
         `"${item.tahunAjaran}"`,
         `"${item.status}"`,
         `"${new Date(item.createdAt).toLocaleDateString('id-ID')}"`

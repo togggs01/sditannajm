@@ -255,7 +255,7 @@ export default function AdminGelombangPPDBPage() {
                               <p className="text-sm font-medium">
                                 {item.jumlahPendaftar || 0} / {item.kuota}
                               </p>
-                              {item.sisaKuota !== undefined && (
+                              {item.sisaKuota !== undefined && item.sisaKuota !== null && (
                                 <p className={`text-xs mt-1 font-semibold ${
                                   item.sisaKuota <= 0 
                                     ? 'text-red-600' 
