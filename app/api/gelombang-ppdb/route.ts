@@ -11,8 +11,11 @@ export async function GET(request: NextRequest) {
     const tahunAjaran = searchParams.get('tahunAjaran') || getCurrentTahunAjaran()
 
     if (checkStatus === 'true') {
-      // Cek apakah pendaftaran sedang dibuka
+      // Cek status pendaftaran dengan logic yang lebih bersih
       const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set ke awal hari untuk perbandingan yang akurat
+      
+      // Cari gelombang yang aktif untuk tahun ajaran ini
       const gelombangAktif = await prisma.gelombangPPDB.findFirst({
         where: {
           tahunAjaran,
@@ -21,18 +24,18 @@ export async function GET(request: NextRequest) {
         orderBy: { tanggalMulai: 'asc' }
       })
 
+      // Jika tidak ada gelombang aktif
       if (!gelombangAktif) {
         return NextResponse.json({
           isOpen: false,
           gelombangAktif: null,
-          message: 'Pendaftaran belum dibuka untuk tahun ajaran ini',
-          kuotaInfo: null
+          message: `Belum ada gelombang pendaftaran yang dibuka untuk tahun ajaran ${tahunAjaran}. Silakan hubungi sekolah untuk informasi lebih lanjut.`,
+          kuotaInfo: null,
+          reason: 'NO_ACTIVE_WAVE'
         })
       }
 
-      const isInRange = isDateInRange(today, gelombangAktif.tanggalMulai, gelombangAktif.tanggalSelesai)
-
-      // Hitung jumlah pendaftar dan sisa kuota
+      // Hitung jumlah pendaftar untuk gelombang ini
       const jumlahPendaftar = await prisma.pPDB.count({
         where: {
           tahunAjaran,
@@ -40,41 +43,79 @@ export async function GET(request: NextRequest) {
         }
       })
 
+      // Buat info kuota
       const kuotaInfo = gelombangAktif.kuota !== null ? {
         total: gelombangAktif.kuota,
         terisi: jumlahPendaftar,
-        sisa: gelombangAktif.kuota - jumlahPendaftar,
+        sisa: Math.max(0, gelombangAktif.kuota - jumlahPendaftar),
         penuh: jumlahPendaftar >= gelombangAktif.kuota
       } : null
 
-      if (!isInRange) {
-        return NextResponse.json({
-          isOpen: false,
-          gelombangAktif,
-          message: `Pendaftaran ${gelombangAktif.gelombang} akan dibuka pada ${new Date(gelombangAktif.tanggalMulai).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`,
-          kuotaInfo
-        })
-      }
-
-      // Cek apakah kuota penuh
+      // Konversi tanggal untuk perbandingan yang akurat
+      const tanggalMulai = new Date(gelombangAktif.tanggalMulai)
+      const tanggalSelesai = new Date(gelombangAktif.tanggalSelesai)
+      tanggalMulai.setHours(0, 0, 0, 0)
+      tanggalSelesai.setHours(23, 59, 59, 999) // Set ke akhir hari
+      
+      // Logic pengecekan status dengan prioritas yang jelas
+      
+      // 1. Cek apakah kuota sudah penuh (prioritas tertinggi)
       if (kuotaInfo && kuotaInfo.penuh) {
         return NextResponse.json({
           isOpen: false,
           gelombangAktif,
-          message: `Maaf, kuota pendaftaran ${gelombangAktif.gelombang} sudah penuh (${gelombangAktif.kuota} siswa)`,
-          kuotaInfo
+          message: `Pendaftaran ${gelombangAktif.gelombang} sudah ditutup karena kuota telah penuh (${gelombangAktif.kuota} siswa). Silakan tunggu pengumuman gelombang berikutnya.`,
+          kuotaInfo,
+          reason: 'QUOTA_FULL'
         })
+      }
+
+      // 2. Cek apakah belum waktunya pendaftaran
+      if (today < tanggalMulai) {
+        return NextResponse.json({
+          isOpen: false,
+          gelombangAktif,
+          message: `Pendaftaran ${gelombangAktif.gelombang} akan dibuka pada ${tanggalMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}. Silakan kembali pada tanggal tersebut.`,
+          kuotaInfo,
+          reason: 'NOT_YET_STARTED'
+        })
+      }
+
+      // 3. Cek apakah sudah lewat masa pendaftaran
+      if (today > tanggalSelesai) {
+        return NextResponse.json({
+          isOpen: false,
+          gelombangAktif,
+          message: `Pendaftaran ${gelombangAktif.gelombang} sudah ditutup pada ${tanggalSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}. Silakan tunggu pengumuman gelombang berikutnya.`,
+          kuotaInfo,
+          reason: 'REGISTRATION_CLOSED'
+        })
+      }
+
+      // 4. Jika semua kondisi terpenuhi, pendaftaran dibuka
+      let sisaKuotaMessage = ''
+      if (kuotaInfo) {
+        if (kuotaInfo.sisa <= 5) {
+          sisaKuotaMessage = ` ⚠️ Hanya tersisa ${kuotaInfo.sisa} kuota lagi!`
+        } else if (kuotaInfo.sisa <= 20) {
+          sisaKuotaMessage = ` Tersisa ${kuotaInfo.sisa} kuota dari ${kuotaInfo.total} total kuota.`
+        } else {
+          sisaKuotaMessage = ` Tersisa ${kuotaInfo.sisa} kuota dari ${kuotaInfo.total} total kuota.`
+        }
+      } else {
+        sisaKuotaMessage = ' Kuota tidak terbatas.'
       }
 
       return NextResponse.json({
         isOpen: true,
         gelombangAktif,
-        message: `Pendaftaran ${gelombangAktif.gelombang} sedang dibuka`,
-        kuotaInfo
+        message: `Pendaftaran ${gelombangAktif.gelombang} sedang dibuka hingga ${tanggalSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}.${sisaKuotaMessage}`,
+        kuotaInfo,
+        reason: 'OPEN'
       })
     }
 
-    // Ambil semua gelombang
+    // Ambil semua gelombang dengan statistik
     const gelombang = await prisma.gelombangPPDB.findMany({
       where: tahunAjaran ? { tahunAjaran } : {},
       orderBy: [
@@ -96,7 +137,8 @@ export async function GET(request: NextRequest) {
         return {
           ...g,
           jumlahPendaftar,
-          sisaKuota: g.kuota !== null ? g.kuota - jumlahPendaftar : null
+          sisaKuota: g.kuota !== null ? g.kuota - jumlahPendaftar : null,
+          status: getGelombangStatus(g, jumlahPendaftar)
         }
       })
     )
@@ -106,6 +148,36 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching gelombang:', error)
     return NextResponse.json({ error: 'Gagal mengambil data gelombang' }, { status: 500 })
   }
+}
+
+// Helper function untuk menentukan status gelombang
+function getGelombangStatus(gelombang: any, jumlahPendaftar: number): string {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  const startDate = new Date(gelombang.tanggalMulai)
+  const endDate = new Date(gelombang.tanggalSelesai)
+  startDate.setHours(0, 0, 0, 0)
+  endDate.setHours(23, 59, 59, 999)
+
+  if (!gelombang.aktif) {
+    return 'INACTIVE'
+  }
+
+  // Prioritas: Kuota penuh > Tanggal
+  if (gelombang.kuota !== null && jumlahPendaftar >= gelombang.kuota) {
+    return 'QUOTA_FULL'
+  }
+
+  if (today < startDate) {
+    return 'NOT_YET_STARTED'
+  }
+
+  if (today > endDate) {
+    return 'CLOSED'
+  }
+
+  return 'OPEN'
 }
 
 // POST - Buat gelombang baru

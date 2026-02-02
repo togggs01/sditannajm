@@ -59,7 +59,7 @@ export default function LoadingScreen() {
             <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-2xl p-3 animate-scale-pulse">
               <Image
                 src="/images/Logo Annajm Rabbani Fix-01.png"
-                alt="SDIT ANNAJM Logo"
+                alt="SDIT ANNAJM RABBANI Logo"
                 width={100}
                 height={100}
                 className="object-contain"
@@ -72,14 +72,11 @@ export default function LoadingScreen() {
         {/* School Name with Slide Animation */}
         <div className="mb-8 space-y-3">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 animate-slide-up tracking-wide">
-            SDIT ANNAJM
+            SDIT ANNAJM RABBANI
           </h1>
           <div className="flex items-center justify-center gap-3 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-[#d4af37] to-[#d4af37] animate-expand"></div>
-            <p className="text-[#d4af37] text-lg md:text-xl font-bold">
-              Rabbani School
-            </p>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent via-[#d4af37] to-[#d4af37] animate-expand"></div>
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#d4af37] to-[#d4af37] animate-expand"></div>
+            <div className="h-px w-24 bg-gradient-to-l from-transparent via-[#d4af37] to-[#d4af37] animate-expand"></div>
           </div>
           <p className="text-white/70 text-sm animate-slide-up" style={{ animationDelay: '0.4s' }}>
             Membentuk Generasi Qurani yang Berakhlak Mulia

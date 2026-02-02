@@ -77,8 +77,9 @@ export default function AdminPPDBPage() {
     try {
       const res = await fetch(`/api/ppdb?tahunAjaran=${selectedTahunAjaran}`)
       const data = await res.json()
-      // Pastikan data adalah array
-      setPpdbList(Array.isArray(data) ? data : [])
+      // Pastikan data adalah array dan filter out null values
+      const validData = Array.isArray(data) ? data.filter(item => item && typeof item === 'object') : []
+      setPpdbList(validData)
     } catch (error) {
       console.error('Error fetching PPDB:', error)
       setPpdbList([])
@@ -117,145 +118,137 @@ export default function AdminPPDBPage() {
   const handleExport = async () => {
     setExporting(true)
     try {
-      // Import jsPDF dynamically
-      const { default: jsPDF } = await import('jspdf')
-      const { default: autoTable } = await import('jspdf-autotable')
+      // Import xlsx dynamically
+      const XLSX = await import('xlsx')
       
-      const doc = new jsPDF('l', 'mm', 'a4') // landscape orientation
-      const pageWidth = doc.internal.pageSize.getWidth()
+      // Prepare Excel data dengan semua field
+      const excelData = filteredList.map((ppdb, index) => ({
+        'No': index + 1,
+        'Nama Lengkap': ppdb.namaLengkap || '-',
+        'Nama Panggilan': ppdb.namaPanggilan || '-',
+        'Jenis Kelamin': ppdb.jenisKelamin || '-',
+        'Tempat Lahir': ppdb.tempatLahir || '-',
+        'Tanggal Lahir': ppdb.tanggalLahir || '-',
+        'Agama': ppdb.agama || '-',
+        'Kewarganegaraan': ppdb.kewarganegaraan || '-',
+        'Bahasa Sehari-hari': ppdb.bahasaSehari || '-',
+        'Bahasa Lainnya': ppdb.bahasaLainnya || '-',
+        'Jumlah Saudara Kandung': ppdb.jumlahSaudaraKandung || '-',
+        'Jumlah Saudara Tiri': ppdb.jumlahSaudaraTiri || '-',
+        'Jumlah Saudara Angkat': ppdb.jumlahSaudaraAngkat || '-',
+        'Tinggi Badan (cm)': ppdb.tinggiBadan || '-',
+        'Berat Badan (kg)': ppdb.beratBadan || '-',
+        'Golongan Darah': ppdb.golonganDarah || '-',
+        'Penyakit Pernah Diderita': ppdb.penyakitPernah || '-',
+        'Kelainan Fisik': ppdb.kelainanFisik || '-',
+        'Alamat Rumah': ppdb.alamatRumah || ppdb.alamat || '-',
+        'Nomor Handphone': ppdb.nomorHandphone || ppdb.teleponOrangTua || '-',
+        'Jarak Rumah ke Sekolah': ppdb.jarakRumahSekolah || '-',
+        'Masuk Kelas': ppdb.masukKelas || '-',
+        'Asal Sekolah': ppdb.asalSekolah || '-',
+        'Nama Ayah': ppdb.namaLengkapAyah || ppdb.namaAyah || '-',
+        'TTL Ayah': ppdb.tempatTanggalLahirAyah || '-',
+        'Pendidikan Ayah': ppdb.pendidikanTerakhirAyah || '-',
+        'Agama Ayah': ppdb.agamaAyah || '-',
+        'No HP Ayah': ppdb.nomorHandphoneAyah || '-',
+        'Pekerjaan Ayah': ppdb.pekerjaanAyah || '-',
+        'Penghasilan Ayah': ppdb.penghasilanAyah ? `Rp ${parseInt(ppdb.penghasilanAyah).toLocaleString('id-ID')}` : '-',
+        'Nama Ibu': ppdb.namaLengkapIbu || ppdb.namaIbu || '-',
+        'TTL Ibu': ppdb.tempatTanggalLahirIbu || '-',
+        'Pendidikan Ibu': ppdb.pendidikanTerakhirIbu || '-',
+        'Agama Ibu': ppdb.agamaIbu || '-',
+        'No HP Ibu': ppdb.nomorHandphoneIbu || '-',
+        'Pekerjaan Ibu': ppdb.pekerjaanIbu || '-',
+        'Penghasilan Ibu': ppdb.penghasilanIbu ? `Rp ${parseInt(ppdb.penghasilanIbu).toLocaleString('id-ID')}` : '-',
+        'Scan Akta Kelahiran': ppdb.scanAktaKelahiran ? `http://localhost:3000${ppdb.scanAktaKelahiran}` : '-',
+        'Pas Foto': ppdb.pasFoto ? `http://localhost:3000${ppdb.pasFoto}` : '-',
+        'Scan KTP Ayah': ppdb.scanKTPAyah ? `http://localhost:3000${ppdb.scanKTPAyah}` : '-',
+        'Scan KTP Ibu': ppdb.scanKTPIbu ? `http://localhost:3000${ppdb.scanKTPIbu}` : '-',
+        'Scan Kartu Keluarga': ppdb.scanKartuKeluarga ? `http://localhost:3000${ppdb.scanKartuKeluarga}` : '-',
+        'Tahun Ajaran': ppdb.tahunAjaran || '-',
+        'Gelombang': ppdb.gelombang || '-',
+        'Status': ppdb.status === 'pending' ? 'Menunggu' : ppdb.status === 'approved' ? 'Diterima' : 'Ditolak',
+        'Tanggal Daftar': ppdb.createdAt ? new Date(ppdb.createdAt).toLocaleDateString('id-ID') : '-'
+      }))
+
+      // Create workbook and worksheet
+      const wb = XLSX.utils.book_new()
+      const ws = XLSX.utils.json_to_sheet(excelData)
+
+      // Set column widths
+      const colWidths = [
+        { wch: 5 },   // No
+        { wch: 25 },  // Nama Lengkap
+        { wch: 15 },  // Nama Panggilan
+        { wch: 12 },  // Jenis Kelamin
+        { wch: 15 },  // Tempat Lahir
+        { wch: 12 },  // Tanggal Lahir
+        { wch: 10 },  // Agama
+        { wch: 15 },  // Kewarganegaraan
+        { wch: 20 },  // Bahasa Sehari-hari
+        { wch: 15 },  // Bahasa Lainnya
+        { wch: 8 },   // Jumlah Saudara Kandung
+        { wch: 8 },   // Jumlah Saudara Tiri
+        { wch: 8 },   // Jumlah Saudara Angkat
+        { wch: 12 },  // Tinggi Badan
+        { wch: 12 },  // Berat Badan
+        { wch: 12 },  // Golongan Darah
+        { wch: 30 },  // Penyakit Pernah Diderita
+        { wch: 30 },  // Kelainan Fisik
+        { wch: 40 },  // Alamat Rumah
+        { wch: 15 },  // Nomor Handphone
+        { wch: 15 },  // Jarak Rumah ke Sekolah
+        { wch: 10 },  // Masuk Kelas
+        { wch: 20 },  // Asal Sekolah
+        { wch: 25 },  // Nama Ayah
+        { wch: 20 },  // TTL Ayah
+        { wch: 15 },  // Pendidikan Ayah
+        { wch: 10 },  // Agama Ayah
+        { wch: 15 },  // No HP Ayah
+        { wch: 20 },  // Pekerjaan Ayah
+        { wch: 15 },  // Penghasilan Ayah
+        { wch: 25 },  // Nama Ibu
+        { wch: 20 },  // TTL Ibu
+        { wch: 15 },  // Pendidikan Ibu
+        { wch: 10 },  // Agama Ibu
+        { wch: 15 },  // No HP Ibu
+        { wch: 20 },  // Pekerjaan Ibu
+        { wch: 15 },  // Penghasilan Ibu
+        { wch: 50 },  // Scan Akta Kelahiran
+        { wch: 50 },  // Pas Foto
+        { wch: 50 },  // Scan KTP Ayah
+        { wch: 50 },  // Scan KTP Ibu
+        { wch: 50 },  // Scan Kartu Keluarga
+        { wch: 12 },  // Tahun Ajaran
+        { wch: 12 },  // Gelombang
+        { wch: 12 },  // Status
+        { wch: 15 }   // Tanggal Daftar
+      ]
+      ws['!cols'] = colWidths
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Data PPDB')
+
+      // Create summary sheet
+      const summaryData = [
+        { 'Keterangan': 'Total Pendaftar', 'Jumlah': stats.total },
+        { 'Keterangan': 'Menunggu', 'Jumlah': stats.pending },
+        { 'Keterangan': 'Diterima', 'Jumlah': stats.approved },
+        { 'Keterangan': 'Ditolak', 'Jumlah': stats.rejected },
+        { 'Keterangan': '', 'Jumlah': '' },
+        { 'Keterangan': 'Tahun Ajaran', 'Jumlah': selectedTahunAjaran },
+        { 'Keterangan': 'Tanggal Export', 'Jumlah': new Date().toLocaleDateString('id-ID') },
+        { 'Keterangan': 'Sekolah', 'Jumlah': 'SDIT AN-NAJM RABBANI' }
+      ]
       
-      // Add header background
-      doc.setFillColor(45, 80, 22) // #2d5016
-      doc.rect(0, 0, pageWidth, 35, 'F')
+      const summaryWs = XLSX.utils.json_to_sheet(summaryData)
+      summaryWs['!cols'] = [{ wch: 20 }, { wch: 20 }]
+      XLSX.utils.book_append_sheet(wb, summaryWs, 'Ringkasan')
+
+      // Save Excel file
+      const filename = `PPDB_${selectedTahunAjaran.replace('/', '-')}_${new Date().toISOString().split('T')[0]}.xlsx`
+      XLSX.writeFile(wb, filename)
       
-      // Add title
-      doc.setTextColor(255, 255, 255)
-      doc.setFontSize(20)
-      doc.setFont('helvetica', 'bold')
-      doc.text('LAPORAN DATA PPDB', pageWidth / 2, 12, { align: 'center' })
-      
-      doc.setFontSize(14)
-      doc.setFont('helvetica', 'bold')
-      doc.text('SDIT AN-NAJM RABBANI', pageWidth / 2, 20, { align: 'center' })
-      
-      doc.setFontSize(11)
-      doc.setFont('helvetica', 'normal')
-      doc.text(`Tahun Ajaran: ${selectedTahunAjaran}`, pageWidth / 2, 27, { align: 'center' })
-      
-      // Add date
-      const today = new Date().toLocaleDateString('id-ID', { 
-        day: 'numeric', 
-        month: 'long', 
-        year: 'numeric' 
-      })
-      doc.setTextColor(0, 0, 0)
-      doc.setFontSize(9)
-      doc.text(`Dicetak pada: ${today}`, 14, 42)
-      
-      // Prepare table data
-      const tableData = filteredList.map((ppdb, index) => [
-        index + 1,
-        ppdb.namaLengkap,
-        `${ppdb.tempatLahir}, ${ppdb.tanggalLahir}`,
-        ppdb.jenisKelamin,
-        `Ayah: ${ppdb.namaLengkapAyah || ppdb.namaAyah || '-'}\nIbu: ${ppdb.namaLengkapIbu || ppdb.namaIbu || '-'}`,
-        ppdb.nomorHandphone || ppdb.teleponOrangTua || '-',
-        ppdb.alamatRumah || ppdb.alamat || '-',
-        ppdb.status === 'pending' ? 'Menunggu' : ppdb.status === 'approved' ? 'Diterima' : 'Ditolak'
-      ])
-      
-      // Add table
-      autoTable(doc, {
-        startY: 47,
-        head: [['No', 'Nama Lengkap', 'TTL', 'JK', 'Orang Tua', 'No. Telepon', 'Alamat', 'Status']],
-        body: tableData,
-        theme: 'striped',
-        headStyles: {
-          fillColor: [45, 80, 22], // #2d5016
-          textColor: [255, 255, 255],
-          fontStyle: 'bold',
-          halign: 'center',
-          fontSize: 9,
-          cellPadding: 4
-        },
-        styles: {
-          fontSize: 8,
-          cellPadding: 3,
-          lineColor: [200, 200, 200],
-          lineWidth: 0.1
-        },
-        columnStyles: {
-          0: { halign: 'center', cellWidth: 10 },
-          1: { cellWidth: 35 },
-          2: { cellWidth: 30 },
-          3: { halign: 'center', cellWidth: 12 },
-          4: { cellWidth: 35 },
-          5: { cellWidth: 25 },
-          6: { cellWidth: 45 },
-          7: { halign: 'center', cellWidth: 20 }
-        },
-        alternateRowStyles: {
-          fillColor: [250, 250, 250]
-        },
-        didDrawPage: (data) => {
-          // Footer with page number
-          const pageCount = doc.getNumberOfPages()
-          const pageHeight = doc.internal.pageSize.getHeight()
-          
-          // Footer line
-          doc.setDrawColor(45, 80, 22)
-          doc.setLineWidth(0.5)
-          doc.line(14, pageHeight - 15, pageWidth - 14, pageHeight - 15)
-          
-          // Page number
-          doc.setFontSize(8)
-          doc.setTextColor(100, 100, 100)
-          doc.text(
-            `Halaman ${data.pageNumber} dari ${pageCount}`,
-            pageWidth / 2,
-            pageHeight - 10,
-            { align: 'center' }
-          )
-          
-          // School name in footer
-          doc.setFontSize(7)
-          doc.text('SDIT AN-NAJM RABBANI', 14, pageHeight - 10)
-        }
-      })
-      
-      // Add summary box
-      const finalY = (doc as any).lastAutoTable.finalY || 47
-      const summaryY = finalY + 10
-      
-      // Summary box background
-      doc.setFillColor(245, 245, 245)
-      doc.roundedRect(14, summaryY, 100, 35, 2, 2, 'F')
-      
-      // Summary border
-      doc.setDrawColor(45, 80, 22)
-      doc.setLineWidth(0.5)
-      doc.roundedRect(14, summaryY, 100, 35, 2, 2, 'S')
-      
-      // Summary title
-      doc.setFillColor(45, 80, 22)
-      doc.roundedRect(14, summaryY, 100, 8, 2, 2, 'F')
-      doc.setTextColor(255, 255, 255)
-      doc.setFontSize(10)
-      doc.setFont('helvetica', 'bold')
-      doc.text('RINGKASAN:', 17, summaryY + 5.5)
-      
-      // Summary content
-      doc.setTextColor(0, 0, 0)
-      doc.setFont('helvetica', 'normal')
-      doc.setFontSize(9)
-      doc.text(`Total Pendaftar: ${stats.total}`, 17, summaryY + 14)
-      doc.text(`Menunggu: ${stats.pending}`, 17, summaryY + 20)
-      doc.text(`Diterima: ${stats.approved}`, 17, summaryY + 26)
-      doc.text(`Ditolak: ${stats.rejected}`, 17, summaryY + 32)
-      
-      // Save PDF with better filename
-      const filename = `PPDB_${selectedTahunAjaran.replace('/', '-')}_${new Date().toISOString().split('T')[0]}.pdf`
-      doc.save(filename)
     } catch (error) {
       console.error('Export error:', error)
       alert('Gagal export data')
@@ -285,12 +278,12 @@ export default function AdminPPDBPage() {
                 </svg>
               ) : (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               )
             }
           >
-            {exporting ? 'Membuat PDF...' : 'Export PDF'}
+            {exporting ? 'Membuat Excel...' : 'Export Excel'}
           </ActionButton>
         }
       />
@@ -459,6 +452,7 @@ export default function AdminPPDBPage() {
                   </tr>
                 ) : (
                   filteredList.map((ppdb) => {
+                    if (!ppdb) return null; // Add null check
                     const gelombangColors = getGelombangColor(ppdb.gelombang || 'Gelombang 1')
                     return (
                     <tr key={ppdb.id} className="hover:bg-gray-50 transition-colors">
@@ -471,13 +465,13 @@ export default function AdminPPDBPage() {
                         <p className="text-xs text-gray-500">{new Date(ppdb.tanggalLahir).toLocaleDateString('id-ID')}</p>
                       </td>
                       <td className="px-6 py-4 text-gray-600">
-                        <p className="text-sm font-medium">{selectedPPDB.namaLengkapAyah || selectedPPDB.namaAyah || '-'}</p>
-                        <p className="text-xs text-gray-500">Ayah: {selectedPPDB.namaLengkapAyah || selectedPPDB.namaAyah || '-'}</p>
-                        <p className="text-xs text-gray-500">Ibu: {selectedPPDB.namaLengkapIbu || selectedPPDB.namaIbu || '-'}</p>
+                        <p className="text-sm font-medium">{ppdb.namaLengkapAyah || ppdb.namaAyah || '-'}</p>
+                        <p className="text-xs text-gray-500">Ayah: {ppdb.namaLengkapAyah || ppdb.namaAyah || '-'}</p>
+                        <p className="text-xs text-gray-500">Ibu: {ppdb.namaLengkapIbu || ppdb.namaIbu || '-'}</p>
                       </td>
                       <td className="px-6 py-4 text-gray-600">
-                        <p className="text-sm">{selectedPPDB.nomorHandphone || selectedPPDB.telefonOrangTua || '-'}</p>
-                        <p className="text-xs text-gray-500">{selectedPPDB.nomorHandphoneAyah || '-'}</p>
+                        <p className="text-sm">{ppdb.nomorHandphone || ppdb.telefonOrangTua || '-'}</p>
+                        <p className="text-xs text-gray-500">{ppdb.nomorHandphoneAyah || '-'}</p>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${gelombangColors.bg} ${gelombangColors.text} border ${gelombangColors.border}`}>
@@ -574,10 +568,14 @@ export default function AdminPPDBPage() {
       {/* Detail Modal */}
       {showDetailModal && selectedPPDB && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-7xl w-full max-h-[95vh] overflow-y-auto">
+            {/* Header */}
             <div className="sticky top-0 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold">Detail Pendaftar</h3>
+                <div>
+                  <h3 className="text-2xl font-bold">Detail Pendaftar</h3>
+                  <p className="text-green-100 mt-1">Tahun Ajaran {selectedPPDB.tahunAjaran}</p>
+                </div>
                 <button
                   onClick={() => setShowDetailModal(false)}
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
@@ -588,9 +586,10 @@ export default function AdminPPDBPage() {
                 </button>
               </div>
             </div>
-            <div className="p-6 space-y-6">
-              {/* Status Badge */}
-              <div className="flex items-center justify-between pb-4 border-b-2 border-gray-100">
+
+            <div className="p-6 space-y-8">
+              {/* Status & Actions */}
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                 <div className="flex items-center gap-3">
                   <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold ${
                     selectedPPDB.status === 'pending' 
@@ -611,10 +610,10 @@ export default function AdminPPDBPage() {
                   })()}
                 </div>
 
-                {/* WhatsApp Button - Only show if approved */}
-                {selectedPPDB.status === 'approved' && (selectedPPDB.nomorHandphone || selectedPPDB.teleponOrangTua) && (
+                {/* WhatsApp Button */}
+                {selectedPPDB.status === 'approved' && (selectedPPDB.nomorHandphone || selectedPPDB.telefonOrangTua) && (
                   <a
-                    href={`https://wa.me/${(selectedPPDB.nomorHandphone || selectedPPDB.teleponOrangTua).replace(/[^0-9]/g, '')}?text=Assalamu'alaikum%20${encodeURIComponent(selectedPPDB.namaLengkapAyah || selectedPPDB.namaAyah || 'Bapak/Ibu')},%0A%0ASelamat!%20Kami%20informasikan%20bahwa%20putra/putri%20Bapak/Ibu%20*${encodeURIComponent(selectedPPDB.namaLengkap)}*%20telah%20*DITERIMA*%20di%20SDIT%20ANNAJM%20RABBANI%20untuk%20Tahun%20Ajaran%20${encodeURIComponent(selectedPPDB.tahunAjaran)}.%0A%0ASilakan%20hubungi%20kami%20untuk%20informasi%20lebih%20lanjut%20mengenai%20proses%20selanjutnya.%0A%0AJazakumullah%20khairan`}
+                    href={`https://wa.me/${(selectedPPDB.nomorHandphone || selectedPPDB.telefonOrangTua).replace(/[^0-9]/g, '')}?text=Assalamu'alaikum%20${encodeURIComponent(selectedPPDB.namaLengkapAyah || selectedPPDB.namaAyah || 'Bapak/Ibu')},%0A%0ASelamat!%20Kami%20informasikan%20bahwa%20putra/putri%20Bapak/Ibu%20*${encodeURIComponent(selectedPPDB.namaLengkap)}*%20telah%20*DITERIMA*%20di%20SDIT%20ANNAJM%20RABBANI%20untuk%20Tahun%20Ajaran%20${encodeURIComponent(selectedPPDB.tahunAjaran)}.%0A%0ASilakan%20hubungi%20kami%20untuk%20informasi%20lebih%20lanjut%20mengenai%20proses%20selanjutnya.%0A%0AJazakumullah%20khairan`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all shadow-lg hover:shadow-xl font-semibold"
@@ -627,260 +626,249 @@ export default function AdminPPDBPage() {
                 )}
               </div>
 
-              {/* Data Grid */}
-              <div className="space-y-6">
-                {/* Data Siswa */}
-                <div>
-                  <h4 className="text-lg font-bold text-[#2d5016] mb-3 pb-2 border-b-2 border-[#d4af37]/30">👤 Data Calon Peserta Didik</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Nama Lengkap</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.namaLengkap}</p>
+              {/* Data Sections */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Data Calon Peserta Didik */}
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                    <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
+                      <span className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm mr-3">👤</span>
+                      Data Calon Peserta Didik
+                    </h4>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nama Lengkap</p>
+                          <p className="text-sm font-bold text-gray-900">{selectedPPDB.namaLengkap}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nama Panggilan</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.namaPanggilan || '-'}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Tempat Lahir</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.tempatLahir}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Tanggal Lahir</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.tanggalLahir}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Jenis Kelamin</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.jenisKelamin}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Agama</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.agama || '-'}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Kewarganegaraan</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.kewarganegaraan || 'Indonesia'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Bahasa Sehari-hari</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {selectedPPDB.bahasaSehari ? 
+                              (typeof selectedPPDB.bahasaSehari === 'string' ? 
+                                JSON.parse(selectedPPDB.bahasaSehari).join(', ') : 
+                                selectedPPDB.bahasaSehari.join(', ')
+                              ) : 'Indonesia'
+                            }
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Tinggi / Berat Badan</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.tinggiBadan || '-'} cm / {selectedPPDB.beratBadan || '-'} kg</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Golongan Darah</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.golonganDarah || '-'}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Alamat Rumah</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedPPDB.alamatRumah || selectedPPDB.alamat || '-'}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">No. Handphone</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.nomorHandphone || selectedPPDB.telefonOrangTua || '-'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Masuk Kelas</p>
+                          <p className="text-sm font-medium text-gray-900">Kelas {selectedPPDB.masukKelas || '1'}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Nama Panggilan</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.namaPanggilan || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Tempat Lahir</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.tempatLahir}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Tanggal Lahir</p>
-                      <p className="text-base text-gray-900 font-medium">{new Date(selectedPPDB.tanggalLahir).toLocaleDateString('id-ID')}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Jenis Kelamin</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.jenisKelamin}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Agama</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.agama || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Kewarganegaraan</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.kewarganegaraan || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Bahasa Sehari-hari</p>
-                      <p className="text-base text-gray-900 font-medium">
-                        {selectedPPDB.bahasaSehari ? 
-                          (typeof selectedPPDB.bahasaSehari === 'string' ? 
-                            JSON.parse(selectedPPDB.bahasaSehari).join(', ') : 
-                            selectedPPDB.bahasaSehari.join(', ')
-                          ) : '-'
-                        }
-                        {selectedPPDB.bahasaLainnya && ` (${selectedPPDB.bahasaLainnya})`}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Tinggi / Berat Badan</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.tinggiBadan || '-'} cm / {selectedPPDB.beratBadan || '-'} kg</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Golongan Darah</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.golonganDarah || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Alamat Rumah</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.alamatRumah || selectedPPDB.alamat || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">No. Handphone</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.nomorHandphone || selectedPPDB.teleponOrangTua || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Jarak Rumah - Sekolah</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.jarakRumahSekolah || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Masuk Kelas</p>
-                      <p className="text-base text-gray-900 font-medium">Kelas {selectedPPDB.masukKelas || '1'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Asal Sekolah</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.asalSekolah || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Jumlah Saudara</p>
-                      <p className="text-base text-gray-900 font-medium">
-                        Kandung: {selectedPPDB.jumlahSaudaraKandung || selectedPPDB.jumlahSaudara || '0'}, 
-                        Tiri: {selectedPPDB.jumlahSaudaraTiri || '0'}, 
-                        Angkat: {selectedPPDB.jumlahSaudaraAngkat || '0'}
-                      </p>
-                    </div>
-                    <div className="col-span-2">
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Penyakit yang Pernah Diderita</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.penyakitPernah || '-'}</p>
-                    </div>
-                    <div className="col-span-2">
-                      <p className="text-sm font-semibold text-gray-600 mb-1">Kelainan Fisik</p>
-                      <p className="text-base text-gray-900 font-medium">{selectedPPDB.kelainanFisik || '-'}</p>
+                  </div>
+
+                  {/* Data Kesehatan */}
+                  <div className="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-xl border border-red-200">
+                    <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
+                      <span className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm mr-3">🏥</span>
+                      Data Kesehatan
+                    </h4>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Penyakit yang Pernah Diderita</p>
+                        <p className="text-sm font-medium text-gray-900 bg-white p-3 rounded-lg">{selectedPPDB.penyakitPernah || 'Tidak Ada'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Kelainan Fisik</p>
+                        <p className="text-sm font-medium text-gray-900 bg-white p-3 rounded-lg">{selectedPPDB.kelainanFisik || 'Tidak Ada'}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Data Orang Tua */}
-                <div>
-                  <h4 className="text-lg font-bold text-[#2d5016] mb-3 pb-2 border-b-2 border-[#d4af37]/30">👨‍👩‍👧 Data Orang Tua / Wali</h4>
-                  
+                <div className="space-y-6">
                   {/* Data Ayah */}
-                  <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                    <h5 className="font-bold text-blue-800 mb-3">Data Ayah</h5>
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200">
+                    <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
+                      <span className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm mr-3">👨</span>
+                      Data Ayah
+                    </h4>
+                    <div className="space-y-4">
                       <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Nama Lengkap</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.namaLengkapAyah || selectedPPDB.namaAyah || '-'}</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nama Lengkap</p>
+                        <p className="text-sm font-bold text-gray-900">{selectedPPDB.namaLengkapAyah || selectedPPDB.namaAyah || '-'}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Tempat, Tanggal Lahir</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.tempatTanggalLahirAyah || '-'}</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Tempat, Tanggal Lahir</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedPPDB.tempatTanggalLahirAyah || '-'}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Pendidikan</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.pendidikanTerakhirAyah || '-'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Agama</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.agamaAyah || '-'}</p>
+                        </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Pendidikan Terakhir</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.pendidikanTerakhirAyah || '-'}</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Pekerjaan</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedPPDB.pekerjaanAyah || '-'}</p>
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Agama</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.agamaAyah || '-'}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">No. Handphone</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.nomorHandphoneAyah || '-'}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Pekerjaan</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.pekerjaanAyah || '-'}</p>
-                      </div>
-                      <div className="col-span-2">
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Penghasilan per Bulan</p>
-                        <p className="text-base text-gray-900 font-medium">Rp {selectedPPDB.penghasilanAyah ? parseInt(selectedPPDB.penghasilanAyah).toLocaleString('id-ID') : '-'}</p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">No. Handphone</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.nomorHandphoneAyah || '-'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Penghasilan</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {selectedPPDB.penghasilanAyah ? `Rp ${parseInt(selectedPPDB.penghasilanAyah).toLocaleString('id-ID')}` : '-'}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Data Ibu */}
-                  <div className="p-4 bg-pink-50 rounded-lg">
-                    <h5 className="font-bold text-pink-800 mb-3">Data Ibu</h5>
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-6 rounded-xl border border-pink-200">
+                    <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
+                      <span className="w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center text-sm mr-3">👩</span>
+                      Data Ibu
+                    </h4>
+                    <div className="space-y-4">
                       <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Nama Lengkap</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.namaLengkapIbu || selectedPPDB.namaIbu || '-'}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Tempat, Tanggal Lahir</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.tempatTanggalLahirIbu || '-'}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Pendidikan Terakhir</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.pendidikanTerakhirIbu || '-'}</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nama Lengkap</p>
+                        <p className="text-sm font-bold text-gray-900">{selectedPPDB.namaLengkapIbu || selectedPPDB.namaIbu || '-'}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Agama</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.agamaIbu || '-'}</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Tempat, Tanggal Lahir</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedPPDB.tempatTanggalLahirIbu || '-'}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Pendidikan</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.pendidikanTerakhirIbu || '-'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Agama</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.agamaIbu || '-'}</p>
+                        </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">No. Handphone</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.nomorHandphoneIbu || '-'}</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Pekerjaan</p>
+                        <p className="text-sm font-medium text-gray-900">{selectedPPDB.pekerjaanIbu || '-'}</p>
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Pekerjaan</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.pekerjaanIbu || '-'}</p>
-                      </div>
-                      <div className="col-span-2">
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Penghasilan per Bulan</p>
-                        <p className="text-base text-gray-900 font-medium">Rp {selectedPPDB.penghasilanIbu ? parseInt(selectedPPDB.penghasilanIbu).toLocaleString('id-ID') : '-'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Data Administrasi */}
-                <div>
-                  <h4 className="text-lg font-bold text-[#2d5016] mb-3 pb-2 border-b-2 border-[#d4af37]/30">📄 Berkas Persyaratan</h4>
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600 mb-2">Dokumen yang Diupload</p>
-                      <div className="flex gap-2 flex-wrap">
-                        {(selectedPPDB.scanAktaKelahiran || selectedPPDB.fotoAktaLahir) && (
-                          <a 
-                            href={`http://localhost:3000${selectedPPDB.scanAktaKelahiran || selectedPPDB.fotoAktaLahir}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="px-4 py-2 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-100 transition-colors border border-purple-200"
-                          >
-                            📜 Akta Kelahiran
-                          </a>
-                        )}
-                        {(selectedPPDB.pasFoto || selectedPPDB.fotoSiswa) && (
-                          <a 
-                            href={`http://localhost:3000${selectedPPDB.pasFoto || selectedPPDB.fotoSiswa}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors border border-blue-200"
-                          >
-                            📷 Pas Foto
-                          </a>
-                        )}
-                        {selectedPPDB.scanKTPAyah && (
-                          <a 
-                            href={`http://localhost:3000${selectedPPDB.scanKTPAyah}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="px-4 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors border border-green-200"
-                          >
-                            🆔 KTP Ayah
-                          </a>
-                        )}
-                        {selectedPPDB.scanKTPIbu && (
-                          <a 
-                            href={`http://localhost:3000${selectedPPDB.scanKTPIbu}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="px-4 py-2 bg-pink-50 text-pink-700 rounded-lg text-sm font-medium hover:bg-pink-100 transition-colors border border-pink-200"
-                          >
-                            🆔 KTP Ibu
-                          </a>
-                        )}
-                        {(selectedPPDB.scanKartuKeluarga || selectedPPDB.fotoKK) && (
-                          <a 
-                            href={`http://localhost:3000${selectedPPDB.scanKartuKeluarga || selectedPPDB.fotoKK}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="px-4 py-2 bg-yellow-50 text-yellow-700 rounded-lg text-sm font-medium hover:bg-yellow-100 transition-colors border border-yellow-200"
-                          >
-                            👨‍👩‍👧‍👦 Kartu Keluarga
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Tahun Ajaran</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.tahunAjaran}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Gelombang Pendaftaran</p>
-                        <p className="text-base text-gray-900 font-medium">{selectedPPDB.gelombang || 'Gelombang 1'}</p>
-                      </div>
-                      <div className="col-span-2">
-                        <p className="text-sm font-semibold text-gray-600 mb-1">Tanggal Pendaftaran</p>
-                        <p className="text-base text-gray-900 font-medium">{new Date(selectedPPDB.createdAt).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">No. Handphone</p>
+                          <p className="text-sm font-medium text-gray-900">{selectedPPDB.nomorHandphoneIbu || '-'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Penghasilan</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {selectedPPDB.penghasilanIbu ? `Rp ${parseInt(selectedPPDB.penghasilanIbu).toLocaleString('id-ID')}` : '-'}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              {/* Dokumen Upload */}
+              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-6 rounded-xl border border-yellow-200">
+                <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
+                  <span className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm mr-3">📄</span>
+                  Dokumen Upload
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {[
+                    { label: 'Akta Kelahiran', file: selectedPPDB.scanAktaKelahiran },
+                    { label: 'Pas Foto', file: selectedPPDB.pasFoto },
+                    { label: 'KTP Ayah', file: selectedPPDB.scanKTPAyah },
+                    { label: 'KTP Ibu', file: selectedPPDB.scanKTPIbu },
+                    { label: 'Kartu Keluarga', file: selectedPPDB.scanKartuKeluarga }
+                  ].map((doc, index) => (
+                    <div key={index} className="text-center">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{doc.label}</p>
+                      {doc.file ? (
+                        <a
+                          href={`http://localhost:3000${doc.file}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-full p-3 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors text-sm font-medium"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          Lihat File
+                        </a>
+                      ) : (
+                        <div className="w-full p-3 bg-gray-100 text-gray-500 rounded-lg text-sm">
+                          Tidak ada file
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Action Buttons */}
               {selectedPPDB.status === 'pending' && (
-                <div className="flex gap-3 pt-4 border-t-2 border-gray-100">
+                <div className="flex gap-4 pt-6 border-t border-gray-200">
                   <button
-                    type="button"
                     onClick={() => {
                       handleUpdateStatus(selectedPPDB.id, 'approved')
                       setShowDetailModal(false)
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -888,12 +876,11 @@ export default function AdminPPDBPage() {
                     Terima Pendaftar
                   </button>
                   <button
-                    type="button"
                     onClick={() => {
                       handleUpdateStatus(selectedPPDB.id, 'rejected')
                       setShowDetailModal(false)
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

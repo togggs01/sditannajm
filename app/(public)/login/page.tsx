@@ -97,17 +97,18 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Back to Home Button - Fixed Position */}
+      {/* Back to Home Button - Enhanced Layout */}
       <Link 
         href="/"
-        className="fixed top-6 left-6 z-50 inline-flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 backdrop-blur-md px-5 py-3 rounded-2xl font-semibold transition-all duration-300 group shadow-xl hover:shadow-2xl border border-white/30 hover:border-white/50 hover:scale-105"
+        className="fixed top-4 left-4 md:top-6 md:left-6 z-50 inline-flex items-center gap-2 text-white bg-white/15 hover:bg-white/25 backdrop-blur-lg px-4 py-2.5 md:px-5 md:py-3 rounded-xl md:rounded-2xl font-semibold transition-all duration-300 group shadow-lg hover:shadow-xl border border-white/20 hover:border-white/40 hover:scale-105 text-sm md:text-base"
       >
-        <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-all">
-          <svg className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-6 h-6 md:w-8 md:h-8 bg-white/20 rounded-md md:rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-all">
+          <svg className="w-3.5 h-3.5 md:w-5 md:h-5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
           </svg>
         </div>
-        <span className="text-base">Kembali ke Beranda</span>
+        <span className="hidden sm:inline">Kembali ke Beranda</span>
+        <span className="sm:hidden">Beranda</span>
       </Link>
 
       {/* Main Login Container - Split Layout */}
@@ -143,7 +144,7 @@ export default function LoginPage() {
                   <div className="relative w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-2xl p-6 ring-4 ring-white/30">
                     <Image
                       src="/images/Logo Annajm Rabbani Fix-01.png"
-                      alt="SDIT ANNAJM Logo"
+                      alt="SDIT ANNAJM RABBANI Logo"
                       width={120}
                       height={120}
                       className="object-contain"

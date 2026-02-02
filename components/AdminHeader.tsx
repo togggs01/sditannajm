@@ -22,7 +22,7 @@ export default function AdminHeader() {
           </div>
           <div>
             <h1 className="text-base font-bold">Admin Panel</h1>
-            <p className="text-[10px] text-[#f4d03f]">SDIT ANNAJM</p>
+            <p className="text-[10px] text-[#f4d03f]">SDIT ANNAJM RABBANI</p>
           </div>
         </div>
 

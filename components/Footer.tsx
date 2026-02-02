@@ -16,7 +16,7 @@ export default function Footer() {
           <div className="text-center pb-6 border-b border-white/20">
             <div className="flex justify-center mb-4">
               <div className="transform hover:scale-105 transition-transform duration-300">
-                <SchoolLogo size="md" showText textColor="text-white" />
+                <SchoolLogo size="xl" showText textColor="text-white" />
               </div>
             </div>
             <p className="text-xs text-gray-300 max-w-xs mx-auto leading-relaxed">
@@ -134,18 +134,20 @@ export default function Footer() {
                 href="mailto:sditannajmrabbani.jatimakmur@gmail.com" 
                 className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300 group hover:shadow-lg"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                     <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-xs text-gray-400">Email</p>
-                    <p className="text-sm font-semibold text-white">sditannajmrabbani.jatimakmur@gmail.com</p>
+                    <p className="text-sm font-semibold text-white break-words leading-tight">
+                      sditannajmrabbani<br className="sm:hidden" />.jatimakmur@gmail.com
+                    </p>
                   </div>
                 </div>
-                <svg className="w-4 h-4 text-gray-400 group-hover:text-[#f4d03f] group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-400 group-hover:text-[#f4d03f] group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </a>
@@ -166,23 +168,13 @@ export default function Footer() {
               </div>
             </div>
           </div>
-
-          {/* Quick Links - Single Row */}
-          <div className="flex flex-wrap justify-center gap-2 px-4 py-2">
-            <a href="/tentang" className="text-xs font-medium text-gray-300 hover:text-[#f4d03f] transition-all duration-300 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl hover:scale-105">Tentang</a>
-            <a href="/guru" className="text-xs font-medium text-gray-300 hover:text-[#f4d03f] transition-all duration-300 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl hover:scale-105">Guru</a>
-            <a href="/berita" className="text-xs font-medium text-gray-300 hover:text-[#f4d03f] transition-all duration-300 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl hover:scale-105">Berita</a>
-            <a href="/galeri" className="text-xs font-medium text-gray-300 hover:text-[#f4d03f] transition-all duration-300 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl hover:scale-105">Galeri</a>
-            <a href="/ppdb" className="text-xs font-medium text-gray-300 hover:text-[#f4d03f] transition-all duration-300 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl hover:scale-105">PPDB</a>
-            <a href="/kontak" className="text-xs font-medium text-gray-300 hover:text-[#f4d03f] transition-all duration-300 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl hover:scale-105">Kontak</a>
-          </div>
         </div>
 
         {/* Desktop: Enhanced Layout */}
         <div className="hidden lg:grid grid-cols-12 gap-8 mb-8">
           <div className="col-span-5">
             <div className="mb-6 transform hover:scale-105 transition-transform duration-300 inline-block">
-              <SchoolLogo size="lg" showText textColor="text-white" />
+              <SchoolLogo size="2xl" showText textColor="text-white" />
             </div>
             <p className="text-base text-gray-300 leading-relaxed mb-6 max-w-md">
               Sekolah Dasar Islam Terpadu yang mengintegrasikan pendidikan akademik berkualitas dengan nilai-nilai Islam yang kuat, membentuk generasi yang cerdas, berakhlak mulia, dan berprestasi.
@@ -269,9 +261,9 @@ export default function Footer() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-xs text-gray-400 mb-1">Email</p>
-                    <p className="text-sm font-semibold break-all">sditannajmrabbani.jatimakmur@gmail.com</p>
+                    <p className="text-sm font-semibold break-words">sditannajmrabbani.jatimakmur@gmail.com</p>
                   </div>
                 </a>
               </li>

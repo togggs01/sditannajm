@@ -45,9 +45,10 @@ export async function POST(request: NextRequest) {
   try {
     console.log('PPDB API: Starting POST request')
     
-    // Cek apakah pendaftaran sedang dibuka
+    // Cek status pendaftaran terlebih dahulu
     const tahunAjaran = getCurrentTahunAjaran()
     const today = new Date()
+    today.setHours(0, 0, 0, 0) // Set ke awal hari untuk perbandingan yang akurat
     
     console.log('PPDB API: Checking gelombang status for tahun ajaran:', tahunAjaran)
     
@@ -60,34 +61,47 @@ export async function POST(request: NextRequest) {
 
     console.log('PPDB API: Gelombang aktif:', gelombangAktif)
 
-    if (gelombangAktif) {
-      const isInRange = isDateInRange(today, gelombangAktif.tanggalMulai, gelombangAktif.tanggalSelesai)
-      
-      console.log('PPDB API: Date in range check:', isInRange)
-      
-      if (!isInRange) {
-        return NextResponse.json({ 
-          error: `Pendaftaran ${gelombangAktif.gelombang} belum dibuka. Periode pendaftaran: ${new Date(gelombangAktif.tanggalMulai).toLocaleDateString('id-ID')} - ${new Date(gelombangAktif.tanggalSelesai).toLocaleDateString('id-ID')}` 
-        }, { status: 400 })
+    if (!gelombangAktif) {
+      return NextResponse.json({ 
+        error: `Belum ada gelombang pendaftaran yang dibuka untuk tahun ajaran ${tahunAjaran}. Silakan hubungi sekolah untuk informasi lebih lanjut.` 
+      }, { status: 400 })
+    }
+
+    // Hitung jumlah pendaftar saat ini
+    const jumlahPendaftar = await prisma.pPDB.count({
+      where: {
+        tahunAjaran,
+        gelombang: gelombangAktif.gelombang
       }
+    })
 
-      // Cek kuota jika ada
-      if (gelombangAktif.kuota !== null) {
-        const jumlahPendaftar = await prisma.pPDB.count({
-          where: {
-            tahunAjaran,
-            gelombang: gelombangAktif.gelombang
-          }
-        })
+    // Konversi tanggal untuk perbandingan yang akurat
+    const tanggalMulai = new Date(gelombangAktif.tanggalMulai)
+    const tanggalSelesai = new Date(gelombangAktif.tanggalSelesai)
+    tanggalMulai.setHours(0, 0, 0, 0)
+    tanggalSelesai.setHours(23, 59, 59, 999)
 
-        console.log('PPDB API: Jumlah pendaftar:', jumlahPendaftar, 'Kuota:', gelombangAktif.kuota)
+    // Logic pengecekan dengan prioritas yang jelas
+    
+    // 1. Cek kuota terlebih dahulu (prioritas tertinggi)
+    if (gelombangAktif.kuota !== null && jumlahPendaftar >= gelombangAktif.kuota) {
+      return NextResponse.json({ 
+        error: `Maaf, kuota pendaftaran ${gelombangAktif.gelombang} sudah penuh (${gelombangAktif.kuota} siswa). Silakan tunggu pengumuman gelombang berikutnya.` 
+      }, { status: 400 })
+    }
 
-        if (jumlahPendaftar >= gelombangAktif.kuota) {
-          return NextResponse.json({ 
-            error: `Maaf, kuota pendaftaran ${gelombangAktif.gelombang} sudah penuh (${gelombangAktif.kuota} siswa). Silakan tunggu pengumuman gelombang berikutnya.` 
-          }, { status: 400 })
-        }
-      }
+    // 2. Cek apakah belum waktunya pendaftaran
+    if (today < tanggalMulai) {
+      return NextResponse.json({ 
+        error: `Pendaftaran ${gelombangAktif.gelombang} akan dibuka pada ${tanggalMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}. Silakan kembali pada tanggal tersebut.` 
+      }, { status: 400 })
+    }
+
+    // 3. Cek apakah sudah lewat masa pendaftaran
+    if (today > tanggalSelesai) {
+      return NextResponse.json({ 
+        error: `Pendaftaran ${gelombangAktif.gelombang} sudah ditutup pada ${tanggalSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}. Silakan tunggu pengumuman gelombang berikutnya.` 
+      }, { status: 400 })
     }
 
     console.log('PPDB API: Processing form data...')

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Card from './Card'
 
 interface Testimoni {
@@ -8,38 +9,51 @@ interface Testimoni {
   class: string
   text: string
   rating: number
+  photo?: string
 }
 
 const testimoniData: Testimoni[] = [
   { 
-    name: 'Ibu Siti', 
-    class: 'Wali Siswa Kelas 3A',
-    text: 'Anak saya jadi lebih disiplin dan rajin mengaji setelah sekolah di SDIT AN-NAJM Rabbani. Guru-gurunya sangat perhatian dan metode pembelajarannya menyenangkan.',
-    rating: 5
+    name: 'Ibunda Sabiya', 
+    class: 'Wali Murid Kelas 1',
+    text: 'Alhamdulillah setelah bersekolah di An-Najm ada beberapa kemajuan dari Sabiya, dengan kelas yang nyaman serta metode belajar yang fun anak saya lebih bisa memahami pelajaran yang diajarkan, dan ada beberapa pilihan eskul yang seru sesuai minat anak.',
+    rating: 5,
+    photo: '/images/ibunda_sabiya.jpeg'
   },
   {
-    name: 'Bapak Ahmad',
-    class: 'Wali Siswa Kelas 5B',
-    text: 'Alhamdulillah, perkembangan akhlak dan prestasi akademik anak saya sangat meningkat. Lingkungan sekolah yang Islami sangat mendukung pembentukan karakter.',
-    rating: 5
+    name: 'Ibunda Yasmin',
+    class: 'Wali Murid Kelas 1',
+    text: 'ANNAJM bukan hanya tempat belajar, tetapi tempat membentuk karakter. Anak kami belajar ilmu, adab, dan akhlak dalam suasana yang menyenangkan.',
+    rating: 5,
+    photo: '/images/ortu_testimoni.jpeg'
   },
   {
-    name: 'Ibu Fatimah',
-    class: 'Wali Siswa Kelas 2C',
-    text: 'Program tahfidz di SDIT AN-NAJM sangat bagus. Anak saya sudah hafal beberapa juz dengan lancar dan benar. Terima kasih guru-guru yang sabar membimbing.',
-    rating: 5
+    name: 'Fakhria Ahminarrizqie',
+    class: 'Wali Murid Kelas 4 & Ketua Komite SDIT ANNAJM RABBANI',
+    text: 'Sebagai wali murid dan Ketua Komite, saya menilai SDIT An Najm Rabbani berkomitmen pada pendidikan akademik dan akhlak Islami, didukung guru berdedikasi dan lingkungan belajar yang kondusif.',
+    rating: 5,
+    photo: '/images/f.jpeg'
   },
   {
-    name: 'Bapak Yusuf',
-    class: 'Wali Siswa Kelas 4A',
-    text: 'Fasilitas sekolah sangat lengkap dan bersih. Anak saya merasa nyaman belajar di sini. Komunikasi dengan guru juga sangat baik.',
-    rating: 5
+    name: 'Melly Amalia',
+    class: 'Wali Murid Kelas 2 & Anggota Komite',
+    text: 'Kami bersyukur anak kami bersekolah di SDIT Annajm Rabbani, dengan guru yang sabar dan perhatian, sehingga anak berkembang mandiri, berakhlak baik, dan terbantu oleh pembelajaran Islami serta pembiasaan ibadah.',
+    rating: 5,
+    photo: '/images/Melly Amalia.jpeg'
   },
   {
-    name: 'Ibu Aisyah',
-    class: 'Wali Siswa Kelas 1B',
-    text: 'Sebagai orang tua baru di SDIT AN-NAJM, saya sangat puas dengan sistem pembelajaran dan perhatian guru terhadap perkembangan anak.',
-    rating: 5
+    name: 'Anne Nurhasayan Dyah Arizona',
+    class: 'Wali Murid Kelas 3 & Anggota Komite',
+    text: 'Sekolah yang tidak hanya cerdas secara intelektual, tapi juga cerdas secara spiritual. Fasilitasnya lengkap, gurunya inspiratif, dan kurikulum agamanya sangat kuat. Anak jadi lebih sopan dan mandiri dalam ibadah.',
+    rating: 5,
+    photo: '/images/Anne Nurhasayan Dyah Arizona.jpeg'
+  },
+  {
+    name: 'Rani Budiarti, SST.PA',
+    class: 'Wali murid & Ketua Komite periode 2023 - 2025',
+    text: 'Menjadi bagian dari SDIT Annajm Rabbani adalah anugerah, karena sekolah ini membimbing generasi Rabbani dengan pendidikan seimbang antara ilmu dan akhlak. Sebagai wali murid, kami sangat bersyukur atas dedikasi para pendidiknya.',
+    rating: 5,
+    photo: '/images/Rani Budiarti, SST.PA.jpeg'
   }
 ]
 
@@ -92,8 +106,28 @@ export default function TestimoniCarousel() {
                 <div className="absolute top-0 right-0 text-[#d4af37]/10 text-8xl font-bold">"</div>
                 <div className="relative">
                   <div className="flex items-center mb-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-full flex items-center justify-center mr-4 shadow-lg">
-                      <span className="text-2xl">👤</span>
+                    {/* Bingkai Foto dengan Placeholder */}
+                    <div className="relative mr-4">
+                      <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-[#d4af37] shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
+                        {testimoni.photo ? (
+                          <Image
+                            src={testimoni.photo}
+                            alt={`Foto ${testimoni.name}`}
+                            width={56}
+                            height={56}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]">
+                            {/* Frame Icon */}
+                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      {/* Decorative Ring */}
+                      <div className="absolute -inset-1 rounded-full border-2 border-[#d4af37]/30 animate-pulse"></div>
                     </div>
                     <div>
                       <h4 className="font-bold text-[#2d5016]">{testimoni.name}</h4>

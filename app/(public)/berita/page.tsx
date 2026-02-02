@@ -18,7 +18,7 @@ export default async function BeritaPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 text-shadow">Berita & Artikel</h1>
           <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-            Update terbaru seputar kegiatan, prestasi, dan pengumuman SDIT ANNAJM
+            Update terbaru seputar kegiatan, prestasi, dan pengumuman SDIT ANNAJM RABBANI
           </p>
         </div>
       </div>
@@ -32,7 +32,7 @@ export default async function BeritaPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {beritaList.map((berita) => (
-              <Card key={berita.id} className="flex flex-col">
+              <Card key={berita.id} className="flex flex-col border-2 border-[#d4af37]/30 hover:border-[#d4af37]/60 transition-colors duration-300">
                 {berita.gambar && (
                   <div className="aspect-video bg-gray-200 rounded-xl mb-4 overflow-hidden -m-6 mb-6">
                     <img src={berita.gambar} alt={berita.judul} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />

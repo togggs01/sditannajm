@@ -36,8 +36,10 @@ model Galeri {
   id        String   @id @default(cuid())
   judul     String
   deskripsi String?
-  gambar    String
+  gambar    String?
+  video     String?
   kategori  String
+  tipe      String   @default("gambar") // "gambar" atau "video"
   createdAt DateTime @default(now())
 }
 

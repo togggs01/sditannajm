@@ -64,7 +64,7 @@ export default function BottomNav() {
   ]
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-50">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl z-50">
       <div className="grid grid-cols-6 h-16">
         {navItems.map((item) => {
           const isActive = pathname === item.href
@@ -72,18 +72,46 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center transition-all ${
+              className={`relative flex flex-col items-center justify-center transition-all duration-300 ease-in-out group ${
                 isActive
-                  ? 'text-[#2d5016] bg-green-50'
-                  : 'text-gray-600 hover:text-[#2d5016] hover:bg-gray-50'
+                  ? 'text-[#2d5016]'
+                  : 'text-gray-600'
               }`}
             >
-              <div className={`transition-transform ${isActive ? 'scale-110' : ''}`}>
+              {/* Background hover effect */}
+              <div className={`absolute inset-0 rounded-xl transition-all duration-300 ${
+                isActive 
+                  ? 'bg-gradient-to-t from-green-100 to-green-50 scale-100' 
+                  : 'bg-gradient-to-t from-green-50 to-transparent scale-0 group-hover:scale-100 group-active:scale-95'
+              }`} />
+              
+              {/* Active indicator */}
+              {isActive && (
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-[#2d5016] rounded-b-full" />
+              )}
+              
+              {/* Icon with animation */}
+              <div className={`relative z-10 transition-all duration-300 ${
+                isActive 
+                  ? 'scale-110 text-[#2d5016]' 
+                  : 'group-hover:scale-110 group-hover:text-[#2d5016] group-active:scale-95'
+              }`}>
                 {item.icon}
               </div>
-              <span className={`text-[10px] mt-0.5 font-medium ${isActive ? 'font-bold' : ''}`}>
+              
+              {/* Label with animation */}
+              <span className={`relative z-10 text-[10px] mt-0.5 transition-all duration-300 ${
+                isActive 
+                  ? 'font-bold text-[#2d5016] scale-105' 
+                  : 'font-medium group-hover:font-semibold group-hover:text-[#2d5016] group-hover:scale-105'
+              }`}>
                 {item.label}
               </span>
+              
+              {/* Ripple effect on tap */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-[#2d5016] opacity-0 group-active:opacity-10 transition-opacity duration-150" />
+              </div>
             </Link>
           )
         })}

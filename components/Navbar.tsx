@@ -44,21 +44,41 @@ export default function Navbar() {
         <div className="flex justify-between h-20">
           <div className="flex items-center">
             <Link href="/" className="group flex items-center space-x-3">
-              <SchoolLogo size="md" className="group-hover:scale-110 transition-transform" />
-              <div>
-                <span className="text-2xl font-bold text-white text-shadow">SDIT ANNAJM</span>
-                <p className="text-xs text-[#f4d03f] font-medium">Generasi Qurani Berprestasi</p>
+              <SchoolLogo size="xl" className="group-hover:scale-110 transition-transform" />
+              <div className="hidden sm:block">
+                <span className="text-xl font-bold text-white text-shadow">SDIT ANNAJM RABBANI</span>
+              </div>
+              <div className="sm:hidden">
+                <span className="text-lg font-bold text-white text-shadow">SDIT<br/>ANNAJM RABBANI</span>
               </div>
             </Link>
           </div>
           
           <div className="hidden lg:flex items-center space-x-1">
-            <Link href="/" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium">Beranda</Link>
-            <Link href="/tentang" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium">Tentang</Link>
-            <Link href="/guru" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium">Guru</Link>
-            <Link href="/galeri" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium">Galeri</Link>
-            <Link href="/berita" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium">Berita</Link>
-            <Link href="/kontak" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium">Kontak</Link>
+            <Link href="/" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium relative group">
+              Beranda
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#d4af37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </Link>
+            <Link href="/tentang" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium relative group">
+              Tentang
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#d4af37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </Link>
+            <Link href="/guru" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium relative group">
+              Guru
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#d4af37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </Link>
+            <Link href="/galeri" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium relative group">
+              Galeri
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#d4af37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </Link>
+            <Link href="/berita" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium relative group">
+              Berita
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#d4af37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </Link>
+            <Link href="/kontak" className="text-white hover:bg-white/10 px-4 py-2 rounded-lg transition font-medium relative group">
+              Kontak
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#d4af37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </Link>
             <Link href="/ppdb" className="ml-2 bg-gradient-to-r from-[#e6c547] to-[#f4d03f] hover:from-[#f4d03f] hover:to-[#e6c547] text-[#2d5016] px-6 py-2.5 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
               PPDB 2025
             </Link>
@@ -74,22 +94,28 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Only PPDB & Login */}
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className="lg:hidden flex items-center space-x-3">
             <Link 
               href="/ppdb" 
-              className="bg-gradient-to-r from-[#e6c547] to-[#f4d03f] text-[#2d5016] px-4 py-2 rounded-lg font-bold text-sm shadow-lg"
+              className="bg-gradient-to-r from-[#e6c547] to-[#f4d03f] hover:from-[#f4d03f] hover:to-[#e6c547] text-[#2d5016] px-4 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:scale-105 active:scale-95"
             >
               PPDB
             </Link>
             
             {isLoggedIn ? (
-              <Link href="/admin" className="bg-blue-600 text-white px-3 py-2 rounded-lg font-semibold text-sm">
+              <Link 
+                href="/admin" 
+                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2.5 rounded-xl font-semibold text-sm shadow-lg transition-all transform hover:scale-105 active:scale-95"
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </Link>
             ) : (
-              <Link href="/login" className="bg-white/20 text-white px-3 py-2 rounded-lg font-semibold text-sm backdrop-blur-sm">
+              <Link 
+                href="/login" 
+                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2.5 rounded-xl font-semibold text-sm backdrop-blur-sm border border-white/20 transition-all transform hover:scale-105 active:scale-95"
+              >
                 Login
               </Link>
             )}

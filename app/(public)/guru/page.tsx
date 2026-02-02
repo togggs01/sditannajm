@@ -30,7 +30,7 @@ export default async function GuruPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {guruList.map((guru) => (
-              <Card key={guru.id} className="text-center group">
+              <Card key={guru.id} className="text-center group border-2 border-[#d4af37]/30 hover:border-[#d4af37]/60 transition-colors duration-300">
                 <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-full flex items-center justify-center p-1 shadow-xl group-hover:scale-105 transition-transform">
                   <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
                     {guru.foto ? (

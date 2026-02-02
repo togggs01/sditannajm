@@ -98,8 +98,8 @@ export default function SyaratPPDBPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-gray-900">Foto Calon Siswa</p>
-                  <p className="text-sm text-gray-600">Ukuran 3x4, latar belakang merah/biru</p>
+                  <p className="font-semibold text-gray-900">Pas Foto Calon Peserta Didik</p>
+                  <p className="text-sm text-gray-600">Ukuran 3x4, latar belakang merah, format JPG/PNG</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200">
@@ -107,8 +107,8 @@ export default function SyaratPPDBPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-gray-900">Fotocopy Kartu Keluarga (KK)</p>
-                  <p className="text-sm text-gray-600">1 lembar, legalisir</p>
+                  <p className="font-semibold text-gray-900">Scan Akta Kelahiran Calon Peserta Didik</p>
+                  <p className="text-sm text-gray-600">File asli yang jelas dan terbaca, format JPG/PNG/PDF</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200">
@@ -116,8 +116,26 @@ export default function SyaratPPDBPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <p className="font-semibold text-gray-900">Fotocopy Akta Kelahiran</p>
-                  <p className="text-sm text-gray-600">1 lembar, legalisir</p>
+                  <p className="font-semibold text-gray-900">Scan KTP Ayah</p>
+                  <p className="text-sm text-gray-600">KTP yang masih berlaku, format JPG/PNG/PDF</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200">
+                <svg className="w-5 h-5 text-[#2d5016] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-gray-900">Scan KTP Ibu</p>
+                  <p className="text-sm text-gray-600">KTP yang masih berlaku, format JPG/PNG/PDF</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200">
+                <svg className="w-5 h-5 text-[#2d5016] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-gray-900">Scan Kartu Keluarga (KK)</p>
+                  <p className="text-sm text-gray-600">Kartu Keluarga yang terbaru, format JPG/PNG/PDF</p>
                 </div>
               </div>
             </div>
@@ -131,27 +149,54 @@ export default function SyaratPPDBPage() {
               </div>
               Data yang Harus Disiapkan
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200">
-                <p className="font-semibold text-blue-900 mb-2">Data Calon Siswa</p>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Nama lengkap</li>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl border border-blue-200">
+                <p className="font-semibold text-blue-900 mb-4 flex items-center">
+                  <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm mr-2">👤</span>
+                  Data Calon Peserta Didik
+                </p>
+                <ul className="text-sm text-blue-800 space-y-2">
+                  <li>• Nama lengkap & nama panggilan</li>
                   <li>• Tempat & tanggal lahir</li>
-                  <li>• Jenis kelamin</li>
-                  <li>• Agama</li>
-                  <li>• Anak ke berapa</li>
-                  <li>• Jumlah saudara</li>
+                  <li>• Jenis kelamin & agama</li>
+                  <li>• Kewarganegaraan & bahasa sehari-hari</li>
+                  <li>• Jumlah saudara (kandung, tiri, angkat)</li>
+                  <li>• Tinggi & berat badan</li>
+                  <li>• Golongan darah</li>
+                  <li>• Riwayat penyakit & kelainan fisik</li>
+                  <li>• Alamat rumah lengkap</li>
+                  <li>• Nomor handphone aktif</li>
+                  <li>• Jarak rumah ke sekolah</li>
+                  <li>• Kelas tujuan & asal sekolah</li>
                 </ul>
               </div>
-              <div className="p-4 bg-gradient-to-br from-green-50 to-green-100/50 rounded-lg border border-green-200">
-                <p className="font-semibold text-green-900 mb-2">👨‍👩‍👧 Data Orang Tua</p>
-                <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Nama ayah & pekerjaan</li>
-                  <li>• Nama ibu & pekerjaan</li>
-                  <li>• Nomor telepon aktif</li>
-                  <li>• Email</li>
-                  <li>• Alamat lengkap</li>
-                </ul>
+              <div className="p-6 bg-gradient-to-br from-green-50 to-green-100/50 rounded-xl border border-green-200">
+                <p className="font-semibold text-green-900 mb-4 flex items-center">
+                  <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm mr-2">👨‍👩‍👧</span>
+                  Data Orang Tua/Wali
+                </p>
+                <div className="space-y-4">
+                  <div>
+                    <p className="font-medium text-green-800 mb-2">📋 Data Ayah:</p>
+                    <ul className="text-sm text-green-700 space-y-1 ml-4">
+                      <li>• Nama lengkap</li>
+                      <li>• Tempat, tanggal lahir</li>
+                      <li>• Pendidikan terakhir & agama</li>
+                      <li>• Nomor handphone</li>
+                      <li>• Pekerjaan & penghasilan per bulan</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-medium text-green-800 mb-2">📋 Data Ibu:</p>
+                    <ul className="text-sm text-green-700 space-y-1 ml-4">
+                      <li>• Nama lengkap</li>
+                      <li>• Tempat, tanggal lahir</li>
+                      <li>• Pendidikan terakhir & agama</li>
+                      <li>• Nomor handphone</li>
+                      <li>• Pekerjaan & penghasilan per bulan</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -194,35 +239,28 @@ export default function SyaratPPDBPage() {
               <div className="w-8 h-8 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-lg flex items-center justify-center">
                 <span className="text-[#1a3a0f] font-bold">4</span>
               </div>
-              Proses Pendaftaran
+              Proses Pendaftaran Online
             </h3>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center font-bold text-[#2d5016] flex-shrink-0">1</div>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
                 <div>
-                  <p className="font-semibold text-gray-900">Isi Data Calon Siswa</p>
-                  <p className="text-sm text-gray-600">Lengkapi informasi pribadi calon siswa</p>
+                  <p className="font-semibold text-gray-900">Isi Data Calon Peserta Didik</p>
+                  <p className="text-sm text-gray-600">Lengkapi identitas, tempat tanggal lahir, agama, data keluarga, data fisik & kesehatan, alamat & kontak, serta data sekolah</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center font-bold text-[#2d5016] flex-shrink-0">2</div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
                 <div>
-                  <p className="font-semibold text-gray-900">Isi Data Orang Tua</p>
-                  <p className="text-sm text-gray-600">Lengkapi informasi orang tua/wali</p>
+                  <p className="font-semibold text-gray-900">Isi Data Orang Tua/Wali</p>
+                  <p className="text-sm text-gray-600">Lengkapi data lengkap ayah dan ibu meliputi nama, TTL, pendidikan, agama, kontak, pekerjaan, dan penghasilan</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center font-bold text-[#2d5016] flex-shrink-0">3</div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
                 <div>
-                  <p className="font-semibold text-gray-900">Upload Dokumen</p>
-                  <p className="text-sm text-gray-600">Upload foto dan dokumen yang diperlukan</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center font-bold text-[#2d5016] flex-shrink-0">4</div>
-                <div>
-                  <p className="font-semibold text-gray-900">Verifikasi & Submit</p>
-                  <p className="text-sm text-gray-600">Periksa kembali data dan kirim pendaftaran</p>
+                  <p className="font-semibold text-gray-900">Upload Berkas Persyaratan</p>
+                  <p className="text-sm text-gray-600">Upload pas foto, scan akta kelahiran, scan KTP ayah, scan KTP ibu, dan scan kartu keluarga</p>
                 </div>
               </div>
             </div>

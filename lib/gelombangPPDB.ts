@@ -14,11 +14,16 @@ export interface PendaftaranStatus {
   message: string
 }
 
-// Fungsi untuk cek apakah tanggal dalam range
+// Fungsi untuk cek apakah tanggal dalam range dengan handling yang lebih akurat
 export function isDateInRange(date: Date, startDate: string, endDate: string): boolean {
   const current = new Date(date.getFullYear(), date.getMonth(), date.getDate())
   const start = new Date(startDate)
   const end = new Date(endDate)
+  
+  // Set waktu untuk perbandingan yang akurat
+  current.setHours(0, 0, 0, 0)
+  start.setHours(0, 0, 0, 0)
+  end.setHours(23, 59, 59, 999) // Set ke akhir hari
   
   return current >= start && current <= end
 }
@@ -64,5 +69,69 @@ export function getDefaultGelombang(date: Date = new Date()): string {
     return 'Gelombang 2'
   } else {
     return 'Gelombang 1'
+  }
+}
+
+// Fungsi untuk mendapatkan status pendaftaran dengan logic yang bersih
+export function getRegistrationStatus(
+  gelombang: GelombangInfo | null, 
+  jumlahPendaftar: number,
+  currentDate: Date = new Date()
+): {
+  isOpen: boolean
+  reason: 'NO_ACTIVE_WAVE' | 'QUOTA_FULL' | 'NOT_YET_STARTED' | 'REGISTRATION_CLOSED' | 'OPEN'
+  message: string
+} {
+  // Set waktu untuk perbandingan yang akurat
+  const today = new Date(currentDate)
+  today.setHours(0, 0, 0, 0)
+
+  if (!gelombang || !gelombang.aktif) {
+    return {
+      isOpen: false,
+      reason: 'NO_ACTIVE_WAVE',
+      message: 'Belum ada gelombang pendaftaran yang dibuka. Silakan hubungi sekolah untuk informasi lebih lanjut.'
+    }
+  }
+
+  const tanggalMulai = new Date(gelombang.tanggalMulai)
+  const tanggalSelesai = new Date(gelombang.tanggalSelesai)
+  tanggalMulai.setHours(0, 0, 0, 0)
+  tanggalSelesai.setHours(23, 59, 59, 999)
+
+  // Prioritas pengecekan: Kuota > Tanggal
+  
+  // 1. Cek kuota penuh
+  if (gelombang.kuota !== null && jumlahPendaftar >= gelombang.kuota) {
+    return {
+      isOpen: false,
+      reason: 'QUOTA_FULL',
+      message: `Pendaftaran ${gelombang.gelombang} sudah ditutup karena kuota telah penuh (${gelombang.kuota} siswa).`
+    }
+  }
+
+  // 2. Cek belum dimulai
+  if (today < tanggalMulai) {
+    return {
+      isOpen: false,
+      reason: 'NOT_YET_STARTED',
+      message: `Pendaftaran ${gelombang.gelombang} akan dibuka pada ${tanggalMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+    }
+  }
+
+  // 3. Cek sudah berakhir
+  if (today > tanggalSelesai) {
+    return {
+      isOpen: false,
+      reason: 'REGISTRATION_CLOSED',
+      message: `Pendaftaran ${gelombang.gelombang} sudah ditutup pada ${tanggalSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+    }
+  }
+
+  // 4. Pendaftaran terbuka
+  return {
+    isOpen: true,
+    reason: 'OPEN',
+    message: `Pendaftaran ${gelombang.gelombang} sedang dibuka hingga ${tanggalSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}.`
   }
 }

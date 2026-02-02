@@ -68,7 +68,7 @@ function CounterStat({ end, suffix = '+', label }: { end: number; suffix?: strin
 export default function Hero() {
   const [hasImage, setHasImage] = useState(false)
   const [imageError, setImageError] = useState(false)
-  const [stats, setStats] = useState({ guru: 10, siswa: 200, berita: 10 })
+  const [stats, setStats] = useState({ guru: 30, siswa: 200, berita: 10 })
 
   useEffect(() => {
     // Check if image exists
@@ -87,7 +87,7 @@ export default function Hero() {
       .then(res => res.json())
       .then(data => {
         setStats({
-          guru: data.guru || 10,
+          guru: data.guru || 30,
           siswa: data.siswa || 200,
           berita: data.berita || 10
         })
@@ -104,7 +104,7 @@ export default function Hero() {
         {hasImage && !imageError && (
           <Image
             src="/images/school-hero.jpg"
-            alt="SDIT ANNAJM"
+            alt="SDIT ANNAJM RABBANI"
             fill
             className="object-cover"
             priority
@@ -132,7 +132,7 @@ export default function Hero() {
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-shadow leading-tight px-2">
             Selamat Datang di<br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#f7e98e] via-[#f4d03f] to-[#f7e98e] drop-shadow-lg">
-              SDIT ANNAJM
+              SDIT ANNAJM RABBANI
             </span>
           </h1>
           

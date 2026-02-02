@@ -45,10 +45,9 @@ export default function Navbar() {
         <div className="flex justify-between h-20">
           <div className="flex items-center">
             <Link href="/" className="group flex items-center space-x-3">
-              <SchoolLogo size="md" className="group-hover:scale-110 transition-transform" />
+              <SchoolLogo size="xl" className="group-hover:scale-110 transition-transform" />
               <div>
-                <span className="text-2xl font-bold text-[#0B6623] text-shadow">SDIT ANNAJM</span>
-                <p className="text-xs text-[#0B6623]/80 font-medium">Generasi Qurani Berprestasi</p>
+                <span className="text-xl font-bold text-[#0B6623] text-shadow">SDIT ANNAJM RABBANI</span>
               </div>
             </Link>
           </div>

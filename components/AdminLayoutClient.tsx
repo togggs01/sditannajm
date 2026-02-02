@@ -3,8 +3,7 @@
 import AdminSidebar from '@/components/AdminSidebar'
 import AdminHeader from '@/components/AdminHeader'
 import AdminBottomNav from '@/components/AdminBottomNav'
-import WhatsAppFloat from '@/components/WhatsAppFloat'
-import { useState, createContext, useContext, useEffect } from 'react'
+import { useState, createContext, useContext } from 'react'
 
 const SidebarContext = createContext({
   isCollapsed: false,
@@ -19,16 +18,6 @@ export default function AdminLayoutClient({
   children: React.ReactNode
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    // Show WhatsApp button after a short delay
-    const timer = setTimeout(() => {
-      setIsVisible(true)
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed }}>
@@ -52,18 +41,6 @@ export default function AdminLayoutClient({
 
         {/* Mobile Bottom Nav */}
         <AdminBottomNav />
-
-        {/* WhatsApp Floating Button - dengan posisi khusus untuk admin */}
-        <div className="lg:hidden">
-          {/* Mobile: posisi lebih tinggi agar tidak tertutup bottom nav */}
-          <WhatsAppFloat className={`fixed bottom-20 right-6 z-[9999] transition-all duration-500 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'
-          }`} />
-        </div>
-        <div className="hidden lg:block">
-          {/* Desktop: posisi normal */}
-          <WhatsAppFloat />
-        </div>
       </div>
     </SidebarContext.Provider>
   )

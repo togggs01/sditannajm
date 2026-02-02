@@ -13,7 +13,7 @@ export default function PageHeader({ title, description, icon, action }: PageHea
   const { isCollapsed, setIsCollapsed } = useSidebar()
 
   return (
-    <div className="bg-gradient-to-r from-[#2d5016] via-[#3d6b1f] to-[#2d5016] px-6 py-8 mb-6 shadow-lg">
+    <div className="sticky top-0 z-40 bg-gradient-to-r from-[#2d5016] via-[#3d6b1f] to-[#2d5016] px-6 py-8 mb-6 shadow-lg">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1 min-w-0">
           {/* Toggle Sidebar Button - Desktop Only */}

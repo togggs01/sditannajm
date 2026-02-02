@@ -40,7 +40,7 @@ export default function WhatsAppFloat({ className }: WhatsAppFloatProps) {
 
   return (
     <div 
-      className={className || "fixed bottom-6 right-6 z-[9999]"}
+      className={className || "fixed bottom-6 md:bottom-6 right-6 z-[9999] mb-16 md:mb-0"}
       style={{ zIndex: 9999 }}
     >
       <div className="relative group">

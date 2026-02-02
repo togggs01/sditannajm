@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 interface SchoolLogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
   className?: string
   showText?: boolean
   textColor?: string
@@ -14,7 +14,8 @@ const sizeMap = {
   sm: { container: 'w-10 h-10', emoji: 'text-xl', image: 40 },
   md: { container: 'w-12 h-12', emoji: 'text-2xl', image: 48 },
   lg: { container: 'w-14 h-14', emoji: 'text-3xl', image: 56 },
-  xl: { container: 'w-16 h-16', emoji: 'text-4xl', image: 64 }
+  xl: { container: 'w-16 h-16', emoji: 'text-4xl', image: 64 },
+  '2xl': { container: 'w-20 h-20', emoji: 'text-5xl', image: 80 }
 }
 
 export default function SchoolLogo({ 
@@ -43,11 +44,11 @@ export default function SchoolLogo({
 
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
-      <div className={`${sizes.container} bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 overflow-hidden`}>
+      <div className={`${sizes.container} rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden`}>
         {hasLogo && !imageError ? (
           <Image
             src="/images/Logo Annajm Rabbani Fix-01.png"
-            alt="Logo SDIT ANNAJM"
+            alt="Logo SDIT ANNAJM RABBANI"
             width={sizes.image}
             height={sizes.image}
             className="object-contain p-1"
@@ -60,8 +61,7 @@ export default function SchoolLogo({
       
       {showText && (
         <div>
-          <h2 className={`text-xl font-bold ${textColor}`}>SDIT ANNAJM</h2>
-          <p className="text-xs text-[#d4af37]">Sekolah Islam Terpadu</p>
+          <h2 className={`text-xl font-bold ${textColor}`}>SDIT ANNAJM RABBANI</h2>
         </div>
       )}
     </div>

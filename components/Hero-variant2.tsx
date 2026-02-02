@@ -104,7 +104,7 @@ export default function Hero() {
         {hasImage && !imageError && (
           <Image
             src="/images/school-hero.jpg"
-            alt="SDIT ANNAJM"
+            alt="SDIT ANNAJM RABBANI"
             fill
             className="object-cover"
             priority
@@ -132,7 +132,7 @@ export default function Hero() {
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-shadow leading-tight px-2">
             Selamat Datang di<br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#39F914] via-[#39F914]/80 to-[#39F914]">
-              SDIT ANNAJM
+              SDIT ANNAJM RABBANI
             </span>
           </h1>
           

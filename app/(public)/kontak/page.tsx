@@ -78,7 +78,7 @@ export default function KontakPage() {
               allowFullScreen
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
-              title="Lokasi SDIT ANNAJM"
+              title="Lokasi SDIT ANNAJM RABBANI"
             />
           </div>
           <div className="mt-4 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">

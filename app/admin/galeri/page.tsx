@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import ImageUpload from '@/components/ImageUpload'
+import VideoUpload from '@/components/VideoUpload'
 import PageHeader from '@/components/admin/PageHeader'
 import ActionButton from '@/components/admin/ActionButton'
 import FormInput from '@/components/admin/FormInput'
@@ -18,7 +19,9 @@ export default function AdminGaleriPage() {
     judul: '',
     deskripsi: '',
     gambar: '',
-    kategori: ''
+    video: '',
+    kategori: '',
+    tipe: 'gambar' // 'gambar' atau 'video'
   })
 
   useEffect(() => {
@@ -58,39 +61,175 @@ export default function AdminGaleriPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (editId) {
-      await fetch(`/api/galeri?id=${editId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-    } else {
-      await fetch('/api/galeri', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-    }
+    try {
+      // Validate required fields based on type
+      if (!formData.judul || !formData.kategori || !formData.tipe) {
+        alert('Judul, kategori, dan tipe wajib diisi')
+        return
+      }
 
-    resetForm()
-    fetchGaleri()
+      // Validate media based on type
+      if (formData.tipe === 'gambar' && !formData.gambar) {
+        alert('Gambar wajib diisi untuk tipe gambar')
+        return
+      }
+
+      if (formData.tipe === 'video' && !formData.video) {
+        alert('Video wajib diisi untuk tipe video')
+        return
+      }
+
+      console.log('Submitting form data:', formData)
+
+      // Retry mechanism for API calls
+      const makeRequest = async (retries = 3) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            let response
+            if (editId) {
+              console.log(`Attempt ${i + 1}: Updating existing item with ID:`, editId)
+              response = await fetch(`/api/galeri?id=${editId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+              })
+            } else {
+              console.log(`Attempt ${i + 1}: Creating new item`)
+              response = await fetch('/api/galeri', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+              })
+            }
+
+            console.log(`Attempt ${i + 1} - Response status:`, response.status)
+            console.log(`Attempt ${i + 1} - Response ok:`, response.ok)
+
+            // Check if response is HTML (Next.js error page)
+            const contentType = response.headers.get('content-type') || ''
+            
+            if (contentType.includes('text/html')) {
+              console.log(`Attempt ${i + 1} - Received HTML response, server might be restarting`)
+              if (i < retries - 1) {
+                console.log(`Waiting 3 seconds before retry...`)
+                await new Promise(resolve => setTimeout(resolve, 3000))
+                continue
+              } else {
+                throw new Error('Server sedang restart. Silakan tunggu beberapa detik dan refresh halaman.')
+              }
+            }
+
+            if (!response.ok) {
+              let errorData
+              
+              try {
+                if (contentType.includes('application/json')) {
+                  errorData = await response.json()
+                } else {
+                  const errorText = await response.text()
+                  console.error(`Attempt ${i + 1} - Non-JSON error response:`, errorText.substring(0, 200))
+                  errorData = { error: `Server Error (${response.status}): ${response.statusText}` }
+                }
+              } catch (parseError) {
+                console.error(`Attempt ${i + 1} - Error parsing response:`, parseError)
+                errorData = { error: `Server Error (${response.status}): Unable to parse response` }
+              }
+              
+              console.error(`Attempt ${i + 1} - API Error Response:`, errorData)
+              throw new Error(errorData.error || `HTTP Error: ${response.status}`)
+            }
+
+            // Success - parse JSON response
+            const result = await response.json()
+            console.log(`Attempt ${i + 1} - Success:`, result)
+            return result
+            
+          } catch (fetchError) {
+            console.error(`Attempt ${i + 1} - Fetch Error:`, fetchError)
+            
+            if (i === retries - 1) {
+              throw fetchError
+            }
+            
+            // Wait before retry
+            console.log(`Waiting 3 seconds before retry...`)
+            await new Promise(resolve => setTimeout(resolve, 3000))
+          }
+        }
+      }
+
+      const result = await makeRequest()
+      
+      const mediaType = formData.tipe === 'video' ? 'Video' : 'Foto'
+      alert(editId ? `${mediaType} berhasil diupdate!` : `${mediaType} berhasil ditambahkan!`)
+      resetForm()
+      fetchGaleri()
+      
+    } catch (error) {
+      console.error('Submit Error Details:', error)
+      
+      // More detailed error handling
+      let errorMessage = 'Terjadi kesalahan tidak diketahui'
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Server sedang restart')) {
+          errorMessage = 'Server sedang restart. Silakan tunggu beberapa detik dan refresh halaman.'
+        } else if (error.message.includes('JSON')) {
+          errorMessage = 'Server sedang restart. Silakan tunggu beberapa detik dan coba lagi.'
+        } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+          errorMessage = 'Koneksi ke server bermasalah. Pastikan server berjalan dan coba lagi.'
+        } else {
+          errorMessage = error.message
+        }
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+      
+      const mediaType = formData.tipe === 'video' ? 'video' : 'foto'
+      alert(`Gagal ${editId ? 'mengupdate' : 'menambahkan'} ${mediaType}: ${errorMessage}`)
+    }
   }
 
   const handleEdit = (galeri: any) => {
-    setFormData(galeri)
+    console.log('Editing galeri:', galeri)
+    setFormData({
+      judul: galeri.judul || '',
+      deskripsi: galeri.deskripsi || '',
+      gambar: galeri.gambar || '',
+      video: galeri.video || '',
+      kategori: galeri.kategori || '',
+      tipe: galeri.tipe || 'gambar'
+    })
     setEditId(galeri.id)
     setShowForm(true)
+    
+    // Scroll to form
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 100)
   }
 
   const handleDelete = async (id: string) => {
     if (confirm('Yakin ingin menghapus foto ini?')) {
-      await fetch(`/api/galeri?id=${id}`, { method: 'DELETE' })
-      fetchGaleri()
+      try {
+        const response = await fetch(`/api/galeri?id=${id}`, { method: 'DELETE' })
+        
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Gagal menghapus foto')
+        }
+        
+        alert('Foto berhasil dihapus!')
+        fetchGaleri()
+      } catch (error) {
+        console.error('Delete error:', error)
+        alert(`Gagal menghapus foto: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      }
     }
   }
 
   const resetForm = () => {
-    setFormData({ judul: '', deskripsi: '', gambar: '', kategori: '' })
+    setFormData({ judul: '', deskripsi: '', gambar: '', video: '', kategori: '', tipe: 'gambar' })
     setEditId(null)
     setShowForm(false)
   }
@@ -123,7 +262,7 @@ export default function AdminGaleriPage() {
               )
             }
           >
-            {showForm ? 'Tutup Form' : 'Tambah Foto'}
+            {showForm ? 'Tutup Form' : 'Tambah Media'}
           </ActionButton>
         }
       />
@@ -143,7 +282,7 @@ export default function AdminGaleriPage() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-[#2d5016]">{editId ? 'Edit Foto' : 'Tambah Foto Baru'}</h2>
+                <h2 className="text-2xl font-bold text-[#2d5016]">{editId ? 'Edit Media' : 'Tambah Media Baru'}</h2>
                 <p className="text-sm text-gray-600">Lengkapi form di bawah ini dengan data yang valid</p>
               </div>
             </div>
@@ -162,25 +301,91 @@ export default function AdminGaleriPage() {
                 }
               />
 
-              <FormInput
-                label="Deskripsi"
-                type="textarea"
-                value={formData.deskripsi}
-                onChange={(value) => setFormData({...formData, deskripsi: value})}
-                placeholder="Deskripsi singkat tentang foto"
-                rows={4}
-                icon={
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                  </svg>
-                }
-              />
+              {/* Deskripsi dengan batas karakter */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Deskripsi
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-3 text-gray-400">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                  </div>
+                  <textarea
+                    value={formData.deskripsi}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      if (value.length <= 40) {
+                        setFormData({...formData, deskripsi: value})
+                      }
+                    }}
+                    placeholder="Deskripsi singkat tentang dokumentasi (maksimal 40 karakter)"
+                    rows={3}
+                    maxLength={40}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d5016] focus:border-[#2d5016] transition-all bg-white text-gray-900 resize-none"
+                  />
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-gray-500">Deskripsi singkat untuk dokumentasi</span>
+                  <span className={`font-medium ${
+                    formData.deskripsi.length >= 35 
+                      ? formData.deskripsi.length === 40 
+                        ? 'text-red-600' 
+                        : 'text-orange-600'
+                      : 'text-gray-500'
+                  }`}>
+                    {formData.deskripsi.length}/40 karakter
+                  </span>
+                </div>
+              </div>
 
-              <ImageUpload
-                value={formData.gambar}
-                onChange={(url) => setFormData({...formData, gambar: url})}
-                label="Foto Galeri *"
-              />
+              {/* Tipe Media */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Tipe Media
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="tipe"
+                      value="gambar"
+                      checked={formData.tipe === 'gambar'}
+                      onChange={(e) => setFormData({...formData, tipe: e.target.value, video: '', gambar: ''})}
+                      className="w-4 h-4 text-[#2d5016] focus:ring-[#2d5016]"
+                    />
+                    <span className="text-sm font-medium text-gray-700">📷 Gambar</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="tipe"
+                      value="video"
+                      checked={formData.tipe === 'video'}
+                      onChange={(e) => setFormData({...formData, tipe: e.target.value, gambar: '', video: ''})}
+                      className="w-4 h-4 text-[#2d5016] focus:ring-[#2d5016]"
+                    />
+                    <span className="text-sm font-medium text-gray-700">🎥 Video</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Conditional Media Upload */}
+              {formData.tipe === 'gambar' ? (
+                <ImageUpload
+                  value={formData.gambar}
+                  onChange={(url) => setFormData({...formData, gambar: url})}
+                  label="Foto Galeri *"
+                />
+              ) : (
+                <VideoUpload
+                  value={formData.video}
+                  onChange={(url) => setFormData({...formData, video: url})}
+                  label="Video Dokumentasi *"
+                />
+              )}
 
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
@@ -218,7 +423,7 @@ export default function AdminGaleriPage() {
                     </svg>
                   }
                 >
-                  {editId ? 'Update Foto' : 'Simpan Foto'}
+                  {editId ? 'Update Media' : 'Simpan Media'}
                 </ActionButton>
                 <ActionButton
                   type="button"
@@ -322,8 +527,8 @@ export default function AdminGaleriPage() {
             <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <p className="text-gray-500 font-medium text-lg">Belum ada foto di galeri</p>
-            <p className="text-gray-400 text-sm mt-1">Klik tombol "Tambah Foto" untuk menambahkan</p>
+            <p className="text-gray-500 font-medium text-lg">Belum ada media di galeri</p>
+            <p className="text-gray-400 text-sm mt-1">Klik tombol "Tambah Media" untuk menambahkan</p>
           </div>
         ) : filteredList.length === 0 ? (
           <div className="bg-white rounded-xl shadow-lg border-2 border-[#d4af37]/20 p-12 text-center">
@@ -347,7 +552,26 @@ export default function AdminGaleriPage() {
             {filteredList.map((galeri) => (
               <div key={galeri.id} className="bg-white rounded-xl shadow-lg border-2 border-[#d4af37]/20 overflow-hidden group hover:shadow-xl transition-all">
                 <div className="aspect-video bg-gray-100 relative overflow-hidden">
-                  {galeri.gambar ? (
+                  {/* Media Type Badge */}
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
+                      galeri.tipe === 'video' 
+                        ? 'bg-red-500 text-white' 
+                        : 'bg-blue-500 text-white'
+                    }`}>
+                      {galeri.tipe === 'video' ? '🎥' : '📷'}
+                      {galeri.tipe === 'video' ? 'Video' : 'Foto'}
+                    </span>
+                  </div>
+
+                  {galeri.tipe === 'video' && galeri.video ? (
+                    <video 
+                      src={galeri.video}
+                      className="w-full h-full object-cover"
+                      controls
+                      preload="metadata"
+                    />
+                  ) : galeri.gambar ? (
                     <Image 
                       src={galeri.gambar} 
                       alt={galeri.judul} 
@@ -357,7 +581,11 @@ export default function AdminGaleriPage() {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <svg className="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        {galeri.tipe === 'video' ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        ) : (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        )}
                       </svg>
                     </div>
                   )}
@@ -365,9 +593,18 @@ export default function AdminGaleriPage() {
                 <div className="p-5">
                   <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-1">{galeri.judul}</h3>
                   <p className="text-sm text-gray-600 mb-3 line-clamp-2">{galeri.deskripsi || 'Tidak ada deskripsi'}</p>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] mb-4">
-                    {galeri.kategori}
-                  </span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f]">
+                      {galeri.kategori}
+                    </span>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      galeri.tipe === 'video' 
+                        ? 'bg-red-100 text-red-700' 
+                        : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {galeri.tipe === 'video' ? 'Video' : 'Gambar'}
+                    </span>
+                  </div>
                   <div className="flex gap-2 pt-3 border-t border-gray-200">
                     <button 
                       type="button"
