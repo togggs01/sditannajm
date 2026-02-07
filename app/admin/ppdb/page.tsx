@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { getCurrentTahunAjaran } from '@/lib/tahunAjaran'
@@ -350,33 +350,29 @@ export default function AdminPPDBPage() {
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-lg border-2 border-[#d4af37]/20 p-6">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div className="flex-1 w-full md:w-auto">
-              <div className="flex items-center gap-2">
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Tahun Ajaran</label>
-                  <select
-                    value={selectedTahunAjaran}
-                    onChange={(e) => setSelectedTahunAjaran(e.target.value)}
-                    className="w-full md:w-64 px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d5016] focus:border-[#2d5016] transition-all bg-white text-gray-900 font-semibold"
-                  >
-                    {tahunAjaranList.map(ta => (
-                      <option key={ta} value={ta}>{ta}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mt-7">
-                  <button
-                    onClick={fetchTahunAjaranList}
-                    className="p-3 bg-[#2d5016] hover:bg-[#3d6b1f] text-white rounded-xl transition-all shadow-md hover:shadow-lg"
-                    title="Refresh Tahun Ajaran"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                  </button>
-                </div>
+          <div className="flex flex-col md:flex-row gap-4 items-start md:items-end justify-between">
+            <div className="flex items-end gap-2">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Tahun Ajaran</label>
+                <select
+                  value={selectedTahunAjaran}
+                  onChange={(e) => setSelectedTahunAjaran(e.target.value)}
+                  className="w-full md:w-64 px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d5016] focus:border-[#2d5016] transition-all bg-white text-gray-900 font-semibold"
+                >
+                  {tahunAjaranList.map(ta => (
+                    <option key={ta} value={ta}>{ta}</option>
+                  ))}
+                </select>
               </div>
+              <button
+                onClick={fetchTahunAjaranList}
+                className="p-3 bg-[#2d5016] hover:bg-[#3d6b1f] text-white rounded-xl transition-all shadow-md hover:shadow-lg"
+                title="Refresh Tahun Ajaran"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
             </div>
 
             <div className="flex gap-2 flex-wrap">
@@ -630,9 +626,9 @@ export default function AdminPPDBPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Data Calon Peserta Didik */}
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                  <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
                     <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
-                      <span className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm mr-3">👤</span>
+                      <span className="w-8 h-8 bg-[#2d5016] text-white rounded-full flex items-center justify-center text-sm mr-3">👤</span>
                       Data Calon Peserta Didik
                     </h4>
                     <div className="space-y-4">
@@ -711,19 +707,19 @@ export default function AdminPPDBPage() {
                   </div>
 
                   {/* Data Kesehatan */}
-                  <div className="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-xl border border-red-200">
+                  <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
                     <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
-                      <span className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm mr-3">🏥</span>
+                      <span className="w-8 h-8 bg-[#2d5016] text-white rounded-full flex items-center justify-center text-sm mr-3">🏥</span>
                       Data Kesehatan
                     </h4>
                     <div className="space-y-4">
                       <div>
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Penyakit yang Pernah Diderita</p>
-                        <p className="text-sm font-medium text-gray-900 bg-white p-3 rounded-lg">{selectedPPDB.penyakitPernah || 'Tidak Ada'}</p>
+                        <p className="text-sm font-medium text-gray-900 bg-gray-50 p-3 rounded-lg border">{selectedPPDB.penyakitPernah || 'Tidak Ada'}</p>
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Kelainan Fisik</p>
-                        <p className="text-sm font-medium text-gray-900 bg-white p-3 rounded-lg">{selectedPPDB.kelainanFisik || 'Tidak Ada'}</p>
+                        <p className="text-sm font-medium text-gray-900 bg-gray-50 p-3 rounded-lg border">{selectedPPDB.kelainanFisik || 'Tidak Ada'}</p>
                       </div>
                     </div>
                   </div>
@@ -732,9 +728,9 @@ export default function AdminPPDBPage() {
                 {/* Data Orang Tua */}
                 <div className="space-y-6">
                   {/* Data Ayah */}
-                  <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200">
+                  <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
                     <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
-                      <span className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm mr-3">👨</span>
+                      <span className="w-8 h-8 bg-[#2d5016] text-white rounded-full flex items-center justify-center text-sm mr-3">👨</span>
                       Data Ayah
                     </h4>
                     <div className="space-y-4">
@@ -776,9 +772,9 @@ export default function AdminPPDBPage() {
                   </div>
 
                   {/* Data Ibu */}
-                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-6 rounded-xl border border-pink-200">
+                  <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
                     <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
-                      <span className="w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center text-sm mr-3">👩</span>
+                      <span className="w-8 h-8 bg-[#2d5016] text-white rounded-full flex items-center justify-center text-sm mr-3">👩</span>
                       Data Ibu
                     </h4>
                     <div className="space-y-4">
@@ -822,9 +818,9 @@ export default function AdminPPDBPage() {
               </div>
 
               {/* Dokumen Upload */}
-              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-6 rounded-xl border border-yellow-200">
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
                 <h4 className="text-lg font-bold text-[#2d5016] mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm mr-3">📄</span>
+                  <span className="w-8 h-8 bg-[#2d5016] text-white rounded-full flex items-center justify-center text-sm mr-3">📄</span>
                   Dokumen Upload
                 </h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -842,7 +838,7 @@ export default function AdminPPDBPage() {
                           href={`http://localhost:3000${doc.file}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-full p-3 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors text-sm font-medium"
+                          className="inline-flex items-center justify-center w-full p-3 bg-[#2d5016] hover:bg-[#3d6b1f] text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow-md"
                         >
                           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -851,7 +847,7 @@ export default function AdminPPDBPage() {
                           Lihat File
                         </a>
                       ) : (
-                        <div className="w-full p-3 bg-gray-100 text-gray-500 rounded-lg text-sm">
+                        <div className="w-full p-3 bg-gray-100 text-gray-500 rounded-lg text-sm border">
                           Tidak ada file
                         </div>
                       )}

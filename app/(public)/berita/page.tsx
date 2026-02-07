@@ -1,7 +1,5 @@
 import { prisma } from '@/lib/db'
-import { formatDate } from '@/lib/formatDate'
-import Link from 'next/link'
-import Card from '@/components/Card'
+import BeritaPageClient from '@/components/BeritaPageClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,67 +10,44 @@ export default async function BeritaPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-shadow">Berita & Artikel</h1>
-          <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-            Update terbaru seputar kegiatan, prestasi, dan pengumuman SDIT ANNAJM RABBANI
-          </p>
+    <div className="min-h-screen bg-yellow-50/50">
+      {/* Enhanced Header */}
+      <div className="relative bg-gradient-to-br from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white pt-32 pb-24 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#d4af37] rounded-full filter blur-3xl animate-float"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f4d03f] rounded-full filter blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#d4af37]/30 rounded-full filter blur-3xl animate-float" style={{animationDelay: '1s'}}></div>
+        </div>
+
+        {/* Islamic Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="islamic-pattern-berita-list" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <circle cx="50" cy="50" r="30" fill="none" stroke="#f4d03f" strokeWidth="1"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="#d4af37" strokeWidth="0.5"/>
+                <path d="M 50 20 L 50 80 M 20 50 L 80 50" stroke="#f4d03f" strokeWidth="0.5"/>
+                <circle cx="50" cy="50" r="3" fill="#d4af37"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#islamic-pattern-berita-list)"/>
+          </svg>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-shadow hero-text-glow animate-slide-up">
+              Berita & Artikel
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed animate-slide-up-delay-1">
+              Temukan informasi terbaru seputar kegiatan, prestasi, dan pengumuman dari SDIT ANNAJM RABBANI
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-10 pb-20 sm:px-6 lg:px-8">
-        {beritaList.length === 0 ? (
-          <Card className="text-center py-12">
-            <div className="text-6xl mb-4">📰</div>
-            <p className="text-gray-600 text-lg">Belum ada berita yang dipublikasikan.</p>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {beritaList.map((berita) => (
-              <Card key={berita.id} className="flex flex-col border-2 border-[#d4af37]/30 hover:border-[#d4af37]/60 transition-colors duration-300">
-                {berita.gambar && (
-                  <div className="aspect-video bg-gray-200 rounded-xl mb-4 overflow-hidden -m-6 mb-6">
-                    <img src={berita.gambar} alt={berita.judul} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                  </div>
-                )}
-                <div className="mb-3">
-                  <span className="bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#2d5016] text-xs px-3 py-1 rounded-full font-semibold">
-                    {berita.kategori}
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold mb-3 line-clamp-2 text-[#2d5016] hover:text-[#3d6b1f] transition">
-                  {berita.judul}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
-                  {berita.konten.substring(0, 150)}...
-                </p>
-                <div className="flex justify-between items-center text-xs text-gray-500 mb-4 pb-4 border-t pt-4">
-                  <span className="flex items-center">
-                    <span className="mr-1">✍️</span>
-                    {berita.penulis}
-                  </span>
-                  <span className="flex items-center">
-                    <span className="mr-1">📅</span>
-                    {formatDate(berita.createdAt)}
-                  </span>
-                </div>
-                <Link 
-                  href={`/berita/${berita.slug}`}
-                  className="inline-flex items-center text-[#2d5016] font-semibold hover:text-[#d4af37] transition group"
-                >
-                  <span>Baca Selengkapnya</span>
-                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+      <BeritaPageClient initialBerita={beritaList} />
     </div>
   )
 }

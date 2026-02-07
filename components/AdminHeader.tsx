@@ -17,9 +17,7 @@ export default function AdminHeader() {
       <div className="flex items-center justify-between px-4 h-16">
         {/* Logo & Title */}
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-lg flex items-center justify-center shadow-lg">
-            <span className="text-xl">🕌</span>
-          </div>
+          <SchoolLogo size="md" showText={false} />
           <div>
             <h1 className="text-base font-bold">Admin Panel</h1>
             <p className="text-[10px] text-[#f4d03f]">SDIT ANNAJM RABBANI</p>

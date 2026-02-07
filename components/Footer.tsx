@@ -132,24 +132,24 @@ export default function Footer() {
 
               <a 
                 href="mailto:sditannajmrabbani.jatimakmur@gmail.com" 
-                className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300 group hover:shadow-lg"
+                className="block p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300 group hover:shadow-lg"
               >
-                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                     <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs text-gray-400">Email</p>
-                    <p className="text-sm font-semibold text-white break-words leading-tight">
-                      sditannajmrabbani<br className="sm:hidden" />.jatimakmur@gmail.com
+                    <p className="text-xs text-gray-400 mb-1">Email</p>
+                    <p className="text-sm font-semibold text-white break-all leading-tight">
+                      sditannajmrabbani.jatimakmur@gmail.com
                     </p>
                   </div>
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-[#f4d03f] group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
-                <svg className="w-4 h-4 text-gray-400 group-hover:text-[#f4d03f] group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
               </a>
 
               <div className="p-3 bg-white/5 rounded-xl">
