@@ -29,7 +29,7 @@ export default function SchoolLogo({
 
   useEffect(() => {
     // Check if logo exists
-    fetch('/images/Logo Annajm Rabbani Fix-01.png', { method: 'HEAD' })
+    fetch('/images/LogoAnnajmRabbaniFix-01.png', { method: 'HEAD' })
       .then(res => {
         if (res.ok) {
           setHasLogo(true)
@@ -47,7 +47,7 @@ export default function SchoolLogo({
       <div className={`${sizes.container} rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden`}>
         {hasLogo && !imageError ? (
           <Image
-            src="/images/Logo Annajm Rabbani Fix-01.png"
+            src="/images/LogoAnnajmRabbaniFix-01.png"
             alt="Logo SDIT ANNAJM RABBANI"
             width={sizes.image}
             height={sizes.image}
