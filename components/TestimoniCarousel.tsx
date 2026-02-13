@@ -38,21 +38,21 @@ const testimoniData: Testimoni[] = [
     class: 'Wali Murid Kelas 2 & Anggota Komite',
     text: 'Kami bersyukur anak kami bersekolah di SDIT Annajm Rabbani, dengan guru yang sabar dan perhatian, sehingga anak berkembang mandiri, berakhlak baik, dan terbantu oleh pembelajaran Islami serta pembiasaan ibadah.',
     rating: 5,
-    photo: '/images/Melly Amalia.jpeg'
+    photo: '/images/Melly.jpeg'
   },
   {
     name: 'Anne Nurhasayan Dyah Arizona',
     class: 'Wali Murid Kelas 3 & Anggota Komite',
     text: 'Sekolah yang tidak hanya cerdas secara intelektual, tapi juga cerdas secara spiritual. Fasilitasnya lengkap, gurunya inspiratif, dan kurikulum agamanya sangat kuat. Anak jadi lebih sopan dan mandiri dalam ibadah.',
     rating: 5,
-    photo: '/images/Anne Nurhasayan Dyah Arizona.jpeg'
+    photo: '/images/AnneNurhasayanDyahArizona.jpeg'
   },
   {
     name: 'Rani Budiarti, SST.PA',
     class: 'Wali murid & Ketua Komite periode 2023 - 2025',
     text: 'Menjadi bagian dari SDIT Annajm Rabbani adalah anugerah, karena sekolah ini membimbing generasi Rabbani dengan pendidikan seimbang antara ilmu dan akhlak. Sebagai wali murid, kami sangat bersyukur atas dedikasi para pendidiknya.',
     rating: 5,
-    photo: '/images/Rani Budiarti, SST.PA.jpeg'
+    photo: '/images/Rani.jpeg'
   }
 ]
 
