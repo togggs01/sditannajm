@@ -87,17 +87,14 @@ export default function AdminSidebar() {
       {/* Header */}
       <div className="p-5 border-b border-white/10">
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2.5'}`}>
-          <div className="relative w-9 h-9 flex-shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-lg shadow-lg"></div>
-            <div className="relative w-full h-full flex items-center justify-center p-1.5">
-              <Image
-                src="/images/Logo Annajm Rabbani Fix-01.png"
-                alt="Logo"
-                width={28}
-                height={28}
-                className="object-contain"
-              />
-            </div>
+          <div className="relative w-12 h-12 flex-shrink-0">
+            <Image
+              src="/images/Logo Annajm Rabbani Fix-01.png"
+              alt="Logo"
+              width={48}
+              height={48}
+              className="object-contain"
+            />
           </div>
           {!isCollapsed && (
             <div className="flex-1 min-w-0">

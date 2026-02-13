@@ -2,7 +2,7 @@ import Card from '@/components/Card'
 
 export default function KontakPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-yellow-50/50">
       {/* Header */}
       <div className="bg-gradient-to-br from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -49,9 +49,9 @@ export default function KontakPage() {
               <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
                 <span className="text-2xl">✉️</span>
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <h3 className="font-bold mb-2 text-[#2d5016]">Email</h3>
-                <p className="text-gray-600">sditannajmrabbani.jatimakmur@gmail.com</p>
+                <p className="text-gray-600 break-all text-sm leading-relaxed">sditannajmrabbani.jatimakmur@gmail.com</p>
               </div>
             </div>
 

@@ -396,7 +396,7 @@ export default function PPDBPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-yellow-50/50">
       {/* Header */}
       <div className="bg-gradient-to-br from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -579,11 +579,11 @@ export default function PPDBPage() {
           <div className="mb-8 bg-white p-8 rounded-xl border border-gray-100 shadow-sm">
             <div className="relative">
               {/* Clean Progress Line */}
-              <div className="absolute top-6 left-8 right-8 h-0.5 bg-gray-200"></div>
-              <div className={`absolute top-6 left-8 h-0.5 bg-[#d4af37] transition-all duration-500 ease-out`} 
-                   style={{ width: `calc(${((currentStep - 1) / 2) * 100}% - 0px)` }}></div>
+              <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-full max-w-md h-0.5 bg-gray-200"></div>
+              <div className={`absolute top-6 left-1/2 transform -translate-x-1/2 h-0.5 bg-[#d4af37] transition-all duration-500 ease-out`} 
+                   style={{ width: `${((currentStep - 1) / 2) * 100}%`, maxWidth: `${((currentStep - 1) / 2) * 384}px` }}></div>
               
-              <div className="flex items-center justify-between relative">
+              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto relative">
                 {[
                   { 
                     step: 1, 
@@ -635,7 +635,7 @@ export default function PPDBPage() {
                     </div>
                     
                     {/* Clean Step Label */}
-                    <div className="mt-4 text-center max-w-[130px]">
+                    <div className="mt-4 text-center w-full px-2">
                       <div className={`mb-3 flex justify-center transition-colors duration-300 ${
                         currentStep >= step ? 'text-[#d4af37]' : 'text-gray-400'
                       }`}>

@@ -7,8 +7,10 @@ import PageHeader from '@/components/admin/PageHeader'
 import ActionButton from '@/components/admin/ActionButton'
 import FormInput from '@/components/admin/FormInput'
 import Image from 'next/image'
+import { useToast } from '@/hooks/useToast'
 
 export default function AdminGaleriPage() {
+  const { showToast, ToastComponent } = useToast()
   const [galeriList, setGaleriList] = useState<any[]>([])
   const [filteredList, setFilteredList] = useState<any[]>([])
   const [showForm, setShowForm] = useState(false)
@@ -64,18 +66,24 @@ export default function AdminGaleriPage() {
     try {
       // Validate required fields based on type
       if (!formData.judul || !formData.kategori || !formData.tipe) {
-        alert('Judul, kategori, dan tipe wajib diisi')
+        showToast('Judul, kategori, dan tipe wajib diisi', 'warning')
+        return
+      }
+
+      // Validate description length
+      if (formData.deskripsi && formData.deskripsi.length > 40) {
+        showToast('Deskripsi tidak boleh lebih dari 40 karakter', 'warning')
         return
       }
 
       // Validate media based on type
       if (formData.tipe === 'gambar' && !formData.gambar) {
-        alert('Gambar wajib diisi untuk tipe gambar')
+        showToast('Gambar wajib diisi untuk tipe gambar', 'warning')
         return
       }
 
       if (formData.tipe === 'video' && !formData.video) {
-        alert('Video wajib diisi untuk tipe video')
+        showToast('Video wajib diisi untuk tipe video', 'warning')
         return
       }
 
@@ -120,23 +128,20 @@ export default function AdminGaleriPage() {
             }
 
             if (!response.ok) {
-              let errorData
+              let errorData: { error?: string } = {}
               
               try {
                 if (contentType.includes('application/json')) {
                   errorData = await response.json()
                 } else {
                   const errorText = await response.text()
-                  console.error(`Attempt ${i + 1} - Non-JSON error response:`, errorText.substring(0, 200))
                   errorData = { error: `Server Error (${response.status}): ${response.statusText}` }
                 }
               } catch (parseError) {
-                console.error(`Attempt ${i + 1} - Error parsing response:`, parseError)
                 errorData = { error: `Server Error (${response.status}): Unable to parse response` }
               }
               
-              console.error(`Attempt ${i + 1} - API Error Response:`, errorData)
-              throw new Error(errorData.error || `HTTP Error: ${response.status}`)
+              throw new Error(errorData?.error || `HTTP Error: ${response.status}`)
             }
 
             // Success - parse JSON response
@@ -161,7 +166,7 @@ export default function AdminGaleriPage() {
       const result = await makeRequest()
       
       const mediaType = formData.tipe === 'video' ? 'Video' : 'Foto'
-      alert(editId ? `${mediaType} berhasil diupdate!` : `${mediaType} berhasil ditambahkan!`)
+      showToast(editId ? `${mediaType} berhasil diupdate!` : `${mediaType} berhasil ditambahkan!`, 'success')
       resetForm()
       fetchGaleri()
       
@@ -186,7 +191,7 @@ export default function AdminGaleriPage() {
       }
       
       const mediaType = formData.tipe === 'video' ? 'video' : 'foto'
-      alert(`Gagal ${editId ? 'mengupdate' : 'menambahkan'} ${mediaType}: ${errorMessage}`)
+      showToast(`Gagal ${editId ? 'mengupdate' : 'menambahkan'} ${mediaType}: ${errorMessage}`, 'error')
     }
   }
 
@@ -219,11 +224,11 @@ export default function AdminGaleriPage() {
           throw new Error(errorData.error || 'Gagal menghapus foto')
         }
         
-        alert('Foto berhasil dihapus!')
+        showToast('Foto berhasil dihapus!', 'success')
         fetchGaleri()
       } catch (error) {
         console.error('Delete error:', error)
-        alert(`Gagal menghapus foto: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        showToast(`Gagal menghapus foto: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error')
       }
     }
   }
@@ -238,14 +243,16 @@ export default function AdminGaleriPage() {
   const categories = ['Semua', ...Array.from(new Set(galeriList.map(item => item.kategori)))]
 
   return (
-    <div className="min-h-screen">
-      <PageHeader
-        title="Kelola Galeri"
-        description="Tambah, edit, dan hapus foto galeri kegiatan"
-        icon={
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
+    <>
+      {ToastComponent}
+      <div className="min-h-screen">
+        <PageHeader
+          title="Kelola Galeri"
+          description="Tambah, edit, dan hapus foto galeri kegiatan"
+          icon={
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
         }
         action={
           <ActionButton
@@ -634,5 +641,6 @@ export default function AdminGaleriPage() {
         )}
       </div>
     </div>
+    </>
   )
 }

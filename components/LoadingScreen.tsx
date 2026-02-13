@@ -58,7 +58,7 @@ export default function LoadingScreen() {
           <div className="relative w-48 h-48 mx-auto flex items-center justify-center">
             <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-2xl p-3 animate-scale-pulse">
               <Image
-                src="/images/Logo Annajm Rabbani Fix-01.png"
+                src="/images/LogoAnnajmRabbaniFix-01.png"
                 alt="SDIT ANNAJM RABBANI Logo"
                 width={100}
                 height={100}

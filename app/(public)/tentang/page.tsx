@@ -26,7 +26,7 @@ export default function TentangPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-yellow-50/50">
       {/* Video Hero Section - Same size as original hero */}
       <div className="relative overflow-hidden pt-32 pb-20">
         {/* Background Video */}
@@ -391,11 +391,11 @@ export default function TentangPage() {
             {/* Pramuka */}
             <div className="relative bg-gradient-to-br from-white to-[#2d5016]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#2d5016]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/pramuka.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -414,11 +414,11 @@ export default function TentangPage() {
             {/* Futsal */}
             <div className="relative bg-gradient-to-br from-white to-[#d4af37]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#d4af37]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/futsal.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -438,11 +438,11 @@ export default function TentangPage() {
             {/* Robotik */}
             <div className="relative bg-gradient-to-br from-white to-[#2d5016]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#2d5016]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/robotik.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -463,11 +463,11 @@ export default function TentangPage() {
             {/* Panahan */}
             <div className="relative bg-gradient-to-br from-white to-[#d4af37]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#d4af37]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/archery.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -485,11 +485,11 @@ export default function TentangPage() {
             {/* Pencak Silat */}
             <div className="relative bg-gradient-to-br from-white to-[#2d5016]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#2d5016]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/silat.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -508,11 +508,11 @@ export default function TentangPage() {
             {/* Melukis */}
             <div className="relative bg-gradient-to-br from-white to-[#d4af37]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#d4af37]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/melukis.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -531,11 +531,11 @@ export default function TentangPage() {
             {/* Berenang */}
             <div className="relative bg-gradient-to-br from-white to-[#2d5016]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#2d5016]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/berenang.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -554,11 +554,11 @@ export default function TentangPage() {
             {/* Arabic Club */}
             <div className="relative bg-gradient-to-br from-white to-[#d4af37]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#d4af37]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-                  backgroundImage: `url('/images/ekstrakurikuler/arabic-club.jpg')`
+                  backgroundImage: `url('/images/ekstrakurikuler/arabic.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -577,11 +577,11 @@ export default function TentangPage() {
             {/* Al Quran Club */}
             <div className="relative bg-gradient-to-br from-white to-[#2d5016]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#2d5016]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-                  backgroundImage: `url('/images/ekstrakurikuler/alquran-club.jpg')`
+                  backgroundImage: `url('/images/ekstrakurikuler/quran.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -600,11 +600,11 @@ export default function TentangPage() {
             {/* Math Club */}
             <div className="relative bg-gradient-to-br from-white to-[#d4af37]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#d4af37]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-                  backgroundImage: `url('/images/ekstrakurikuler/math-club.jpg')`
+                  backgroundImage: `url('/images/ekstrakurikuler/math-club.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -623,11 +623,11 @@ export default function TentangPage() {
             {/* English Club */}
             <div className="relative bg-gradient-to-br from-white to-[#2d5016]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#2d5016]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/english-club.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -645,11 +645,11 @@ export default function TentangPage() {
             {/* Hadroh */}
             <div className="relative bg-gradient-to-br from-white to-[#d4af37]/5 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-[#d4af37]/10 group overflow-hidden">
               {/* Background Image */}
-              <div className="absolute inset-0 opacity-35 group-hover:opacity-50 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-60 group-hover:opacity-75 transition-opacity duration-300">
                 <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
                   backgroundImage: `url('/images/ekstrakurikuler/marawis.jpeg')`
                 }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-white/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/50 to-white/30"></div>
               </div>
               
               <div className="relative z-10">
@@ -672,3 +672,10 @@ export default function TentangPage() {
     </div>
   )
 }
+
+
+
+
+
+
+

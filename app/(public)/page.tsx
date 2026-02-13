@@ -25,77 +25,21 @@ export default async function Home() {
   ])
 
   return (
-    <div className="bg-gray-50 relative overflow-hidden">
-      {/* Islamic Pattern Background */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="islamic-pattern-home" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-              <circle cx="50" cy="50" r="30" fill="none" stroke="#2d5016" strokeWidth="1"/>
-              <circle cx="50" cy="50" r="20" fill="none" stroke="#d4af37" strokeWidth="0.5"/>
-              <path d="M 50 20 L 50 80 M 20 50 L 80 50" stroke="#2d5016" strokeWidth="0.5"/>
-              <circle cx="50" cy="50" r="3" fill="#d4af37"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#islamic-pattern-home)"/>
-        </svg>
+    <div className="bg-yellow-50/60 relative overflow-hidden">
+      
+      {/* Animated Hero Section */}
+      <div className="animate-fade-in">
+        <Hero />
       </div>
       
-      <Hero />
-      
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-20 sm:px-6 lg:px-8 relative">
-        {/* Floating Ornaments - Hidden on mobile */}
-        <div className="hidden lg:block">
-          {/* Top ornaments */}
-          <div className="absolute top-10 right-5 w-3 h-3 bg-[#d4af37]/40 rounded-full animate-pulse shadow-lg shadow-[#d4af37]/20"></div>
-          <div className="absolute top-32 right-20 w-2 h-2 bg-[#f4d03f]/50 rounded-full animate-pulse shadow-lg shadow-[#f4d03f]/20" style={{animationDelay: '0.5s'}}></div>
-          <div className="absolute top-56 right-10 w-2.5 h-2.5 bg-[#d4af37]/35 rounded-full animate-pulse shadow-lg shadow-[#d4af37]/15" style={{animationDelay: '1s'}}></div>
-          
-          {/* Left ornaments */}
-          <div className="absolute top-40 left-5 w-2.5 h-2.5 bg-[#f4d03f]/45 rounded-full animate-pulse shadow-lg shadow-[#f4d03f]/20" style={{animationDelay: '0.3s'}}></div>
-          <div className="absolute top-96 left-10 w-2 h-2 bg-[#d4af37]/50 rounded-full animate-pulse shadow-lg shadow-[#d4af37]/20" style={{animationDelay: '0.8s'}}></div>
-          
-          {/* Middle ornaments */}
-          <div className="absolute top-[30rem] right-1/4 w-3 h-3 bg-[#f4d03f]/40 rounded-full animate-pulse shadow-lg shadow-[#f4d03f]/20" style={{animationDelay: '1.2s'}}></div>
-          <div className="absolute top-[50rem] left-1/4 w-2 h-2 bg-[#d4af37]/45 rounded-full animate-pulse shadow-lg shadow-[#d4af37]/20" style={{animationDelay: '1.5s'}}></div>
-        </div>
         
-        {/* Sambutan Kepala Sekolah */}
-        <section className="mb-20 relative">
-          {/* Islamic Ornaments */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="islamic-sambutan" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-                  <g stroke="#2d5016" strokeWidth="0.5" fill="none">
-                    <circle cx="40" cy="40" r="25"/>
-                    <circle cx="40" cy="40" r="15"/>
-                    <path d="M 40 15 L 40 65 M 15 40 L 65 40"/>
-                    <path d="M 25 25 L 55 55 M 55 25 L 25 55"/>
-                  </g>
-                  <circle cx="40" cy="40" r="2" fill="#d4af37"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#islamic-sambutan)"/>
-            </svg>
-          </div>
-          
-          {/* Islamic Corner Ornaments */}
-          <div className="absolute top-5 left-5 text-[#d4af37]/30 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.2s'}}>☪</div>
-          <div className="absolute top-10 right-10 text-[#2d5016]/25 text-3xl -z-10 animate-pulse" style={{animationDelay: '0.8s'}}>✦</div>
-          <div className="absolute bottom-5 left-10 text-[#d4af37]/35 text-2xl -z-10 animate-pulse" style={{animationDelay: '1.2s'}}>❋</div>
-          <div className="absolute bottom-10 right-5 text-[#2d5016]/30 text-3xl -z-10 animate-pulse" style={{animationDelay: '0.5s'}}>✧</div>
-          
-          {/* Subtle Wave Ornaments */}
-          <CornerAccent colors="green" />
-          
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#d4af37]/20 to-[#f4d03f]/10 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#f4d03f]/15 to-transparent rounded-full blur-3xl -z-10"></div>
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-[#2d5016]/20">
+        {/* Sambutan Kepala Sekolah with slide-up animation */}
+        <section className="mb-20 relative animate-slide-up-delay-1">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-[#2d5016]/20 hover:shadow-2xl hover:scale-[1.01] transition-all duration-700 hover:border-[#d4af37]/30">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-0">
               {/* Foto Kepala Sekolah */}
-              <div className="md:col-span-2 relative">
+              <div className="md:col-span-2 relative animate-fade-in-left">
                 {/* Bingkai Foto yang Mengisi Seluruh Area */}
                 <div className="relative h-64 md:h-full p-4">
                   {/* Bingkai Luar dengan Gradient Hijau-Kuning */}
@@ -133,15 +77,10 @@ export default async function Home() {
                   <div className="absolute top-4 right-4 w-3 h-3 bg-[#d4af37] rounded-full animate-pulse"></div>
                   <div className="absolute bottom-8 left-4 w-2 h-2 bg-[#2d5016] rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
                 </div>
-                
-                {/* Pattern overlay untuk seluruh area */}
-                <div className="absolute inset-0 opacity-5 pointer-events-none">
-                  <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
-                </div>
               </div>
 
               {/* Sambutan */}
-              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center">
+              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center animate-fade-in-right">
                 <h2 className="text-2xl md:text-3xl font-bold text-[#2d5016] mb-4">
                   Assalamu'alaikum Warahmatullahi Wabarakatuh
                 </h2>
@@ -171,208 +110,95 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Program Unggulan */}
-        <section className="mb-20 relative">
-          {/* Islamic Ornaments */}
-          <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="islamic-program" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-                  <g stroke="#d4af37" strokeWidth="0.8" fill="none">
-                    <rect x="30" y="30" width="60" height="60" rx="10"/>
-                    <circle cx="60" cy="60" r="20"/>
-                    <path d="M 60 40 L 60 80 M 40 60 L 80 60"/>
-                    <circle cx="45" cy="45" r="3" fill="#d4af37"/>
-                    <circle cx="75" cy="45" r="3" fill="#d4af37"/>
-                    <circle cx="45" cy="75" r="3" fill="#d4af37"/>
-                    <circle cx="75" cy="75" r="3" fill="#d4af37"/>
-                  </g>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#islamic-program)"/>
-            </svg>
-          </div>
-          
-          {/* Islamic Geometric Ornaments */}
-          <div className="absolute top-8 left-8 text-[#d4af37]/40 text-5xl -z-10 animate-pulse" style={{animationDelay: '0.3s'}}>◈</div>
-          <div className="absolute top-16 right-12 text-[#2d5016]/30 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.9s'}}>❋</div>
-          <div className="absolute bottom-8 left-16 text-[#d4af37]/35 text-3xl -z-10 animate-pulse" style={{animationDelay: '1.4s'}}>✦</div>
-          <div className="absolute bottom-12 right-8 text-[#2d5016]/35 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.6s'}}>◆</div>
-          
-          {/* Subtle Wave Ornaments */}
-          <SubtleBottomWave colors="gold" />
-          
-          {/* Decorative Elements */}
-          <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-[#d4af37]/40 to-[#f4d03f]/25 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute bottom-0 right-0 w-56 h-56 bg-gradient-to-tl from-[#f4d03f]/50 to-transparent rounded-full blur-3xl -z-10"></div>
-          <div className="absolute top-1/2 right-10 w-24 h-24 border-2 border-[#d4af37]/70 rounded-full -z-10 shadow-lg shadow-[#d4af37]/35"></div>
-          <div className="absolute bottom-20 left-20 w-12 h-12 bg-[#f4d03f]/50 rounded-full -z-10 shadow-lg shadow-[#f4d03f]/40"></div>
-          
-          {/* Clean Header Section */}
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-4 leading-tight">
+        {/* Program Unggulan with clean grid design */}
+        <section className="mb-20 relative animate-slide-up-delay-2">
+          <div className="text-center mb-12 animate-fade-in">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-[#2d5016] to-[#3d6b1f] rounded-2xl mb-4 shadow-lg">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3 animate-slide-up">
               Mengapa SDIT Annajm Rabbani<br />
-              menjadi <span className="text-[#d4af37]">PILIHAN UTAMA</span>?
+              menjadi <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#f4d03f]">PILIHAN UTAMA</span>?
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-600 max-w-2xl mx-auto animate-slide-up-delay-1">
               Lima alasan utama mengapa orang tua mempercayakan pendidikan terbaik untuk buah hati mereka di SDIT Annajm Rabbani
             </p>
           </div>
-          
-          {/* 2 Column Benefits Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
-              { 
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                ), 
+              {
+                number: '01',
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />,
                 title: 'Sekolah berbasis karakter',
-                desc: 'Membangun kepribadian islami yang kuat dengan akhlak mulia sebagai fondasi utama pendidikan'
+                desc: 'Membangun kepribadian islami yang kuat dengan akhlak mulia'
               },
-              { 
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                ), 
-                title: 'Tenaga pengajar ahli sesuai bidang nya',
-                desc: 'Guru profesional dan berpengalaman di bidangnya masing-masing dengan sertifikasi pendidik'
+              {
+                number: '02',
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />,
+                title: 'Tenaga pengajar ahli',
+                desc: 'Guru profesional dan berpengalaman dengan sertifikasi pendidik'
               },
-              { 
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                ), 
-                title: 'Menggunakan Kurikulum Merdeka dan Kurikulum Unggulan ciri khas SDIT ANNAJM RABBANI',
-                desc: 'Perpaduan sempurna kurikulum nasional dengan program unggulan sekolah yang terintegrasi'
+              {
+                number: '03',
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />,
+                title: 'Kurikulum Unggulan',
+                desc: 'Perpaduan kurikulum nasional dengan program unggulan sekolah'
               },
-              { 
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                ), 
-                title: 'Pembelajaran Qur\'an setiap hari dengan target Hafalan minimal 2 juz',
-                desc: 'Program tahfidz intensif dan terstruktur untuk membangun generasi Qur\'ani yang hafal dan faham'
+              {
+                number: '04',
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />,
+                title: 'Pembelajaran Qur\'an',
+                desc: 'Program tahfidz intensif dengan target hafalan 2 juz'
               },
-              { 
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ), 
-                title: 'Sekolah kualitas terbaik dengan biaya pendidikan terjangkau',
-                desc: 'Pendidikan berkualitas tinggi dengan investasi yang terjangkau untuk semua kalangan'
+              {
+                number: '05',
+                icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
+                title: 'Biaya Terjangkau',
+                desc: 'Pendidikan berkualitas tinggi dengan investasi terjangkau'
               }
-            ].map((benefit, index) => (
-              <div key={index} className="group">
-                <div className="flex items-start gap-4 bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-2 border-gray-100 hover:border-[#d4af37]/30 h-full">
-                  {/* Premium SVG Icon */}
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#2d5016] to-[#3d6b1f] rounded-lg flex items-center justify-center shadow-md group-hover:scale-110 transition-transform text-white">
-                      {benefit.icon}
+            ].map((item, index) => (
+              <div key={index} className="group animate-slide-up" style={{animationDelay: `${index * 0.1}s`}}>
+                <div className="relative bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-[#2d5016]/10 hover:border-[#d4af37]/40 group-hover:-translate-y-1 h-full">
+                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-sm font-bold text-[#2d5016]">{item.number}</span>
+                  </div>
+                  <div className="flex justify-center mb-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-[#2d5016] to-[#3d6b1f] rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 text-white">
+                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {item.icon}
+                      </svg>
                     </div>
                   </div>
-                  
-                  {/* Content */}
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-[#2d5016] mb-2 leading-tight">
-                      {benefit.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {benefit.desc}
-                    </p>
-                  </div>
+                  <h3 className="text-lg font-bold text-[#2d5016] mb-3 text-center leading-tight group-hover:text-[#3d6b1f] transition-colors duration-300">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed text-center">
+                    {item.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Galeri Sekolah */}
-        <section className="mb-20 relative">
-          {/* Islamic Ornaments */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="islamic-galeri" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                  <g stroke="#2d5016" strokeWidth="0.6" fill="none">
-                    <polygon points="50,20 65,35 65,65 50,80 35,65 35,35"/>
-                    <circle cx="50" cy="50" r="15"/>
-                    <path d="M 35 35 L 65 65 M 65 35 L 35 65"/>
-                  </g>
-                  <circle cx="50" cy="50" r="3" fill="#d4af37"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#islamic-galeri)"/>
-            </svg>
-          </div>
-          
-          {/* Islamic Camera & Art Ornaments */}
-          <div className="absolute top-6 left-6 text-[#d4af37]/35 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.4s'}}>📷</div>
-          <div className="absolute top-12 right-8 text-[#2d5016]/30 text-3xl -z-10 animate-pulse" style={{animationDelay: '1.0s'}}>🎨</div>
-          <div className="absolute bottom-6 left-12 text-[#d4af37]/40 text-3xl -z-10 animate-pulse" style={{animationDelay: '1.5s'}}>✦</div>
-          <div className="absolute bottom-8 right-6 text-[#2d5016]/35 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.7s'}}>◈</div>
-          
-          {/* Subtle Wave Ornaments */}
-          <SideFlow colors="blue" />
-          
-          {/* Decorative Elements */}
-          <div className="absolute -top-10 right-1/4 w-40 h-40 bg-gradient-to-br from-[#d4af37]/20 to-[#f4d03f]/10 rounded-full blur-2xl -z-10"></div>
-          <div className="absolute top-20 left-10 w-28 h-28 border-4 border-[#d4af37]/25 rounded-full -z-10 shadow-lg shadow-[#d4af37]/10"></div>
-          <div className="absolute bottom-0 right-10 w-20 h-20 bg-[#f4d03f]/25 rounded-full -z-10 shadow-xl shadow-[#f4d03f]/20"></div>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3">Dokumentasi Kegiatan</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Momen berharga dan suasana belajar di SDIT ANNAJM RABBANI</p>
+        {/* Galeri Sekolah with fade-in animation */}
+        <section className="mb-20 relative animate-slide-up-delay-3">
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3 animate-slide-up">Dokumentasi Kegiatan</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto animate-slide-up-delay-1">Momen berharga dan suasana belajar di SDIT ANNAJM RABBANI</p>
           </div>
 
           <GaleriShowcase photos={galeriPhotos} />
         </section>
 
-        {/* Prestasi */}
-        <section className="mb-20 relative">
-          {/* Islamic Ornaments */}
-          <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="islamic-prestasi" x="0" y="0" width="90" height="90" patternUnits="userSpaceOnUse">
-                  <g stroke="#d4af37" strokeWidth="1" fill="none">
-                    <circle cx="45" cy="45" r="30"/>
-                    <circle cx="45" cy="45" r="20"/>
-                    <circle cx="45" cy="45" r="10"/>
-                    <path d="M 45 15 L 45 75 M 15 45 L 75 45"/>
-                    <path d="M 25 25 L 65 65 M 65 25 L 25 65"/>
-                  </g>
-                  <circle cx="45" cy="45" r="4" fill="#d4af37"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#islamic-prestasi)"/>
-            </svg>
-          </div>
-          
-          {/* Islamic Trophy & Achievement Ornaments */}
-          <div className="absolute top-4 left-4 text-[#d4af37]/40 text-5xl -z-10 animate-pulse" style={{animationDelay: '0.2s'}}>🏆</div>
-          <div className="absolute top-8 right-6 text-[#2d5016]/35 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.8s'}}>⭐</div>
-          <div className="absolute bottom-4 left-8 text-[#d4af37]/45 text-4xl -z-10 animate-pulse" style={{animationDelay: '1.3s'}}>🥇</div>
-          <div className="absolute bottom-6 right-4 text-[#2d5016]/40 text-5xl -z-10 animate-pulse" style={{animationDelay: '0.6s'}}>✦</div>
-          
-          {/* Subtle Wave Ornaments */}
-          <SubtleTopWave colors="purple" />
-          
-          {/* Decorative Elements */}
-          <div className="absolute top-10 right-0 w-64 h-64 bg-gradient-to-bl from-[#f4d03f]/20 to-[#d4af37]/10 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute bottom-10 left-0 w-48 h-48 bg-gradient-to-tr from-[#d4af37]/15 to-transparent rounded-full blur-3xl -z-10"></div>
-          <div className="absolute top-1/3 left-10 w-16 h-16 border-2 border-[#d4af37]/35 rounded-full -z-10 animate-pulse shadow-lg shadow-[#d4af37]/15"></div>
-          <div className="absolute bottom-1/4 right-20 w-24 h-24 bg-[#f4d03f]/15 rounded-full -z-10 shadow-lg shadow-[#f4d03f]/10"></div>
-          {/* Star ornaments */}
-          <div className="absolute top-20 left-1/4 text-[#d4af37]/40 text-2xl -z-10 animate-pulse drop-shadow-lg" style={{animationDelay: '0.3s'}}>✦</div>
-          <div className="absolute bottom-20 right-1/3 text-[#f4d03f]/35 text-xl -z-10 animate-pulse drop-shadow-lg" style={{animationDelay: '0.7s'}}>✦</div>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3">Pencapaian Membanggakan</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Prestasi gemilang siswa-siswi SDIT ANNAJM RABBANI</p>
+        {/* Prestasi with bounce animations */}
+        <section className="mb-20 relative animate-slide-up-delay-4">
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3 animate-slide-up">Pencapaian Membanggakan</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto animate-slide-up-delay-1">Prestasi gemilang siswa-siswi SDIT ANNAJM RABBANI</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -381,7 +207,7 @@ export default async function Home() {
               { image: '/images/prestasi2.jpeg', title: 'Juara 1 Regu Terbaik ', desc: 'lomba pramuka Tangkas Galang Kec.Pondokgede 2024', color: 'from-[#d4af37] to-[#f4d03f]' },
               { image: '/images/prestasi3.jpeg', title: 'Medali emas lomba silat', desc: 'Kompetisi Presentasi Islami 2024', color: 'from-[#d4af37] to-[#f4d03f]' }
             ].map((prestasi, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 p-8 border-3 border-[#2d5016] text-center group">
+              <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl smooth-hover p-8 border-3 border-[#2d5016] text-center group animate-slide-up" style={{animationDelay: `${index * 0.2}s`}}>
                 {/* Bingkai Foto Prestasi */}
                 <div className="relative w-48 h-48 mx-auto mb-6">
                   {/* Bingkai Luar dengan Gradient */}
@@ -421,50 +247,18 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Berita & Kegiatan */}
-        <section className="mb-20 relative">
-          {/* Islamic Ornaments */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="islamic-berita" x="0" y="0" width="110" height="110" patternUnits="userSpaceOnUse">
-                  <g stroke="#2d5016" strokeWidth="0.7" fill="none">
-                    <rect x="25" y="25" width="60" height="60" rx="15"/>
-                    <circle cx="55" cy="55" r="25"/>
-                    <circle cx="55" cy="55" r="15"/>
-                    <path d="M 40 40 L 70 70 M 70 40 L 40 70"/>
-                  </g>
-                  <circle cx="55" cy="55" r="2" fill="#d4af37"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#islamic-berita)"/>
-            </svg>
-          </div>
-          
-          {/* Islamic News & Information Ornaments */}
-          <div className="absolute top-5 left-5 text-[#d4af37]/35 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.3s'}}>📰</div>
-          <div className="absolute top-10 right-8 text-[#2d5016]/30 text-3xl -z-10 animate-pulse" style={{animationDelay: '0.9s'}}>📢</div>
-          <div className="absolute bottom-5 left-10 text-[#d4af37]/40 text-3xl -z-10 animate-pulse" style={{animationDelay: '1.4s'}}>✦</div>
-          <div className="absolute bottom-8 right-5 text-[#2d5016]/35 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.6s'}}>◈</div>
-          
-          {/* Subtle Wave Ornaments */}
-          <CornerAccent colors="gradient" />
-          
-          {/* Decorative Elements */}
-          <div className="absolute -top-20 left-1/4 w-56 h-56 bg-gradient-to-br from-[#d4af37]/15 to-[#f4d03f]/5 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute top-40 right-0 w-40 h-40 border-4 border-[#d4af37]/25 rounded-full -z-10 shadow-lg shadow-[#d4af37]/10"></div>
-          <div className="absolute bottom-20 left-10 w-32 h-32 bg-[#f4d03f]/20 rounded-full blur-2xl -z-10 shadow-xl shadow-[#f4d03f]/15"></div>
-          <div className="absolute bottom-0 right-1/3 w-20 h-20 border-2 border-[#d4af37]/30 rounded-full -z-10 shadow-lg shadow-[#d4af37]/10"></div>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3">Informasi Terbaru</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Update kegiatan dan berita terkini dari SDIT ANNAJM RABBANI</p>
+        {/* Berita & Kegiatan with slide animations */}
+        <section className="mb-20 relative animate-slide-up-delay-5">
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3 animate-slide-up">Informasi Terbaru</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto animate-slide-up-delay-1">Update kegiatan dan berita terkini dari SDIT ANNAJM RABBANI</p>
           </div>
 
           {recentBerita.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {recentBerita.map((berita) => (
-                  <div key={berita.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 overflow-hidden border-2 border-yellow-400 group">
+                {recentBerita.map((berita, index) => (
+                  <div key={berita.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl smooth-hover overflow-hidden border-2 border-yellow-400 group animate-slide-up" style={{animationDelay: `${index * 0.1}s`}}>
                     <div className="relative aspect-video bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden">
                       {berita.gambar && (
                         <Image
@@ -497,10 +291,10 @@ export default async function Home() {
                   </div>
                 ))}
               </div>
-              <div className="text-center mt-10">
+              <div className="text-center mt-10 animate-fade-in" style={{animationDelay: '0.5s'}}>
                 <Link 
                   href="/berita"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] hover:from-[#3d6b1f] hover:to-[#2d5016] text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] hover:from-[#3d6b1f] hover:to-[#2d5016] text-white font-bold py-4 px-8 rounded-xl smooth-hover shadow-lg hover:shadow-xl"
                 >
                   <span>Lihat Semua Berita</span>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -517,51 +311,20 @@ export default async function Home() {
           )}
         </section>
 
-        {/* Testimoni */}
-        <section className="mb-20 relative">
-          {/* Islamic Ornaments */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="islamic-testimoni" x="0" y="0" width="95" height="95" patternUnits="userSpaceOnUse">
-                  <g stroke="#d4af37" strokeWidth="0.8" fill="none">
-                    <circle cx="47.5" cy="47.5" r="35"/>
-                    <circle cx="47.5" cy="47.5" r="25"/>
-                    <circle cx="47.5" cy="47.5" r="15"/>
-                    <path d="M 47.5 12.5 L 47.5 82.5 M 12.5 47.5 L 82.5 47.5"/>
-                    <path d="M 27.5 27.5 L 67.5 67.5 M 67.5 27.5 L 27.5 67.5"/>
-                  </g>
-                  <circle cx="47.5" cy="47.5" r="3" fill="#d4af37"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#islamic-testimoni)"/>
-            </svg>
-          </div>
-          
-          {/* Islamic Heart & Love Ornaments */}
-          <div className="absolute top-6 left-6 text-[#d4af37]/40 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.4s'}}>💝</div>
-          <div className="absolute top-10 right-10 text-[#2d5016]/35 text-3xl -z-10 animate-pulse" style={{animationDelay: '1.0s'}}>🤝</div>
-          <div className="absolute bottom-6 left-10 text-[#d4af37]/35 text-3xl -z-10 animate-pulse" style={{animationDelay: '1.5s'}}>✦</div>
-          <div className="absolute bottom-10 right-6 text-[#2d5016]/40 text-4xl -z-10 animate-pulse" style={{animationDelay: '0.7s'}}>◈</div>
-          
-          {/* Subtle Wave Ornaments */}
-          <SubtleBottomWave colors="green" />
-          
-          {/* Decorative Elements */}
-          <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-[#d4af37]/20 to-[#f4d03f]/10 rounded-full blur-3xl -z-10"></div>
-          <div className="absolute top-20 right-20 w-48 h-48 bg-gradient-to-tl from-[#f4d03f]/15 to-transparent rounded-full blur-3xl -z-10"></div>
-          <div className="absolute bottom-10 left-1/3 w-28 h-28 border-4 border-[#d4af37]/30 rounded-full -z-10 shadow-lg shadow-[#d4af37]/15"></div>
-          <div className="absolute top-1/2 right-10 w-16 h-16 bg-[#f4d03f]/20 rounded-full -z-10 shadow-lg shadow-[#f4d03f]/15"></div>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3">Kata Wali Murid</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Pengalaman dan kepercayaan orang tua terhadap SDIT ANNAJM RABBANI</p>
+        {/* Testimoni with fade-in animation */}
+        <section className="mb-20 relative animate-slide-up-delay-6">
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2d5016] mb-3 animate-slide-up">Kata Wali Murid</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto animate-slide-up-delay-1">Pengalaman dan kepercayaan orang tua terhadap SDIT ANNAJM RABBANI</p>
           </div>
 
           <TestimoniCarousel />
         </section>
 
-        {/* CTA PPDB */}
-        <PPDBSection />
+        {/* CTA PPDB with final animation */}
+        <div className="animate-slide-up-delay-6">
+          <PPDBSection />
+        </div>
       </div>
     </div>
   )
