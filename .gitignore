@@ -32,10 +32,16 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # prisma
 prisma/*.db
 prisma/*.db-journal
+prisma/migrations/
+
+# backup files
+backup-data.json
+*.backup.*
 
 # uploads
 /public/uploads/*

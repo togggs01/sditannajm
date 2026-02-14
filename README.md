@@ -1,94 +1,126 @@
-# SDIT An-Najm - Website Sekolah
+# 🏫 SDIT ANNAJM RABBANI - Website Sekolah
 
-Website resmi SDIT An-Najm yang dibangun dengan Next.js, TypeScript, Tailwind CSS, dan Prisma.
+Website resmi SDIT ANNAJM RABBANI dengan fitur lengkap untuk manajemen sekolah dan PPDB online.
 
-## Fitur
+## 🚀 Tech Stack
 
-- 🏠 Halaman Beranda dengan Hero Section
-- 📖 Profil Sekolah (Visi, Misi, Fasilitas)
-- 👨‍🏫 Daftar Guru
-- 📰 Berita & Artikel
-- 🖼️ Galeri Foto
-- 📝 Pendaftaran Online (PPDB)
-- 📞 Halaman Kontak
-- 🔌 REST API untuk CRUD data
+- **Framework:** Next.js 15.1.3
+- **Database:** MySQL (Prisma ORM)
+- **Styling:** Tailwind CSS
+- **Language:** TypeScript
 
-## Teknologi
+## 📋 Features
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **Database**: SQLite dengan Prisma ORM
-- **Deployment**: Vercel (recommended)
+- ✅ Halaman Beranda dengan Hero Section
+- ✅ Profil Sekolah (Tentang)
+- ✅ Data Guru & Staff
+- ✅ Galeri Foto & Video
+- ✅ Berita & Artikel
+- ✅ PPDB Online (Pendaftaran Siswa Baru)
+- ✅ Admin Dashboard
+- ✅ Export Data (Excel & PDF)
+- ✅ Upload Gambar
+- ✅ Responsive Design
 
-## Instalasi
+## 🛠️ Installation
 
-1. Clone repository ini
+### Prerequisites
+
+- Node.js 18+ 
+- MySQL 8+
+- npm atau yarn
+
+### Setup
+
+1. Clone repository:
+```bash
+git clone <repository-url>
+cd companyprofile
+```
+
 2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Setup database:
+3. Setup database MySQL:
+```sql
+CREATE DATABASE annajm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+4. Copy `.env.example` ke `.env` dan update:
+```env
+DATABASE_URL="mysql://root:PASSWORD@localhost:3306/annajm"
+NEXT_PUBLIC_SITE_NAME="SDIT ANNAJM RABBANI"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
+
+5. Push database schema:
 ```bash
-npx prisma generate
 npx prisma db push
 ```
 
-4. Jalankan development server:
+6. Seed data (optional):
+```bash
+npm run db:seed
+```
+
+7. Run development server:
 ```bash
 npm run dev
 ```
 
-5. Buka [http://localhost:3000](http://localhost:3000)
+Buka [http://localhost:3000](http://localhost:3000)
 
-## Struktur Database
+## 📁 Project Structure
 
-### Tabel Guru
-- id, nama, nip, jabatan, foto, email, telepon
-
-### Tabel Berita
-- id, judul, slug, konten, gambar, penulis, kategori, published
-
-### Tabel Galeri
-- id, judul, deskripsi, gambar, kategori
-
-### Tabel PPDB
-- id, namaLengkap, tempatLahir, tanggalLahir, jenisKelamin, alamat, namaOrangTua, teleponOrangTua, email, status
-
-## API Endpoints
-
-### Guru
-- GET `/api/guru` - Ambil semua data guru
-- POST `/api/guru` - Tambah guru baru
-- DELETE `/api/guru?id={id}` - Hapus guru
-
-### Berita
-- GET `/api/berita` - Ambil semua berita
-- POST `/api/berita` - Tambah berita baru
-- DELETE `/api/berita?id={id}` - Hapus berita
-
-### Galeri
-- GET `/api/galeri` - Ambil semua foto
-- POST `/api/galeri` - Tambah foto baru
-- DELETE `/api/galeri?id={id}` - Hapus foto
-
-### PPDB
-- GET `/api/ppdb` - Ambil semua pendaftaran
-- POST `/api/ppdb` - Tambah pendaftaran baru
-- DELETE `/api/ppdb?id={id}` - Hapus pendaftaran
-
-## Deployment
-
-Deploy ke Vercel dengan satu klik atau gunakan Vercel CLI:
-
-```bash
-npm install -g vercel
-vercel
+```
+├── app/                    # Next.js App Router
+│   ├── (public)/          # Public pages
+│   ├── admin/             # Admin dashboard
+│   └── api/               # API routes
+├── components/            # React components
+├── prisma/               # Database schema
+├── public/               # Static files
+└── scripts/              # Utility scripts
 ```
 
-Jangan lupa setup environment variables di Vercel dashboard.
+## 🔐 Admin Access
 
-## Lisensi
+Default login (setelah seed):
+- Username: `admin`
+- Password: `admin123`
 
-© 2025 SDIT An-Najm. All rights reserved.
+**⚠️ Ganti password setelah login pertama!**
+
+## 📦 Available Scripts
+
+```bash
+npm run dev          # Development server
+npm run build        # Production build
+npm run start        # Production server
+npm run db:push      # Push schema ke database
+npm run db:seed      # Seed data
+npm run db:studio    # Prisma Studio (GUI)
+```
+
+## 🌐 Deployment
+
+Lihat [DEPLOYMENT.md](./DEPLOYMENT.md) untuk panduan lengkap deployment.
+
+### Quick Deploy ke Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+1. Push ke GitHub
+2. Import di Vercel
+3. Set environment variables
+4. Deploy!
+
+## 📝 License
+
+© 2025 SDIT ANNAJM RABBANI. All rights reserved.
+
+## 🤝 Support
+
+Untuk bantuan, hubungi tim IT sekolah.
