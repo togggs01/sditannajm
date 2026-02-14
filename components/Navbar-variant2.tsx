@@ -11,6 +11,15 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const router = useRouter()
 
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/auth/me')
+      setIsLoggedIn(res.ok)
+    } catch {
+      setIsLoggedIn(false)
+    }
+  }
+
   useEffect(() => {
     checkAuth()
     
@@ -21,15 +30,6 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const checkAuth = async () => {
-    try {
-      const res = await fetch('/api/auth/me')
-      setIsLoggedIn(res.ok)
-    } catch {
-      setIsLoggedIn(false)
-    }
-  }
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
