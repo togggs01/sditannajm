@@ -3,113 +3,133 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Guru {
   id        String   @id @default(cuid())
-  nama      String
-  nip       String?  @unique
-  jabatan   String
-  foto      String?
-  email     String?
-  telepon   String?
+  nama      String   @db.VarChar(255)
+  nip       String?  @unique @db.VarChar(100)
+  jabatan   String   @db.VarChar(255)
+  foto      String?  @db.Text
+  email     String?  @db.VarChar(255)
+  telepon   String?  @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@index([nip])
 }
 
 model Berita {
   id        String   @id @default(cuid())
-  judul     String
-  slug      String   @unique
-  konten    String
-  gambar    String?
-  penulis   String
-  kategori  String
+  judul     String   @db.VarChar(500)
+  slug      String   @unique @db.VarChar(500)
+  konten    String   @db.LongText
+  gambar    String?  @db.Text
+  penulis   String   @db.VarChar(255)
+  kategori  String   @db.VarChar(100)
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([kategori])
+  @@index([published])
 }
 
 model Galeri {
   id        String   @id @default(cuid())
-  judul     String
-  deskripsi String?
-  gambar    String?
-  video     String?
-  kategori  String
-  tipe      String   @default("gambar") // "gambar" atau "video"
+  judul     String   @db.VarChar(500)
+  deskripsi String?  @db.Text
+  gambar    String?  @db.Text
+  video     String?  @db.Text
+  kategori  String   @db.VarChar(100)
+  tipe      String   @default("gambar") @db.VarChar(50)
   createdAt DateTime @default(now())
+  
+  @@index([kategori])
+  @@index([tipe])
 }
 
 model PPDB {
   id                     String   @id @default(cuid())
-  namaLengkap            String
-  namaPanggilan          String
-  jenisKelamin           String
-  tempatLahir            String
-  tanggalLahir           String
-  agama                  String
-  kewarganegaraan        String
-  bahasaSehari           String
-  bahasaLainnya          String?
+  namaLengkap            String   @db.VarChar(255)
+  namaPanggilan          String   @db.VarChar(100)
+  jenisKelamin           String   @db.VarChar(20)
+  tempatLahir            String   @db.VarChar(255)
+  tanggalLahir           String   @db.VarChar(50)
+  agama                  String   @db.VarChar(50)
+  kewarganegaraan        String   @db.VarChar(50)
+  bahasaSehari           String   @db.VarChar(100)
+  bahasaLainnya          String?  @db.VarChar(100)
   jumlahSaudaraKandung   Int?
   jumlahSaudaraTiri      Int?
   jumlahSaudaraAngkat    Int?
   tinggiBadan            Int?
   beratBadan             Int?
-  golonganDarah          String?
-  penyakitPernah         String?
-  kelainanFisik          String?
-  alamatRumah            String
-  nomorHandphone         String
-  jarakRumahSekolah      String
-  masukKelas             String
-  asalSekolah            String
-  namaLengkapAyah        String
-  tempatTanggalLahirAyah String
-  pendidikanTerakhirAyah String
-  agamaAyah              String
-  nomorHandphoneAyah     String
-  pekerjaanAyah          String
-  penghasilanAyah        String
-  namaLengkapIbu         String
-  tempatTanggalLahirIbu  String
-  pendidikanTerakhirIbu  String
-  agamaIbu               String
-  nomorHandphoneIbu      String
-  pekerjaanIbu           String
-  penghasilanIbu         String
-  scanAktaKelahiran      String?
-  pasFoto                String?
-  scanKTPAyah            String?
-  scanKTPIbu             String?
-  scanKartuKeluarga      String?
-  tahunAjaran            String
-  gelombang              String
-  status                 String   @default("pending")
+  golonganDarah          String?  @db.VarChar(10)
+  penyakitPernah         String?  @db.Text
+  kelainanFisik          String?  @db.Text
+  alamatRumah            String   @db.Text
+  nomorHandphone         String   @db.VarChar(50)
+  jarakRumahSekolah      String   @db.VarChar(100)
+  masukKelas             String   @db.VarChar(50)
+  asalSekolah            String   @db.VarChar(255)
+  namaLengkapAyah        String   @db.VarChar(255)
+  tempatTanggalLahirAyah String   @db.VarChar(255)
+  pendidikanTerakhirAyah String   @db.VarChar(100)
+  agamaAyah              String   @db.VarChar(50)
+  nomorHandphoneAyah     String   @db.VarChar(50)
+  pekerjaanAyah          String   @db.VarChar(255)
+  penghasilanAyah        String   @db.VarChar(100)
+  namaLengkapIbu         String   @db.VarChar(255)
+  tempatTanggalLahirIbu  String   @db.VarChar(255)
+  pendidikanTerakhirIbu  String   @db.VarChar(100)
+  agamaIbu               String   @db.VarChar(50)
+  nomorHandphoneIbu      String   @db.VarChar(50)
+  pekerjaanIbu           String   @db.VarChar(255)
+  penghasilanIbu         String   @db.VarChar(100)
+  scanAktaKelahiran      String?  @db.Text
+  pasFoto                String?  @db.Text
+  scanKTPAyah            String?  @db.Text
+  scanKTPIbu             String?  @db.Text
+  scanKartuKeluarga      String?  @db.Text
+  tahunAjaran            String   @db.VarChar(50)
+  gelombang              String   @db.VarChar(50)
+  status                 String   @default("pending") @db.VarChar(50)
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
+  
+  @@index([tahunAjaran])
+  @@index([gelombang])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Admin {
   id        String   @id @default(cuid())
-  username  String   @unique
-  password  String
-  role      String   @default("admin")
+  username  String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  role      String   @default("admin") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@index([username])
 }
 
 model GelombangPPDB {
   id             String   @id @default(cuid())
-  tahunAjaran    String
-  gelombang      String
-  tanggalMulai   String
-  tanggalSelesai String
+  tahunAjaran    String   @db.VarChar(50)
+  gelombang      String   @db.VarChar(50)
+  tanggalMulai   String   @db.VarChar(50)
+  tanggalSelesai String   @db.VarChar(50)
   kuota          Int?
   aktif          Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  
+  @@index([tahunAjaran])
+  @@index([aktif])
 }
