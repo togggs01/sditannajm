@@ -143,7 +143,7 @@ export default function LoginPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-full blur-2xl opacity-50 animate-pulse"></div>
                   <div className="relative w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-2xl p-6 ring-4 ring-white/30">
                     <Image
-                      src="/images/Logo Annajm Rabbani Fix-01.png"
+                      src="/images/LogoAnnajmRabbaniFix-01.png"
                       alt="SDIT ANNAJM RABBANI Logo"
                       width={120}
                       height={120}

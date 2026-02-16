@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface ImageUploadProps {
   value: string
@@ -12,11 +12,23 @@ export default function ImageUpload({ value, onChange, label = 'Upload Gambar' }
   const [uploading, setUploading] = useState(false)
   const [preview, setPreview] = useState(value)
 
+  // Update preview when value changes
+  useEffect(() => {
+    setPreview(value)
+  }, [value])
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Preview
+    // Check file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      alert('File terlalu besar! Maksimal 5MB. Silakan kompres gambar terlebih dahulu.')
+      return
+    }
+
+    // Preview immediately
     const reader = new FileReader()
     reader.onloadend = () => {
       setPreview(reader.result as string)
@@ -29,18 +41,35 @@ export default function ImageUpload({ value, onChange, label = 'Upload Gambar' }
     formData.append('file', file)
 
     try {
+      console.log('Uploading file:', file.name, 'Size:', file.size)
+      
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       })
 
+      console.log('Upload response status:', res.status)
+      
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.error || `Upload failed with status ${res.status}`)
+      }
+
       const data = await res.json()
+      console.log('Upload response:', data)
+      
       if (data.url) {
         onChange(data.url)
+        setPreview(data.url)
+        console.log('Upload success!')
+      } else {
+        throw new Error('No URL in response')
       }
     } catch (error) {
       console.error('Upload error:', error)
-      alert('Gagal upload gambar')
+      const errorMessage = error instanceof Error ? error.message : 'Gagal upload gambar'
+      alert(`Upload gagal: ${errorMessage}`)
+      setPreview(value) // Reset to original value
     } finally {
       setUploading(false)
     }

@@ -3,6 +3,7 @@
 import AdminSidebar from '@/components/AdminSidebar'
 import AdminHeader from '@/components/AdminHeader'
 import AdminBottomNav from '@/components/AdminBottomNav'
+import SessionChecker from '@/components/SessionChecker'
 import { useState, createContext, useContext } from 'react'
 
 const SidebarContext = createContext({
@@ -21,6 +22,7 @@ export default function AdminLayoutClient({
 
   return (
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed }}>
+      <SessionChecker />
       <div className="flex min-h-screen bg-gray-50">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">

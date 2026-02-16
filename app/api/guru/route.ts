@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
@@ -17,6 +17,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { nama, nip, jabatan, foto, email, telepon } = body
 
+    console.log('POST /api/guru - Request body:', { 
+      nama, 
+      nip, 
+      jabatan, 
+      email, 
+      telepon,
+      fotoLength: foto ? foto.length : 0 
+    })
+
     if (!nama || !jabatan) {
       return NextResponse.json({ error: 'Nama dan jabatan wajib diisi' }, { status: 400 })
     }
@@ -25,9 +34,22 @@ export async function POST(request: NextRequest) {
       data: { nama, nip, jabatan, foto, email, telepon }
     })
 
+    console.log('POST /api/guru - Success:', guru.id)
     return NextResponse.json(guru, { status: 201 })
-  } catch (error) {
-    return NextResponse.json({ error: 'Gagal menambahkan guru' }, { status: 500 })
+  } catch (error: any) {
+    console.error('POST /api/guru - Error:', error)
+    
+    // Handle unique constraint error
+    if (error.code === 'P2002') {
+      return NextResponse.json({ 
+        error: 'NIP sudah digunakan oleh guru lain. Silakan gunakan NIP yang berbeda.' 
+      }, { status: 400 })
+    }
+    
+    return NextResponse.json({ 
+      error: 'Gagal menambahkan guru',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 

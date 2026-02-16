@@ -1,6 +1,6 @@
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import StatsCard from '@/components/admin/StatsCard'
 import PageHeader from '@/components/admin/PageHeader'
 

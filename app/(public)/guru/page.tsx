@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import Card from '@/components/Card'
 import Image from 'next/image'
 

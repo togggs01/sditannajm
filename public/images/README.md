@@ -5,7 +5,7 @@ Folder ini berisi gambar-gambar untuk website SDIT An-Najm.
 ## 🏫 Logo Sekolah
 
 Untuk mengganti logo sekolah, tambahkan file logo dengan nama:
-- **`Logo Annajm Rabbani Fix-01.png`** - Logo sekolah (akan muncul di Navbar, Footer, Admin Sidebar, dll)
+- **`LogoAnnajmRabbaniFix-01.png`** - Logo sekolah (akan muncul di Navbar, Footer, Admin Sidebar, dll)
 
 ### Rekomendasi Logo:
 - **Ukuran**: 512x512px (square/persegi)
@@ -15,7 +15,7 @@ Untuk mengganti logo sekolah, tambahkan file logo dengan nama:
 
 ### Cara Menambahkan Logo:
 1. Siapkan file logo sekolah (PNG transparan)
-2. Rename menjadi `Logo Annajm Rabbani Fix-01.png`
+2. Rename menjadi `LogoAnnajmRabbaniFix-01.png`
 3. Copy ke folder `public/images/`
 4. Refresh website (Ctrl+F5)
 5. Logo akan muncul di semua tempat!
@@ -58,7 +58,7 @@ Anda juga bisa menambahkan foto-foto lain seperti:
 
 ## 📝 Catatan Penting:
 
-- **Logo**: Jika `Logo Annajm Rabbani Fix-01.png` tidak ada, akan tampil emoji 🕌 sebagai fallback
+- **Logo**: Jika `LogoAnnajmRabbaniFix-01.png` tidak ada, akan tampil emoji 🕌 sebagai fallback
 - **Hero**: Jika `school-hero.jpg` tidak ada, akan tampil background gradient hijau
 - **Format**: PNG untuk logo (transparan), JPG untuk foto (lebih kecil)
 - **Optimasi**: Compress gambar sebelum upload untuk performa lebih baik

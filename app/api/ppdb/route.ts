@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { getCurrentTahunAjaran } from '@/lib/tahunAjaran'
 import { getDefaultGelombang, isDateInRange } from '@/lib/gelombangPPDB'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
 
 
 export async function GET(request: NextRequest) {
@@ -207,10 +205,7 @@ export async function POST(request: NextRequest) {
       scanKartuKeluarga: !!scanKartuKeluarga
     })
     
-    // Upload files
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'ppdb')
-    await mkdir(uploadDir, { recursive: true })
-
+    // Convert files to base64 for database storage
     let scanAktaKelahiranPath = ''
     let pasFotoPath = ''
     let scanKTPAyahPath = ''
@@ -221,13 +216,11 @@ export async function POST(request: NextRequest) {
       try {
         const bytes = await scanAktaKelahiran.arrayBuffer()
         const buffer = Buffer.from(bytes)
-        const filename = `akta_${Date.now()}_${scanAktaKelahiran.name}`
-        const filepath = join(uploadDir, filename)
-        await writeFile(filepath, buffer)
-        scanAktaKelahiranPath = `/uploads/ppdb/${filename}`
-        console.log('PPDB API: Akta kelahiran uploaded:', scanAktaKelahiranPath)
+        const base64 = buffer.toString('base64')
+        scanAktaKelahiranPath = `data:${scanAktaKelahiran.type};base64,${base64}`
+        console.log('PPDB API: Akta kelahiran converted to base64')
       } catch (uploadError) {
-        console.error('PPDB API: Error uploading akta kelahiran:', uploadError)
+        console.error('PPDB API: Error converting akta kelahiran:', uploadError)
       }
     }
 
@@ -235,13 +228,11 @@ export async function POST(request: NextRequest) {
       try {
         const bytes = await pasFoto.arrayBuffer()
         const buffer = Buffer.from(bytes)
-        const filename = `foto_${Date.now()}_${pasFoto.name}`
-        const filepath = join(uploadDir, filename)
-        await writeFile(filepath, buffer)
-        pasFotoPath = `/uploads/ppdb/${filename}`
-        console.log('PPDB API: Pas foto uploaded:', pasFotoPath)
+        const base64 = buffer.toString('base64')
+        pasFotoPath = `data:${pasFoto.type};base64,${base64}`
+        console.log('PPDB API: Pas foto converted to base64')
       } catch (uploadError) {
-        console.error('PPDB API: Error uploading pas foto:', uploadError)
+        console.error('PPDB API: Error converting pas foto:', uploadError)
       }
     }
 
@@ -249,13 +240,11 @@ export async function POST(request: NextRequest) {
       try {
         const bytes = await scanKTPAyah.arrayBuffer()
         const buffer = Buffer.from(bytes)
-        const filename = `ktp_ayah_${Date.now()}_${scanKTPAyah.name}`
-        const filepath = join(uploadDir, filename)
-        await writeFile(filepath, buffer)
-        scanKTPAyahPath = `/uploads/ppdb/${filename}`
-        console.log('PPDB API: KTP Ayah uploaded:', scanKTPAyahPath)
+        const base64 = buffer.toString('base64')
+        scanKTPAyahPath = `data:${scanKTPAyah.type};base64,${base64}`
+        console.log('PPDB API: KTP Ayah converted to base64')
       } catch (uploadError) {
-        console.error('PPDB API: Error uploading KTP Ayah:', uploadError)
+        console.error('PPDB API: Error converting KTP Ayah:', uploadError)
       }
     }
 
@@ -263,13 +252,11 @@ export async function POST(request: NextRequest) {
       try {
         const bytes = await scanKTPIbu.arrayBuffer()
         const buffer = Buffer.from(bytes)
-        const filename = `ktp_ibu_${Date.now()}_${scanKTPIbu.name}`
-        const filepath = join(uploadDir, filename)
-        await writeFile(filepath, buffer)
-        scanKTPIbuPath = `/uploads/ppdb/${filename}`
-        console.log('PPDB API: KTP Ibu uploaded:', scanKTPIbuPath)
+        const base64 = buffer.toString('base64')
+        scanKTPIbuPath = `data:${scanKTPIbu.type};base64,${base64}`
+        console.log('PPDB API: KTP Ibu converted to base64')
       } catch (uploadError) {
-        console.error('PPDB API: Error uploading KTP Ibu:', uploadError)
+        console.error('PPDB API: Error converting KTP Ibu:', uploadError)
       }
     }
 
@@ -277,13 +264,11 @@ export async function POST(request: NextRequest) {
       try {
         const bytes = await scanKartuKeluarga.arrayBuffer()
         const buffer = Buffer.from(bytes)
-        const filename = `kk_${Date.now()}_${scanKartuKeluarga.name}`
-        const filepath = join(uploadDir, filename)
-        await writeFile(filepath, buffer)
-        scanKartuKeluargaPath = `/uploads/ppdb/${filename}`
-        console.log('PPDB API: Kartu Keluarga uploaded:', scanKartuKeluargaPath)
+        const base64 = buffer.toString('base64')
+        scanKartuKeluargaPath = `data:${scanKartuKeluarga.type};base64,${base64}`
+        console.log('PPDB API: Kartu Keluarga converted to base64')
       } catch (uploadError) {
-        console.error('PPDB API: Error uploading Kartu Keluarga:', uploadError)
+        console.error('PPDB API: Error converting Kartu Keluarga:', uploadError)
       }
     }
 

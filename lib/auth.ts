@@ -4,6 +4,7 @@ export interface User {
   id: string
   username: string
   role: string
+  loginTime?: number // Timestamp when user logged in
 }
 
 export async function getSession(): Promise<User | null> {
@@ -13,7 +14,22 @@ export async function getSession(): Promise<User | null> {
   if (!session) return null
   
   try {
-    return JSON.parse(session.value)
+    const user: User = JSON.parse(session.value)
+    
+    // Check if session has expired (24 hours)
+    if (user.loginTime) {
+      const now = Date.now()
+      const sessionAge = now - user.loginTime
+      const maxAge = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+      
+      if (sessionAge > maxAge) {
+        // Session expired, clear it
+        await clearSession()
+        return null
+      }
+    }
+    
+    return user
   } catch {
     return null
   }
@@ -21,11 +37,18 @@ export async function getSession(): Promise<User | null> {
 
 export async function setSession(user: User) {
   const cookieStore = await cookies()
-  cookieStore.set('session', JSON.stringify(user), {
+  
+  // Add login timestamp
+  const userWithTimestamp = {
+    ...user,
+    loginTime: Date.now()
+  }
+  
+  cookieStore.set('session', JSON.stringify(userWithTimestamp), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7 // 7 days
+    maxAge: 60 * 60 * 24 // 24 hours (1 day)
   })
 }
 
