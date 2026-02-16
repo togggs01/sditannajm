@@ -1,110 +1,123 @@
-# 🚀 Deployment Guide - SDIT ANNAJM RABBANI
+# Deployment Guide - SDIT ANNAJM RABBANI
 
-## Database Configuration
-
-Aplikasi ini menggunakan **MySQL** sebagai database.
-
-### Local Development
-
-1. Install MySQL di komputer kamu
-2. Buat database:
-```sql
-CREATE DATABASE annajm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-3. Update `.env`:
-```env
-DATABASE_URL="mysql://root:PASSWORD@localhost:3306/annajm"
-```
-
-4. Push schema:
-```bash
-npm run db:push
-```
-
-5. Seed data (optional):
-```bash
-npm run db:seed
-```
-
-### Production Deployment
-
-#### Option 1: Vercel + PlanetScale (Recommended)
-
-1. **Setup PlanetScale:**
-   - Daftar di https://planetscale.com
-   - Buat database baru
-   - Copy connection string
-
-2. **Deploy ke Vercel:**
-   - Push code ke GitHub
-   - Import project di Vercel
-   - Set environment variables:
-     ```
-     DATABASE_URL=mysql://user:pass@host/annajm?sslaccept=strict
-     NEXT_PUBLIC_SITE_NAME=SDIT ANNAJM RABBANI
-     NEXT_PUBLIC_SITE_URL=https://sditannajm.sch.id
-     ```
-
-3. **Push Schema:**
-   ```bash
-   npx prisma db push
-   ```
-
-#### Option 2: Railway
-
-1. Deploy MySQL di Railway
-2. Copy connection string
-3. Set di environment variables
-4. Deploy aplikasi
-
-#### Option 3: Hosting Sendiri (VPS)
-
-1. Install MySQL di VPS
-2. Buat database
-3. Set environment variables
-4. Build dan deploy:
-   ```bash
-   npm run build
-   npm start
-   ```
+## Prerequisites
+- Node.js 18+ 
+- MySQL Database
+- Linux Server (cPanel/VPS)
 
 ## Environment Variables
 
-Wajib di-set di production:
+Buat file `.env` di server dengan isi:
 
 ```env
-DATABASE_URL="mysql://user:pass@host:3306/annajm"
+# MySQL Database Connection
+DATABASE_URL="mysql://u900997367_annajm:PASSWORD_ANDA@localhost:3306/u900997367_annajm"
+
+# Site Configuration
 NEXT_PUBLIC_SITE_NAME="SDIT ANNAJM RABBANI"
 NEXT_PUBLIC_SITE_URL="https://sditannajm.sch.id"
 ```
 
-## Troubleshooting
+## Deployment Steps
 
-### Error 503 - Database Connection Failed
+### 1. Upload Files
+Upload semua file project ke server (kecuali node_modules)
 
-- Pastikan MySQL server running
-- Cek kredensial di DATABASE_URL
-- Pastikan database sudah dibuat
-- Cek firewall/network access
+### 2. Install Dependencies
+```bash
+npm install --production
+```
 
-### Error: Table doesn't exist
+### 3. Generate Prisma Client
+```bash
+npx prisma generate
+```
 
+### 4. Push Database Schema
 ```bash
 npx prisma db push
 ```
 
-### Reset Database
-
+### 5. Build Application
 ```bash
-npx prisma db push --force-reset
-npm run db:seed
+npm run build
 ```
 
-## Admin Login
+### 6. Start Application
+```bash
+npm start
+```
 
-Default admin (setelah seed):
-- Username: `admin`
-- Password: `admin123`
+## cPanel Deployment
 
-**⚠️ WAJIB ganti password setelah login pertama!**
+### Setup Node.js App
+1. Buka cPanel → Setup Node.js App
+2. Node.js version: 18.x atau lebih tinggi
+3. Application mode: Production
+4. Application root: /home/u900997367/public_html
+5. Application URL: sditannajm.sch.id
+6. Application startup file: server.js atau gunakan npm start
+
+### Environment Variables di cPanel
+Tambahkan di Node.js App → Environment Variables:
+- `DATABASE_URL`: mysql://u900997367_annajm:PASSWORD@localhost:3306/u900997367_annajm
+- `NEXT_PUBLIC_SITE_NAME`: SDIT ANNAJM RABBANI
+- `NEXT_PUBLIC_SITE_URL`: https://sditannajm.sch.id
+
+### Run Commands
+```bash
+cd /home/u900997367/public_html
+npm install
+npx prisma generate
+npx prisma db push
+npm run build
+```
+
+## Troubleshooting
+
+### Error: @next/swc-win32-x64-msvc
+Sudah diperbaiki! Package platform-specific sudah dihapus dari dependencies.
+
+### Error: Prisma Client
+Jalankan: `npx prisma generate`
+
+### Error: Database Connection
+Pastikan DATABASE_URL benar dan MySQL server running.
+
+### Port Already in Use
+Default port 3000. Ubah dengan: `PORT=3001 npm start`
+
+## Post-Deployment
+
+### Create Admin User
+Jalankan seed script atau insert manual ke database:
+```sql
+INSERT INTO Admin (id, username, password, role) 
+VALUES ('admin1', 'admin', 'hashed_password', 'admin');
+```
+
+### Test Website
+- Public: https://sditannajm.sch.id
+- Admin: https://sditannajm.sch.id/admin
+- Login: https://sditannajm.sch.id/login
+
+## Maintenance
+
+### Update Application
+```bash
+git pull origin main
+npm install
+npx prisma generate
+npm run build
+pm2 restart sdit-annajm
+```
+
+### Backup Database
+```bash
+mysqldump -u u900997367_annajm -p u900997367_annajm > backup.sql
+```
+
+### View Logs
+```bash
+pm2 logs sdit-annajm
+```
