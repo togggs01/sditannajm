@@ -17,9 +17,11 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@next/swc-win32-x64-msvc": "^16.1.6",
     "@prisma/client": "^5.22.0",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
+    "mysql2": "^3.17.1",
     "next": "15.1.4",
     "nodemailer": "^6.9.8",
     "react": "^19.0.0",

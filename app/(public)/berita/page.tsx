@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import BeritaPageClient from '@/components/BeritaPageClient'
 
 export const dynamic = 'force-dynamic'

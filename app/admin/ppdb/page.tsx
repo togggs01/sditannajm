@@ -160,11 +160,11 @@ export default function AdminPPDBPage() {
         'No HP Ibu': ppdb.nomorHandphoneIbu || '-',
         'Pekerjaan Ibu': ppdb.pekerjaanIbu || '-',
         'Penghasilan Ibu': ppdb.penghasilanIbu ? `Rp ${parseInt(ppdb.penghasilanIbu).toLocaleString('id-ID')}` : '-',
-        'Scan Akta Kelahiran': ppdb.scanAktaKelahiran ? `http://localhost:3000${ppdb.scanAktaKelahiran}` : '-',
-        'Pas Foto': ppdb.pasFoto ? `http://localhost:3000${ppdb.pasFoto}` : '-',
-        'Scan KTP Ayah': ppdb.scanKTPAyah ? `http://localhost:3000${ppdb.scanKTPAyah}` : '-',
-        'Scan KTP Ibu': ppdb.scanKTPIbu ? `http://localhost:3000${ppdb.scanKTPIbu}` : '-',
-        'Scan Kartu Keluarga': ppdb.scanKartuKeluarga ? `http://localhost:3000${ppdb.scanKartuKeluarga}` : '-',
+        'Scan Akta Kelahiran': ppdb.scanAktaKelahiran ? `http://localhost:3000/api/ppdb/dokumen?id=${ppdb.id}&type=akta` : 'Tidak ada',
+        'Pas Foto': ppdb.pasFoto ? `http://localhost:3000/api/ppdb/dokumen?id=${ppdb.id}&type=foto` : 'Tidak ada',
+        'Scan KTP Ayah': ppdb.scanKTPAyah ? `http://localhost:3000/api/ppdb/dokumen?id=${ppdb.id}&type=ktp_ayah` : 'Tidak ada',
+        'Scan KTP Ibu': ppdb.scanKTPIbu ? `http://localhost:3000/api/ppdb/dokumen?id=${ppdb.id}&type=ktp_ibu` : 'Tidak ada',
+        'Scan Kartu Keluarga': ppdb.scanKartuKeluarga ? `http://localhost:3000/api/ppdb/dokumen?id=${ppdb.id}&type=kk` : 'Tidak ada',
         'Tahun Ajaran': ppdb.tahunAjaran || '-',
         'Gelombang': ppdb.gelombang || '-',
         'Status': ppdb.status === 'pending' ? 'Menunggu' : ppdb.status === 'approved' ? 'Diterima' : 'Ditolak',
@@ -249,9 +249,12 @@ export default function AdminPPDBPage() {
       const filename = `PPDB_${selectedTahunAjaran.replace('/', '-')}_${new Date().toISOString().split('T')[0]}.xlsx`
       XLSX.writeFile(wb, filename)
       
+      alert(`Export berhasil! File: ${filename}`)
+      
     } catch (error) {
       console.error('Export error:', error)
-      alert('Gagal export data')
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      alert(`Gagal export data: ${errorMessage}`)
     } finally {
       setExporting(false)
     }
@@ -825,17 +828,17 @@ export default function AdminPPDBPage() {
                 </h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                   {[
-                    { label: 'Akta Kelahiran', file: selectedPPDB.scanAktaKelahiran },
-                    { label: 'Pas Foto', file: selectedPPDB.pasFoto },
-                    { label: 'KTP Ayah', file: selectedPPDB.scanKTPAyah },
-                    { label: 'KTP Ibu', file: selectedPPDB.scanKTPIbu },
-                    { label: 'Kartu Keluarga', file: selectedPPDB.scanKartuKeluarga }
+                    { label: 'Akta Kelahiran', file: selectedPPDB.scanAktaKelahiran, type: 'akta' },
+                    { label: 'Pas Foto', file: selectedPPDB.pasFoto, type: 'foto' },
+                    { label: 'KTP Ayah', file: selectedPPDB.scanKTPAyah, type: 'ktp_ayah' },
+                    { label: 'KTP Ibu', file: selectedPPDB.scanKTPIbu, type: 'ktp_ibu' },
+                    { label: 'Kartu Keluarga', file: selectedPPDB.scanKartuKeluarga, type: 'kk' }
                   ].map((doc, index) => (
                     <div key={index} className="text-center">
                       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{doc.label}</p>
                       {doc.file ? (
                         <a
-                          href={`http://localhost:3000${doc.file}`}
+                          href={`/api/ppdb/dokumen?id=${selectedPPDB.id}&type=${doc.type}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center w-full p-3 bg-[#2d5016] hover:bg-[#3d6b1f] text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow-md"

@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  relationMode = "prisma"
 }
 
 model Guru {
@@ -13,7 +12,7 @@ model Guru {
   nama      String   @db.VarChar(255)
   nip       String?  @unique @db.VarChar(100)
   jabatan   String   @db.VarChar(255)
-  foto      String?  @db.Text
+  foto      String?  @db.LongText
   email     String?  @db.VarChar(255)
   telepon   String?  @db.VarChar(50)
   createdAt DateTime @default(now())
@@ -27,7 +26,7 @@ model Berita {
   judul     String   @db.VarChar(500)
   slug      String   @unique @db.VarChar(500)
   konten    String   @db.LongText
-  gambar    String?  @db.Text
+  gambar    String?  @db.LongText
   penulis   String   @db.VarChar(255)
   kategori  String   @db.VarChar(100)
   published Boolean  @default(false)
@@ -43,8 +42,8 @@ model Galeri {
   id        String   @id @default(cuid())
   judul     String   @db.VarChar(500)
   deskripsi String?  @db.Text
-  gambar    String?  @db.Text
-  video     String?  @db.Text
+  gambar    String?  @db.LongText
+  video     String?  @db.LongText
   kategori  String   @db.VarChar(100)
   tipe      String   @default("gambar") @db.VarChar(50)
   createdAt DateTime @default(now())
@@ -91,11 +90,11 @@ model PPDB {
   nomorHandphoneIbu      String   @db.VarChar(50)
   pekerjaanIbu           String   @db.VarChar(255)
   penghasilanIbu         String   @db.VarChar(100)
-  scanAktaKelahiran      String?  @db.Text
-  pasFoto                String?  @db.Text
-  scanKTPAyah            String?  @db.Text
-  scanKTPIbu             String?  @db.Text
-  scanKartuKeluarga      String?  @db.Text
+  scanAktaKelahiran      String?  @db.LongText
+  pasFoto                String?  @db.LongText
+  scanKTPAyah            String?  @db.LongText
+  scanKTPIbu             String?  @db.LongText
+  scanKartuKeluarga      String?  @db.LongText
   tahunAjaran            String   @db.VarChar(50)
   gelombang              String   @db.VarChar(50)
   status                 String   @default("pending") @db.VarChar(50)

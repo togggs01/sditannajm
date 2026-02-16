@@ -89,7 +89,7 @@ export default function AdminSidebar() {
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2.5'}`}>
           <div className="relative w-12 h-12 flex-shrink-0">
             <Image
-              src="/images/Logo Annajm Rabbani Fix-01.png"
+              src="/images/LogoAnnajmRabbaniFix-01.png"
               alt="Logo"
               width={48}
               height={48}
