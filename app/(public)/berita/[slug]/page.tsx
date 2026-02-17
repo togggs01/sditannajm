@@ -9,19 +9,29 @@ export const dynamic = 'force-dynamic'
 export default async function BeritaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   
-  const [berita, relatedBerita] = await Promise.all([
-    prisma.berita.findUnique({
-      where: { slug }
-    }),
-    prisma.berita.findMany({
-      where: { 
-        published: true,
-        slug: { not: slug }
-      },
-      take: 3,
-      orderBy: { createdAt: 'desc' }
-    })
-  ])
+  let berita = null
+  let relatedBerita = []
+  
+  try {
+    const results = await Promise.allSettled([
+      prisma.berita.findUnique({
+        where: { slug }
+      }),
+      prisma.berita.findMany({
+        where: { 
+          published: true,
+          slug: { not: slug }
+        },
+        take: 3,
+        orderBy: { createdAt: 'desc' }
+      })
+    ])
+    
+    berita = results[0].status === 'fulfilled' ? results[0].value : null
+    relatedBerita = results[1].status === 'fulfilled' ? results[1].value : []
+  } catch (error) {
+    console.error('Error fetching berita detail:', error)
+  }
 
   if (!berita || !berita.published) {
     notFound()

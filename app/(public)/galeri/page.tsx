@@ -72,12 +72,31 @@ export default function GaleriPage() {
 
   const fetchGaleri = async () => {
     try {
-      const res = await fetch('/api/galeri')
+      const res = await fetch('/api/galeri', {
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+      
       const data = await res.json()
-      setGaleriList(data)
-      setFilteredList(data)
+      
+      if (Array.isArray(data)) {
+        setGaleriList(data)
+        setFilteredList(data)
+      } else {
+        console.error('Invalid data format:', data)
+        setGaleriList([])
+        setFilteredList([])
+      }
     } catch (error) {
       console.error('Error fetching galeri:', error)
+      setGaleriList([])
+      setFilteredList([])
     } finally {
       setLoading(false)
     }
@@ -263,11 +282,10 @@ export default function GaleriPage() {
                     </div>
                   ) : item.gambar ? (
                     <div className="relative w-full h-full">
-                      <Image 
+                      <img 
                         src={item.gambar} 
                         alt={item.judul}
-                        fill
-                        className="object-cover" 
+                        className="w-full h-full object-cover" 
                       />
                       
                       {/* Photo Badge */}
