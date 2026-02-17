@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
     unoptimized: false,
   },
   // Production optimizations
-  swcMinify: true,
   compress: true,
   poweredByHeader: false,
   
