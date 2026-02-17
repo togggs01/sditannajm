@@ -1,6 +1,6 @@
 // Validate environment variables
 export function validateEnv() {
-  const required = ['mysql://u900997367_annajm:Vu7tBK^|A92^@srv1154.hstgr.io:3306/u9O0997367_annajm'];
+  const required = ['DATABASE_URL'];
   const missing = required.filter(key => !process.env[key]);
   
   if (missing.length > 0) {
