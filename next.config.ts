@@ -2,15 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
     ignoreBuildErrors: true,
   },
   images: {
@@ -21,6 +15,15 @@ const nextConfig: NextConfig = {
       },
     ],
     unoptimized: false,
+  },
+  // Production optimizations
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  
+  // Experimental features for better performance
+  experimental: {
+    optimizePackageImports: ['@prisma/client'],
   },
 };
 
