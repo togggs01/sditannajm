@@ -20,9 +20,15 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Experimental features for better performance
-  experimental: {
-    optimizePackageImports: ['@prisma/client'],
+  // Disable all chunking for debugging
+  webpack: (config, { isServer }) => {
+    // Disable chunking for both client and server
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: false,
+      runtimeChunk: false,
+    };
+    return config;
   },
 };
 
