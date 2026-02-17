@@ -11,18 +11,29 @@ import { SubtleTopWave, SubtleBottomWave, CornerAccent, SideFlow } from '@/compo
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
-  // Fetch data
-  const [recentBerita, galeriPhotos] = await Promise.all([
-    prisma.berita.findMany({
-      where: { published: true },
-      take: 3,
-      orderBy: { createdAt: 'desc' }
-    }),
-    prisma.galeri.findMany({
-      take: 6,
-      orderBy: { createdAt: 'desc' }
-    })
-  ])
+  // Fetch data with error handling
+  let recentBerita = []
+  let galeriPhotos = []
+  
+  try {
+    const results = await Promise.allSettled([
+      prisma.berita.findMany({
+        where: { published: true },
+        take: 3,
+        orderBy: { createdAt: 'desc' }
+      }).catch(() => []),
+      prisma.galeri.findMany({
+        take: 6,
+        orderBy: { createdAt: 'desc' }
+      }).catch(() => [])
+    ])
+    
+    recentBerita = results[0].status === 'fulfilled' ? results[0].value : []
+    galeriPhotos = results[1].status === 'fulfilled' ? results[1].value : []
+  } catch (error) {
+    console.error('Error fetching home data:', error)
+    // Continue with empty arrays
+  }
 
   return (
     <div className="bg-yellow-50/60 relative overflow-hidden">

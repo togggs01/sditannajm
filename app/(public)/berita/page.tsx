@@ -4,10 +4,17 @@ import BeritaPageClient from '@/components/BeritaPageClient'
 export const dynamic = 'force-dynamic'
 
 export default async function BeritaPage() {
-  const beritaList = await prisma.berita.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' }
-  })
+  let beritaList = []
+  
+  try {
+    beritaList = await prisma.berita.findMany({
+      where: { published: true },
+      orderBy: { createdAt: 'desc' }
+    })
+  } catch (error) {
+    console.error('Error fetching berita:', error)
+    // Continue with empty array
+  }
 
   return (
     <div className="min-h-screen bg-yellow-50/50">

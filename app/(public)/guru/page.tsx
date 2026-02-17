@@ -5,9 +5,16 @@ import Image from 'next/image'
 export const dynamic = 'force-dynamic'
 
 export default async function GuruPage() {
-  const guruList = await prisma.guru.findMany({
-    orderBy: { nama: 'asc' }
-  })
+  let guruList = []
+  
+  try {
+    guruList = await prisma.guru.findMany({
+      orderBy: { nama: 'asc' }
+    })
+  } catch (error) {
+    console.error('Error fetching guru:', error)
+    // Continue with empty array
+  }
 
   return (
     <div className="min-h-screen bg-yellow-50/50">
