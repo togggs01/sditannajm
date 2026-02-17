@@ -6,14 +6,12 @@ import Image from 'next/image'
 import TestimoniCarousel from '@/components/TestimoniCarousel'
 import GaleriShowcase from '@/components/GaleriShowcase'
 import PPDBSection from '@/components/PPDBSection'
-import { SubtleTopWave, SubtleBottomWave, CornerAccent, SideFlow } from '@/components/WaveOrnaments'
-
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
   // Fetch data with error handling
-  let recentBerita = []
-  let galeriPhotos = []
+  let recentBerita: any[] = []
+  let galeriPhotos: any[] = []
   
   try {
     const results = await Promise.allSettled([
