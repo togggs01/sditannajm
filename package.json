@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@tailwindcss/postcss": "^4",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "mysql2": "^3.17.1",
@@ -28,10 +29,10 @@
     "nodemailer": "^6.9.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwindcss": "^4",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^19",
@@ -41,7 +42,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "prisma": "^5.22.0",
-    "tailwindcss": "^4",
     "tsx": "^4.7.0",
     "typescript": "^5"
   }
