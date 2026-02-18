@@ -146,7 +146,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(gelombangWithStats)
   } catch (error) {
     console.error('Error fetching gelombang:', error)
-    return NextResponse.json({ error: 'Gagal mengambil data gelombang' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Gagal mengambil data gelombang',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 
@@ -209,7 +212,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(newGelombang, { status: 201 })
   } catch (error) {
     console.error('Error creating gelombang:', error)
-    return NextResponse.json({ error: 'Gagal membuat gelombang' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Gagal membuat gelombang',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 
@@ -255,7 +261,10 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(updated)
   } catch (error) {
     console.error('Error updating gelombang:', error)
-    return NextResponse.json({ error: 'Gagal mengupdate gelombang' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Gagal mengupdate gelombang',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 
@@ -273,6 +282,9 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ message: 'Gelombang berhasil dihapus' })
   } catch (error) {
     console.error('Error deleting gelombang:', error)
-    return NextResponse.json({ error: 'Gagal menghapus gelombang' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Gagal menghapus gelombang',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }

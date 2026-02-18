@@ -16,6 +16,9 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Stats API Error:', error)
-    return NextResponse.json({ error: 'Gagal mengambil statistik' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Gagal mengambil statistik',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
