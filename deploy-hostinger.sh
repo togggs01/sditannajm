@@ -35,7 +35,7 @@ echo ""
 
 # Install dependencies
 echo "Installing dependencies..."
-npm install
+npm install --production=false
 if [ $? -ne 0 ]; then
     echo "ERROR: npm install failed"
     exit 1
