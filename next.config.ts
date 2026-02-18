@@ -20,9 +20,15 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Disable all chunking for debugging
+  // Webpack configuration
   webpack: (config, { isServer }) => {
-    // Disable chunking for both client and server
+    // Ensure path aliases are resolved correctly
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': __dirname,
+    };
+    
+    // Disable chunking for debugging
     config.optimization = {
       ...config.optimization,
       splitChunks: false,
