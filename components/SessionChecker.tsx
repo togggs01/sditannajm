@@ -13,8 +13,18 @@ export default function SessionChecker() {
 
     const checkSession = async () => {
       try {
-        const res = await fetch('/api/auth/me')
+        const res = await fetch('/api/auth/me', {
+          credentials: 'include',
+          cache: 'no-store'
+        })
         
+        // Check if response is JSON
+        const contentType = res.headers.get('content-type')
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('SessionChecker: Non-JSON response received')
+          return
+        }
+
         if (!res.ok) {
           // Session expired or invalid
           alert('Sesi Anda telah berakhir. Silakan login kembali.')
@@ -22,6 +32,7 @@ export default function SessionChecker() {
         }
       } catch (error) {
         console.error('Session check error:', error)
+        // Don't redirect on network errors
       }
     }
 

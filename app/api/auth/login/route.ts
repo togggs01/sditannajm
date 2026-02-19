@@ -26,11 +26,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Create session with 24 hour expiry
+    const now = Date.now()
+    const expiresAt = now + (24 * 60 * 60 * 1000) // 24 hours from now
+    
     const sessionData = {
       id: admin.id,
       username: admin.username,
       role: admin.role,
-      loginTime: Date.now()
+      loginTime: now,
+      expiresAt: expiresAt
     }
 
     const response = NextResponse.json({ 
@@ -39,14 +44,16 @@ export async function POST(request: NextRequest) {
         id: admin.id,
         username: admin.username,
         role: admin.role
-      }
+      },
+      expiresAt: new Date(expiresAt).toISOString()
     })
 
+    // Set cookie with 24 hour expiry
     response.cookies.set('session', JSON.stringify(sessionData), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 86400,
+      maxAge: 86400, // 24 hours in seconds
       path: '/'
     })
 
