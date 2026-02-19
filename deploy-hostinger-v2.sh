@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "========================================="
-echo "Hostinger Deployment Fix Script"
+echo "Hostinger Deployment Script v2"
 echo "SDIT ANNAJM RABBANI"
 echo "========================================="
 echo ""
@@ -12,7 +12,10 @@ export NODE_ENV=production
 # Stop existing process
 echo "Stopping existing application..."
 pm2 stop sdit-annajm 2>/dev/null || echo "No existing PM2 process"
+pm2 delete sdit-annajm 2>/dev/null || echo "No PM2 process to delete"
 pkill -f "next start" 2>/dev/null || echo "No existing Node process"
+sleep 2
+echo "✓ Application stopped"
 echo ""
 
 # Check .env file
@@ -25,31 +28,38 @@ fi
 echo "✓ Environment file found"
 echo ""
 
-# Clean everything
+# Clean everything thoroughly
 echo "Cleaning old build and cache..."
 rm -rf .next
 rm -rf node_modules/.cache
 rm -rf node_modules/.prisma
+rm -rf .turbo
 echo "✓ Clean completed"
 echo ""
 
-# Install dependencies
-echo "Installing ALL dependencies (including devDependencies)..."
+# Remove node_modules and reinstall (fresh install)
+echo "Removing old node_modules..."
+rm -rf node_modules
+echo "✓ Old modules removed"
+echo ""
+
+# Install ALL dependencies (including devDependencies for build)
+echo "Installing ALL dependencies (this may take a while)..."
 npm install --production=false --legacy-peer-deps
 if [ $? -ne 0 ]; then
     echo "ERROR: npm install failed"
     exit 1
 fi
-echo "✓ Dependencies installed"
+echo "✓ All dependencies installed"
 echo ""
 
-# Verify Tailwind packages
-echo "Verifying Tailwind packages..."
+# Verify critical packages
+echo "Verifying critical packages..."
 if [ ! -d "node_modules/@tailwindcss" ]; then
-    echo "Installing Tailwind packages..."
+    echo "ERROR: @tailwindcss not found, installing manually..."
     npm install @tailwindcss/postcss tailwindcss --save
 fi
-echo "✓ Tailwind packages verified"
+echo "✓ Critical packages verified"
 echo ""
 
 # Generate Prisma Client
@@ -87,20 +97,26 @@ echo "Building application..."
 npm run build
 if [ $? -ne 0 ]; then
     echo "ERROR: Build failed"
+    echo "Check the error messages above"
     exit 1
 fi
-echo "✓ Build completed"
+echo "✓ Build completed successfully"
 echo ""
 
 # Start application with PM2
 echo "Starting application with PM2..."
 pm2 start npm --name sdit-annajm -- start
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to start with PM2"
+    exit 1
+fi
 pm2 save
+echo "✓ Application started"
 echo ""
 
 # Show status
 echo "========================================="
-echo "✓ Deployment successful!"
+echo "✓ DEPLOYMENT SUCCESSFUL!"
 echo "========================================="
 echo ""
 pm2 status
@@ -108,7 +124,9 @@ echo ""
 echo "Website: https://sditannajm.sch.id"
 echo "Admin: https://sditannajm.sch.id/admin"
 echo ""
-echo "View logs: pm2 logs sdit-annajm"
-echo "Restart: pm2 restart sdit-annajm"
-echo "Stop: pm2 stop sdit-annajm"
+echo "Useful commands:"
+echo "  View logs: pm2 logs sdit-annajm"
+echo "  Restart: pm2 restart sdit-annajm"
+echo "  Stop: pm2 stop sdit-annajm"
+echo "  Monitor: pm2 monit"
 echo ""
