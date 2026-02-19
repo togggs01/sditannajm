@@ -4,32 +4,70 @@ import { setSession } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, password } = await request.json()
+    // Parse request body
+    const body = await request.json()
+    const { username, password } = body
 
+    // Validate input
     if (!username || !password) {
-      return NextResponse.json({ error: 'Username dan password wajib diisi' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Username dan password wajib diisi' }, 
+        { status: 400 }
+      )
     }
 
+    // Find admin user
     const admin = await prisma.admin.findUnique({
-      where: { username }
+      where: { username: username.trim() }
     })
 
-    if (!admin || admin.password !== password) {
-      return NextResponse.json({ error: 'Username atau password salah' }, { status: 401 })
+    // Check credentials
+    if (!admin) {
+      return NextResponse.json(
+        { error: 'Username atau password salah' }, 
+        { status: 401 }
+      )
     }
 
+    if (admin.password !== password) {
+      return NextResponse.json(
+        { error: 'Username atau password salah' }, 
+        { status: 401 }
+      )
+    }
+
+    // Set session
     await setSession({
       id: admin.id,
       username: admin.username,
       role: admin.role
     })
 
-    return NextResponse.json({ success: true })
+    // Return success
+    return NextResponse.json({ 
+      success: true,
+      user: {
+        id: admin.id,
+        username: admin.username,
+        role: admin.role
+      }
+    })
+
   } catch (error) {
     console.error('Login API Error:', error)
+    
+    // Return detailed error in development
+    if (process.env.NODE_ENV === 'development') {
+      return NextResponse.json({ 
+        error: 'Terjadi kesalahan saat login',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      }, { status: 500 })
+    }
+    
+    // Return generic error in production
     return NextResponse.json({ 
-      error: 'Terjadi kesalahan saat login',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      error: 'Terjadi kesalahan saat login'
     }, { status: 500 })
   }
 }
