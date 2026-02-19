@@ -1,123 +1,128 @@
 # Deployment Guide - SDIT ANNAJM RABBANI
 
-## Prerequisites
-- Node.js 18+ 
-- MySQL Database
-- Linux Server (cPanel/VPS)
+## Cara Deploy ke Hostinger
 
-## Environment Variables
+### Opsi 1: Full Deployment (Recommended untuk first time atau major issues)
 
-Buat file `.env` di server dengan isi:
+```bash
+# SSH ke server
+ssh u900997367@sditannajm.sch.id
 
-```env
-# MySQL Database Connection
-DATABASE_URL="mysql://u900997367_annajm:PASSWORD_ANDA@localhost:3306/u900997367_annajm"
+# Masuk ke directory project
+cd /home/u900997367/domains/sditannajm.sch.id/public_html/.builds/source/repository
 
-# Site Configuration
-NEXT_PUBLIC_SITE_NAME="SDIT ANNAJM RABBANI"
-NEXT_PUBLIC_SITE_URL="https://sditannajm.sch.id"
+# Upload file terbaru (via FTP/Git)
+# Pastikan file berikut sudah terupload:
+# - package.json (updated)
+# - deploy-hostinger-v2.sh (new)
+# - next.config.ts (updated)
+
+# Jalankan deployment
+chmod +x deploy-hostinger-v2.sh
+./deploy-hostinger-v2.sh
 ```
 
-## Deployment Steps
+### Opsi 2: Quick Fix (Untuk error Tailwind saja)
 
-### 1. Upload Files
-Upload semua file project ke server (kecuali node_modules)
-
-### 2. Install Dependencies
 ```bash
-npm install --production
+# SSH ke server
+ssh u900997367@sditannajm.sch.id
+
+# Masuk ke directory project
+cd /home/u900997367/domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+# Upload quick-fix.sh
+# Jalankan quick fix
+chmod +x quick-fix.sh
+./quick-fix.sh
 ```
 
-### 3. Generate Prisma Client
-```bash
-npx prisma generate
-```
+### Opsi 3: Manual Fix
 
-### 4. Push Database Schema
 ```bash
-npx prisma db push
-```
+# SSH ke server
+ssh u900997367@sditannajm.sch.id
+cd /home/u900997367/domains/sditannajm.sch.id/public_html/.builds/source/repository
 
-### 5. Build Application
-```bash
+# Stop app
+pm2 stop sdit-annajm
+
+# Install Tailwind packages
+npm install @tailwindcss/postcss tailwindcss --save
+
+# Clean and rebuild
+rm -rf .next
 npm run build
-```
 
-### 6. Start Application
-```bash
-npm start
-```
-
-## cPanel Deployment
-
-### Setup Node.js App
-1. Buka cPanel → Setup Node.js App
-2. Node.js version: 18.x atau lebih tinggi
-3. Application mode: Production
-4. Application root: /home/u900997367/public_html
-5. Application URL: sditannajm.sch.id
-6. Application startup file: server.js atau gunakan npm start
-
-### Environment Variables di cPanel
-Tambahkan di Node.js App → Environment Variables:
-- `DATABASE_URL`: mysql://u900997367_annajm:PASSWORD@localhost:3306/u900997367_annajm
-- `NEXT_PUBLIC_SITE_NAME`: SDIT ANNAJM RABBANI
-- `NEXT_PUBLIC_SITE_URL`: https://sditannajm.sch.id
-
-### Run Commands
-```bash
-cd /home/u900997367/public_html
-npm install
-npx prisma generate
-npx prisma db push
-npm run build
+# Restart
+pm2 restart sdit-annajm
+pm2 save
 ```
 
 ## Troubleshooting
 
-### Error: @next/swc-win32-x64-msvc
-Sudah diperbaiki! Package platform-specific sudah dihapus dari dependencies.
+### Error: Cannot find module '@tailwindcss/postcss'
 
-### Error: Prisma Client
-Jalankan: `npx prisma generate`
+**Penyebab:** Package Tailwind tidak terinstall di production
 
-### Error: Database Connection
-Pastikan DATABASE_URL benar dan MySQL server running.
+**Solusi:**
+1. Pastikan `@tailwindcss/postcss` dan `tailwindcss` ada di `dependencies` (bukan devDependencies)
+2. Jalankan `npm install --production=false` untuk install semua packages
+3. Atau gunakan quick-fix.sh script
 
-### Port Already in Use
-Default port 3000. Ubah dengan: `PORT=3001 npm start`
+### Error: Module not found '@/components/...' atau '@/lib/...'
 
-## Post-Deployment
+**Penyebab:** Cache webpack yang corrupt
 
-### Create Admin User
-Jalankan seed script atau insert manual ke database:
-```sql
-INSERT INTO Admin (id, username, password, role) 
-VALUES ('admin1', 'admin', 'hashed_password', 'admin');
-```
-
-### Test Website
-- Public: https://sditannajm.sch.id
-- Admin: https://sditannajm.sch.id/admin
-- Login: https://sditannajm.sch.id/login
-
-## Maintenance
-
-### Update Application
+**Solusi:**
 ```bash
-git pull origin main
-npm install
-npx prisma generate
+rm -rf .next
 npm run build
 pm2 restart sdit-annajm
 ```
 
-### Backup Database
+### Error 404 di API routes
+
+**Penyebab:** Build tidak complete atau PM2 tidak restart dengan benar
+
+**Solusi:**
 ```bash
-mysqldump -u u900997367_annajm -p u900997367_annajm > backup.sql
+pm2 delete sdit-annajm
+npm run build
+pm2 start npm --name sdit-annajm -- start
+pm2 save
 ```
 
-### View Logs
+## Monitoring
+
 ```bash
+# Lihat status
+pm2 status
+
+# Lihat logs
 pm2 logs sdit-annajm
+
+# Lihat logs realtime
+pm2 logs sdit-annajm --lines 100
+
+# Monitor resources
+pm2 monit
+
+# Restart jika perlu
+pm2 restart sdit-annajm
 ```
+
+## Checklist Sebelum Deploy
+
+- [ ] File .env sudah ada di server dengan DATABASE_URL yang benar
+- [ ] package.json sudah terupload
+- [ ] next.config.ts sudah terupload
+- [ ] Deploy script sudah terupload dan executable
+- [ ] Database sudah ready dan accessible
+- [ ] PM2 sudah terinstall di server
+
+## Important Notes
+
+- Selalu gunakan `--production=false` saat install untuk memastikan Tailwind terinstall
+- Tailwind v4 membutuhkan `@tailwindcss/postcss` saat build time
+- Jangan lupa `pm2 save` setelah start agar auto-restart on reboot
