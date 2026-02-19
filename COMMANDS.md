@@ -8,33 +8,40 @@ cd /home/u900997367/domains/sditannajm.sch.id/public_html/.builds/source/reposit
 
 ## Fix Scripts (Pilih salah satu)
 
-### 1. Complete Fix (Recommended - paling thorough)
+### 0. Fix All (RECOMMENDED - Most comprehensive)
+```bash
+chmod +x fix-all.sh
+./fix-all.sh
+```
+Untuk: Semua masalah, test lengkap dari component sampai API
+
+### 1. Complete Fix (Thorough dengan fresh install)
 ```bash
 chmod +x complete-fix.sh
 ./complete-fix.sh
 ```
 Untuk: Fresh install, missing packages, database issues
 
-### 2. Clean Rebuild (Untuk masalah chunk/build)
+### 2. Force Restart (Untuk app yang crash)
+```bash
+chmod +x force-restart.sh
+./force-restart.sh
+```
+Untuk: App crash, port issues, process stuck
+
+### 3. Clean Rebuild (Untuk masalah chunk/build)
 ```bash
 chmod +x rebuild-clean.sh
 ./rebuild-clean.sh
 ```
 Untuk: Error di chunk files, webpack issues, build corruption
 
-### 3. Quick Fix (Cepat, untuk error Tailwind/Prisma)
+### 4. Quick Fix (Cepat, untuk error Tailwind/Prisma)
 ```bash
 chmod +x quick-fix.sh
 ./quick-fix.sh
 ```
 Untuk: Missing Tailwind/Prisma packages
-
-### 4. Full Deployment (Fresh install)
-```bash
-chmod +x deploy-hostinger-v2.sh
-./deploy-hostinger-v2.sh
-```
-Untuk: Deployment dari awal
 
 ### 5. Diagnostic (Check masalah)
 ```bash
@@ -42,6 +49,19 @@ chmod +x diagnose.sh
 ./diagnose.sh
 ```
 Untuk: Cek status dan diagnosa masalah
+
+### 6. Test Scripts
+```bash
+# Test components
+node test-components.js
+
+# Test database & admin user
+node test-database.js
+
+# Test API
+chmod +x test-api.sh
+./test-api.sh
+```
 
 ## Manual Commands
 

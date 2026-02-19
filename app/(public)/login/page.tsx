@@ -20,20 +20,29 @@ export default function LoginPage() {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username.trim(),
+          password: formData.password
+        }),
+        credentials: 'include'
       })
 
       const data = await res.json()
 
-      if (res.ok) {
+      if (res.ok && data.success) {
+        // Login successful, redirect to admin
         router.push('/admin')
         router.refresh()
       } else {
-        setError(data.error || 'Login gagal')
+        // Show error message
+        setError(data.error || 'Login gagal. Silakan coba lagi.')
       }
     } catch (error) {
-      setError('Terjadi kesalahan')
+      console.error('Login error:', error)
+      setError('Terjadi kesalahan koneksi. Silakan coba lagi.')
     } finally {
       setLoading(false)
     }
