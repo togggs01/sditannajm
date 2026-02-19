@@ -1,0 +1,133 @@
+=====================================
+CARA CARI FOLDER APLIKASI
+=====================================
+
+FOLDER SOURCE KOSONG!
+Aplikasi mungkin ada di tempat lain.
+
+CARA 1: Cari via File Manager
+==============================
+
+1. Klik "Home" icon (rumah) di File Manager
+2. Cari folder-folder ini:
+
+   KEMUNGKINAN LOKASI:
+   
+   ✓ public_html/
+   ✓ public_html/sditannajm/
+   ✓ domains/sditannajm.sch.id/public_html/
+   ✓ htdocs/
+   ✓ www/
+   ✓ sditannajm/
+
+3. Cari file-file ini di dalam folder:
+   - package.json
+   - next.config.ts
+   - app/ (folder)
+   - node_modules/ (folder)
+
+4. Kalau ketemu, itu folder aplikasi!
+
+CARA 2: Via Terminal (PALING AKURAT)
+=====================================
+
+1. Klik "Terminal" di Hostinger Panel
+
+2. Jalankan command ini untuk cari folder:
+
+   find ~ -name "package.json" -type f 2>/dev/null | grep sdit
+
+3. Atau cari next.config.ts:
+
+   find ~ -name "next.config.ts" -type f 2>/dev/null
+
+4. Hasilnya akan show path lengkap, contoh:
+   /home/u900997367/public_html/package.json
+
+5. Berarti folder aplikasi di:
+   /home/u900997367/public_html/
+
+CARA 3: Check PM2 Process
+==========================
+
+1. Buka Terminal
+
+2. Jalankan:
+
+   pm2 list
+
+3. Lihat kolom "cwd" (current working directory)
+   Itu adalah folder aplikasi
+
+4. Atau:
+
+   pm2 info sdit-annajm
+
+5. Lihat "exec cwd" - itu folder aplikasi
+
+CARA 4: Check Running Process
+==============================
+
+Terminal command:
+
+   ps aux | grep next
+
+Akan show path aplikasi yang running
+
+=====================================
+
+SETELAH KETEMU FOLDER:
+======================
+
+1. Catat path lengkapnya, contoh:
+   /home/u900997367/public_html/
+
+2. Masuk ke folder itu via File Manager
+
+3. Upload 2 file:
+   - app/api/auth/login/route.ts
+   - next.config.ts
+
+4. Via Terminal, masuk ke folder:
+   cd /home/u900997367/public_html/
+
+5. Rebuild:
+   pm2 stop sdit-annajm
+   rm -rf .next
+   npm run build
+   pm2 restart sdit-annajm
+
+=====================================
+
+JIKA APLIKASI BELUM DI-DEPLOY:
+===============================
+
+Kalau memang belum ada aplikasi di server,
+berarti harus deploy dari awal:
+
+1. Upload semua file project via FTP
+2. SSH ke server
+3. Install dependencies: npm install
+4. Build: npm run build
+5. Start: pm2 start npm --name sdit-annajm -- start
+
+=====================================
+
+QUICK CHECK:
+============
+
+Terminal command untuk check:
+
+# Check apakah PM2 running
+pm2 status
+
+# Check folder home
+ls -la ~
+
+# Check public_html
+ls -la ~/public_html
+
+# Find package.json
+find ~ -name "package.json" 2>/dev/null
+
+=====================================

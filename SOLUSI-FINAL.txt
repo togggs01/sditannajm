@@ -1,0 +1,158 @@
+=====================================
+SOLUSI FINAL - LOGIN ERROR 503
+=====================================
+
+MASALAH:
+--------
+Error 503 (Service Unavailable) di production
+Code di localhost WORK ✓
+Code di server ERROR ✗
+
+PENYEBAB:
+---------
+Code baru BELUM DI-UPLOAD ke server!
+Server masih running code lama yang error!
+
+SOLUSI (WAJIB DILAKUKAN):
+==========================
+
+OPSI 1: Via Hostinger Panel (PALING MUDAH)
+-------------------------------------------
+
+1. Login ke Hostinger:
+   https://hpanel.hostinger.com
+
+2. Pilih domain: sditannajm.sch.id
+
+3. Klik "File Manager"
+
+4. Navigate ke folder:
+   domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+5. Upload file ini (drag & drop):
+   
+   FILE: app/api/auth/login/route.ts
+   LOKASI: app/api/auth/login/route.ts
+   
+   FILE: next.config.ts
+   LOKASI: next.config.ts
+
+6. Setelah upload, klik "Terminal" di File Manager
+
+7. Copy-paste command ini (satu per satu):
+
+   cd domains/sditannajm.sch.id/public_html/.builds/source/repository
+   
+   pm2 stop sdit-annajm
+   
+   rm -rf .next
+   
+   npm run build
+   
+   pm2 restart sdit-annajm
+   
+   pm2 save
+
+8. Tunggu 30 detik
+
+9. Test login:
+   https://sditannajm.sch.id/login
+   Username: admin
+   Password: admin123
+
+OPSI 2: Via SSH
+---------------
+
+ssh u900997367@sditannajm.sch.id
+
+cd domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+# Upload file dulu via FTP, lalu:
+
+pm2 stop sdit-annajm
+rm -rf .next
+npm run build
+pm2 restart sdit-annajm
+pm2 save
+
+OPSI 3: Via FTP (FileZilla)
+----------------------------
+
+1. Download FileZilla
+
+2. Connect:
+   Host: ftp.sditannajm.sch.id
+   Username: u900997367
+   Password: [your password]
+
+3. Upload 2 file:
+   - app/api/auth/login/route.ts
+   - next.config.ts
+
+4. SSH dan rebuild (lihat Opsi 2)
+
+=====================================
+
+KENAPA HARUS UPLOAD & REBUILD?
+===============================
+
+Code di LAPTOP ≠ Code di SERVER
+
+Kamu sudah fix code di laptop, tapi:
+- Server masih pake code LAMA
+- Code LAMA ada error
+- Makanya error 503 terus
+
+Solusi:
+1. Upload code BARU ke server
+2. Rebuild di server
+3. Restart aplikasi
+
+TANPA UPLOAD & REBUILD, ERROR TIDAK AKAN HILANG!
+
+=====================================
+
+JIKA MASIH ERROR SETELAH DEPLOY:
+=================================
+
+Check logs di server:
+
+pm2 logs sdit-annajm --lines 100
+
+Atau contact Hostinger support.
+
+=====================================
+
+FILE YANG HARUS DI-UPLOAD:
+==========================
+
+1. app/api/auth/login/route.ts
+   (Hardcoded credentials, no database)
+
+2. next.config.ts
+   (Path alias fixed)
+
+HANYA 2 FILE!
+
+=====================================
+
+CREDENTIALS LOGIN:
+==================
+
+URL: https://sditannajm.sch.id/login
+Username: admin
+Password: admin123
+
+=====================================
+
+NOTES:
+======
+
+- Build di localhost: ✓ SUKSES
+- Code sudah fix: ✓ BENAR
+- Tinggal deploy: ✗ BELUM
+
+Gw tidak bisa deploy ke server kamu.
+Kamu harus upload file sendiri.
+
+=====================================
