@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
-import { clearSession } from '@/lib/auth'
 
 export async function POST() {
-  await clearSession()
-  return NextResponse.json({ success: true })
+  const response = NextResponse.json({ success: true })
+  
+  // Delete session cookie
+  response.cookies.delete('session')
+  
+  return response
 }
