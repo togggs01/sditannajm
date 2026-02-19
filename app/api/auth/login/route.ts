@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { username, password } = body
+    const username = body.username
+    const password = body.password
 
     if (!username || !password) {
       return NextResponse.json(
@@ -26,9 +28,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create session with 24 hour expiry
     const now = Date.now()
-    const expiresAt = now + (24 * 60 * 60 * 1000) // 24 hours from now
+    const expiresAt = now + 86400000 // 24 hours
     
     const sessionData = {
       id: admin.id,
@@ -44,16 +45,14 @@ export async function POST(request: NextRequest) {
         id: admin.id,
         username: admin.username,
         role: admin.role
-      },
-      expiresAt: new Date(expiresAt).toISOString()
+      }
     })
 
-    // Set cookie with 24 hour expiry
     response.cookies.set('session', JSON.stringify(sessionData), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 86400, // 24 hours in seconds
+      maxAge: 86400,
       path: '/'
     })
 
@@ -62,8 +61,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json({ 
-      error: 'Terjadi kesalahan saat login',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      error: 'Terjadi kesalahan saat login'
     }, { status: 500 })
   }
 }

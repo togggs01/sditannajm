@@ -1,57 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function GET(request: NextRequest) {
   try {
     const sessionCookie = request.cookies.get('session')
     
     if (!sessionCookie?.value) {
-      return NextResponse.json({ 
-        error: 'Unauthorized',
-        expired: false 
-      }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const session = JSON.parse(sessionCookie.value)
     const now = Date.now()
     
-    // Check if session expired (24 hours)
     if (session.expiresAt && now > session.expiresAt) {
-      // Session expired, return 401 with expired flag
       return NextResponse.json({ 
         error: 'Session expired',
-        expired: true,
-        message: 'Sesi Anda telah berakhir. Silakan login kembali.'
+        expired: true
       }, { status: 401 })
     }
 
-    // Also check loginTime as fallback
     if (session.loginTime) {
       const sessionAge = now - session.loginTime
-      const maxAge = 86400000 // 24 hours in milliseconds
-      
-      if (sessionAge > maxAge) {
+      if (sessionAge > 86400000) {
         return NextResponse.json({ 
           error: 'Session expired',
-          expired: true,
-          message: 'Sesi Anda telah berakhir. Silakan login kembali.'
+          expired: true
         }, { status: 401 })
       }
     }
 
-    // Return session with remaining time
     const remainingTime = session.expiresAt ? session.expiresAt - now : null
     
     return NextResponse.json({
-      ...session,
-      remainingTime: remainingTime,
-      remainingHours: remainingTime ? Math.floor(remainingTime / (60 * 60 * 1000)) : null
+      id: session.id,
+      username: session.username,
+      role: session.role,
+      remainingTime: remainingTime
     })
   } catch (error) {
-    return NextResponse.json({ 
-      error: 'Unauthorized',
-      expired: false 
-    }, { status: 401 })
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 }

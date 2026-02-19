@@ -1,0 +1,84 @@
+=====================================
+URGENT FIX - Login Error 503
+=====================================
+
+MASALAH:
+- Login error 503 (Service Unavailable)
+- Server production crash atau tidak running
+- Code baru belum di-deploy
+
+SOLUSI CEPAT:
+============
+
+1. LOGIN KE HOSTINGER PANEL
+   https://hpanel.hostinger.com
+
+2. BUKA FILE MANAGER
+   - Masuk ke: domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+3. UPLOAD FILE-FILE INI (via drag & drop):
+   ✓ app/api/auth/login/route.ts
+   ✓ app/api/auth/me/route.ts
+   ✓ app/api/auth/logout/route.ts
+   ✓ app/admin/layout.tsx
+   ✓ components/SessionTimer.tsx
+   ✓ components/SessionChecker.tsx
+   ✓ components/AdminLayoutClient.tsx
+
+4. BUKA TERMINAL DI HOSTINGER
+   - Klik icon Terminal di File Manager
+   - Atau SSH: ssh u900997367@sditannajm.sch.id
+
+5. JALANKAN COMMAND INI:
+   cd domains/sditannajm.sch.id/public_html/.builds/source/repository
+   pm2 stop sdit-annajm
+   rm -rf .next
+   npm run build
+   pm2 restart sdit-annajm
+   pm2 save
+
+6. TUNGGU 30 DETIK, LALU TEST LOGIN:
+   https://sditannajm.sch.id/login
+   Username: admin
+   Password: admin123
+
+=====================================
+
+ALTERNATIF (Kalau punya SSH access):
+=====================================
+
+ssh u900997367@sditannajm.sch.id
+cd domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+# Upload file dulu via FTP, lalu:
+chmod +x server-quick-fix.sh
+./server-quick-fix.sh
+
+=====================================
+
+KENAPA HARUS DEPLOY?
+=====================================
+
+Code di LOCALHOST ≠ Code di SERVER
+
+Kamu sudah fix code di local, tapi server masih
+pake code lama yang error. Makanya perlu:
+1. Upload file baru
+2. Rebuild di server
+3. Restart aplikasi
+
+Tanpa deploy, server akan terus error 503.
+
+=====================================
+
+JIKA MASIH ERROR SETELAH DEPLOY:
+=====================================
+
+Check logs di server:
+pm2 logs sdit-annajm --lines 100
+
+Atau jalankan diagnostic:
+chmod +x diagnose.sh
+./diagnose.sh
+
+=====================================
