@@ -21,15 +21,23 @@ export default async function AdminLayout({
 
     // Parse and validate session
     const session = JSON.parse(sessionCookie.value)
+    const now = Date.now()
     
-    // Check if session expired
+    // Check if session expired (24 hours)
+    if (session.expiresAt && now > session.expiresAt) {
+      // Session expired, clear cookie and redirect
+      cookieStore.delete('session')
+      redirect('/login?expired=true')
+    }
+
+    // Also check loginTime as fallback
     if (session.loginTime) {
-      const now = Date.now()
       const sessionAge = now - session.loginTime
-      const maxAge = 24 * 60 * 60 * 1000
+      const maxAge = 86400000 // 24 hours
       
       if (sessionAge > maxAge) {
-        redirect('/login')
+        cookieStore.delete('session')
+        redirect('/login?expired=true')
       }
     }
 
