@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+
+// Hardcoded credentials (bypass database)
+const ADMIN_USERNAME = 'admin'
+const ADMIN_PASSWORD = 'admin123'
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,11 +20,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const admin = await prisma.admin.findUnique({
-      where: { username: String(username).trim() }
-    })
-
-    if (!admin || admin.password !== password) {
+    // Check hardcoded credentials
+    if (username.trim() !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
       return NextResponse.json(
         { error: 'Username atau password salah' }, 
         { status: 401 }
@@ -32,9 +32,9 @@ export async function POST(request: NextRequest) {
     const expiresAt = now + 86400000 // 24 hours
     
     const sessionData = {
-      id: admin.id,
-      username: admin.username,
-      role: admin.role,
+      id: '1',
+      username: ADMIN_USERNAME,
+      role: 'admin',
       loginTime: now,
       expiresAt: expiresAt
     }
@@ -42,9 +42,9 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({ 
       success: true,
       user: {
-        id: admin.id,
-        username: admin.username,
-        role: admin.role
+        id: '1',
+        username: ADMIN_USERNAME,
+        role: 'admin'
       }
     })
 
