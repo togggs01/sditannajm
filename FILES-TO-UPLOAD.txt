@@ -1,0 +1,79 @@
+=====================================
+FILE YANG HARUS DI-UPLOAD KE SERVER
+=====================================
+
+WAJIB (Login Fix):
+==================
+☐ app/api/auth/login/route.ts
+☐ app/api/auth/me/route.ts
+☐ app/api/auth/logout/route.ts
+☐ app/admin/layout.tsx
+
+OPTIONAL (Session 24 Jam):
+==========================
+☐ components/SessionTimer.tsx
+☐ components/SessionChecker.tsx
+☐ components/AdminLayoutClient.tsx
+☐ app/(public)/login/page.tsx
+
+SCRIPTS (Helper):
+=================
+☐ server-quick-fix.sh
+☐ fix-all.sh
+☐ diagnose.sh
+
+CONFIG (Jika belum):
+====================
+☐ next.config.ts
+☐ package.json
+
+=====================================
+
+CARA UPLOAD VIA HOSTINGER FILE MANAGER:
+========================================
+
+1. Login: https://hpanel.hostinger.com
+2. Pilih domain: sditannajm.sch.id
+3. Klik "File Manager"
+4. Navigate ke:
+   domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+5. Upload file:
+   - Drag & drop file dari local ke folder yang sesuai
+   - Atau klik "Upload" button
+   
+   Contoh:
+   - app/api/auth/login/route.ts → upload ke folder app/api/auth/login/
+   - components/SessionTimer.tsx → upload ke folder components/
+
+6. Setelah semua file terupload, buka Terminal
+
+7. Jalankan command:
+   cd domains/sditannajm.sch.id/public_html/.builds/source/repository
+   pm2 stop sdit-annajm
+   rm -rf .next
+   npm run build
+   pm2 restart sdit-annajm
+
+8. Test login: https://sditannajm.sch.id/login
+
+=====================================
+
+CARA UPLOAD VIA FTP (FileZilla):
+=================================
+
+1. Download FileZilla: https://filezilla-project.org
+2. Connect ke server:
+   Host: ftp.sditannajm.sch.id
+   Username: u900997367
+   Password: [your password]
+   Port: 21
+
+3. Navigate ke:
+   /domains/sditannajm.sch.id/public_html/.builds/source/repository
+
+4. Drag & drop file dari local (kiri) ke server (kanan)
+
+5. Setelah upload, SSH ke server dan rebuild
+
+=====================================
