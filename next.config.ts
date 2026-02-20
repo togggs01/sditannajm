@@ -25,10 +25,16 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['@prisma/client'],
   },
   
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
+    };
+    
+    // Disable code splitting untuk menghindari chunk loading error
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: false,
     };
     
     return config;
