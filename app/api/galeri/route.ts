@@ -17,35 +17,109 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/galeri - Starting...')
+    
     const body = await request.json()
-    const galeri = await prisma.galeri.create({
-      data: body
+    console.log('POST /api/galeri - Body:', {
+      judul: body.judul,
+      kategori: body.kategori,
+      tipe: body.tipe,
+      hasGambar: !!body.gambar,
+      hasVideo: !!body.video,
+      gambarLength: body.gambar?.length || 0,
+      videoLength: body.video?.length || 0
     })
+    
+    // Validate required fields
+    if (!body.judul || !body.kategori || !body.tipe) {
+      console.error('POST /api/galeri - Missing required fields')
+      return NextResponse.json({ 
+        error: 'Missing required fields',
+        details: {
+          judul: !body.judul ? 'required' : 'ok',
+          kategori: !body.kategori ? 'required' : 'ok',
+          tipe: !body.tipe ? 'required' : 'ok'
+        }
+      }, { status: 400 })
+    }
+    
+    // Validate tipe
+    if (body.tipe !== 'gambar' && body.tipe !== 'video') {
+      console.error('POST /api/galeri - Invalid tipe:', body.tipe)
+      return NextResponse.json({ 
+        error: 'Invalid tipe. Must be "gambar" or "video"'
+      }, { status: 400 })
+    }
+    
+    console.log('POST /api/galeri - Creating galeri...')
+    
+    const galeri = await prisma.galeri.create({
+      data: {
+        judul: body.judul,
+        deskripsi: body.deskripsi || null,
+        gambar: body.gambar || null,
+        video: body.video || null,
+        kategori: body.kategori,
+        tipe: body.tipe
+      }
+    })
+    
+    console.log('POST /api/galeri - Success:', galeri.id)
+    
     return NextResponse.json(galeri, { status: 201 })
   } catch (error) {
-    console.error('Error creating galeri:', error)
-    return NextResponse.json({ error: 'Failed to create' }, { status: 500 })
+    console.error('POST /api/galeri - Error:', error)
+    return NextResponse.json({ 
+      error: 'Failed to create',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error
+    }, { status: 500 })
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
+    console.log('PUT /api/galeri - Starting...')
+    
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     const body = await request.json()
     
     if (!id) {
+      console.error('PUT /api/galeri - Missing ID')
       return NextResponse.json({ error: 'ID required' }, { status: 400 })
     }
 
+    console.log('PUT /api/galeri - ID:', id)
+    console.log('PUT /api/galeri - Body:', {
+      judul: body.judul,
+      kategori: body.kategori,
+      tipe: body.tipe,
+      hasGambar: !!body.gambar,
+      hasVideo: !!body.video
+    })
+
     const galeri = await prisma.galeri.update({
       where: { id },
-      data: body
+      data: {
+        judul: body.judul,
+        deskripsi: body.deskripsi || null,
+        gambar: body.gambar || null,
+        video: body.video || null,
+        kategori: body.kategori,
+        tipe: body.tipe
+      }
     })
+    
+    console.log('PUT /api/galeri - Success')
+    
     return NextResponse.json(galeri)
   } catch (error) {
-    console.error('Error updating galeri:', error)
-    return NextResponse.json({ error: 'Failed to update' }, { status: 500 })
+    console.error('PUT /api/galeri - Error:', error)
+    return NextResponse.json({ 
+      error: 'Failed to update',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 

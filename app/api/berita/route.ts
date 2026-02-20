@@ -18,18 +18,40 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/berita - Starting...')
+    
     const body = await request.json()
     
-    console.log('Creating berita with data:', {
+    console.log('POST /api/berita - Body:', {
       judul: body.judul,
       penulis: body.penulis,
       kategori: body.kategori,
       hasGambar: !!body.gambar,
-      gambarLength: body.gambar?.length || 0
+      gambarLength: body.gambar?.length || 0,
+      published: body.published
     })
+    
+    // Validate required fields
+    if (!body.judul || !body.konten || !body.penulis || !body.kategori) {
+      console.error('POST /api/berita - Missing required fields')
+      return NextResponse.json({ 
+        error: 'Missing required fields',
+        details: {
+          judul: !body.judul ? 'required' : 'ok',
+          konten: !body.konten ? 'required' : 'ok',
+          penulis: !body.penulis ? 'required' : 'ok',
+          kategori: !body.kategori ? 'required' : 'ok'
+        }
+      }, { status: 400 })
+    }
+    
+    console.log('POST /api/berita - Generating slug...')
     
     // Generate slug from judul
     const slug = slugify(body.judul)
+    
+    console.log('POST /api/berita - Slug:', slug)
+    console.log('POST /api/berita - Creating berita...')
     
     const berita = await prisma.berita.create({
       data: {
@@ -43,14 +65,15 @@ export async function POST(request: NextRequest) {
       }
     })
     
-    console.log('Berita created successfully:', berita.id)
+    console.log('POST /api/berita - Success:', berita.id)
     
     return NextResponse.json(berita, { status: 201 })
   } catch (error) {
-    console.error('Error creating berita:', error)
+    console.error('POST /api/berita - Error:', error)
     return NextResponse.json({ 
       error: 'Failed to create',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error
     }, { status: 500 })
   }
 }

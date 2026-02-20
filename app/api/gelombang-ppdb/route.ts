@@ -130,7 +130,27 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/gelombang-ppdb - Starting...')
+    
     const body = await request.json()
+    console.log('POST /api/gelombang-ppdb - Body:', body)
+    
+    // Validate required fields
+    if (!body.tahunAjaran || !body.gelombang || !body.tanggalMulai || !body.tanggalSelesai) {
+      console.error('POST /api/gelombang-ppdb - Missing required fields')
+      return NextResponse.json({ 
+        error: 'Missing required fields',
+        details: {
+          tahunAjaran: !body.tahunAjaran ? 'required' : 'ok',
+          gelombang: !body.gelombang ? 'required' : 'ok',
+          tanggalMulai: !body.tanggalMulai ? 'required' : 'ok',
+          tanggalSelesai: !body.tanggalSelesai ? 'required' : 'ok'
+        }
+      }, { status: 400 })
+    }
+    
+    console.log('POST /api/gelombang-ppdb - Creating gelombang...')
+    
     const gelombang = await prisma.gelombangPPDB.create({
       data: {
         tahunAjaran: body.tahunAjaran,
@@ -141,10 +161,17 @@ export async function POST(request: NextRequest) {
         aktif: body.aktif !== false
       }
     })
+    
+    console.log('POST /api/gelombang-ppdb - Success:', gelombang.id)
+    
     return NextResponse.json(gelombang, { status: 201 })
   } catch (error) {
-    console.error('Error creating gelombang:', error)
-    return NextResponse.json({ error: 'Failed to create' }, { status: 500 })
+    console.error('POST /api/gelombang-ppdb - Error:', error)
+    return NextResponse.json({ 
+      error: 'Failed to create',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error
+    }, { status: 500 })
   }
 }
 
