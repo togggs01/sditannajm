@@ -142,13 +142,23 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
           {berita.gambar && (
             <div className="relative">
               <div className="relative aspect-[21/9] bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden">
-                <Image
-                  src={berita.gambar}
-                  alt={berita.judul}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                  priority
-                />
+                {berita.gambar.startsWith('data:') ? (
+                  // Use regular img for base64 images
+                  <img
+                    src={berita.gambar}
+                    alt={berita.judul}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  // Use Next.js Image for URLs
+                  <Image
+                    src={berita.gambar}
+                    alt={berita.judul}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-700"
+                    priority
+                  />
+                )}
                 {/* Enhanced Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
                 

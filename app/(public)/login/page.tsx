@@ -318,30 +318,6 @@ export default function LoginPage() {
                     )}
                   </button>
                 </form>
-
-                {/* Demo Credentials */}
-                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 via-green-50 to-yellow-50 rounded-xl border-2 border-blue-200/50">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-600 font-bold mb-2">Demo Credentials:</p>
-                      <div className="text-sm text-gray-700 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500">👤</span>
-                          <span className="font-bold text-[#2d5016]">admin</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500">🔑</span>
-                          <span className="font-bold text-[#2d5016]">admin123</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 

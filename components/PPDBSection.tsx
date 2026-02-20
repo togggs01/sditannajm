@@ -29,9 +29,44 @@ export default function PPDBSection() {
 
   const fetchGelombang = async () => {
     try {
-      const res = await fetch(`/api/gelombang-ppdb?tahunAjaran=${getCurrentTahunAjaran()}`)
+      const currentTA = getCurrentTahunAjaran()
+      console.log('Fetching gelombang for tahun ajaran:', currentTA)
+      
+      // Fetch all active gelombang (tidak filter by tahunAjaran dulu)
+      const res = await fetch(`/api/gelombang-ppdb`)
       const data = await res.json()
-      setGelombangList(data.filter((g: GelombangInfo) => g.aktif))
+      
+      console.log('All gelombang data:', data)
+      
+      // Filter dan sort gelombang berdasarkan status
+      const now = new Date()
+      const gelombangWithStatus = data.map((g: GelombangInfo) => {
+        const startDate = new Date(g.tanggalMulai)
+        const endDate = new Date(g.tanggalSelesai)
+        
+        let status = 'upcoming' // belum dibuka
+        if (now >= startDate && now <= endDate) {
+          status = 'open' // sedang dibuka
+        } else if (now > endDate) {
+          status = 'closed' // sudah ditutup
+        }
+        
+        return { ...g, status }
+      })
+      
+      console.log('Gelombang with status:', gelombangWithStatus)
+      
+      // Prioritas: open > upcoming > closed, dan hanya tampilkan yang aktif
+      const sortedGelombang = gelombangWithStatus
+        .filter((g: any) => g.aktif)
+        .sort((a: any, b: any) => {
+          const statusOrder = { open: 0, upcoming: 1, closed: 2 }
+          return statusOrder[a.status as keyof typeof statusOrder] - statusOrder[b.status as keyof typeof statusOrder]
+        })
+      
+      console.log('Filtered and sorted gelombang:', sortedGelombang)
+      
+      setGelombangList(sortedGelombang)
     } catch (error) {
       console.error('Error fetching gelombang:', error)
     } finally {
@@ -56,28 +91,50 @@ export default function PPDBSection() {
         {/* Info PPDB */}
         {!loading && gelombangList.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
-            {gelombangList.map((gelombang) => {
+            {gelombangList.map((gelombang: any) => {
               const kuotaPenuh = gelombang.kuota !== null && gelombang.sisaKuota !== undefined && gelombang.sisaKuota <= 0
               const kuotaTerbatas = gelombang.kuota !== null && gelombang.sisaKuota !== undefined && gelombang.sisaKuota <= 10 && gelombang.sisaKuota > 0
+              const isOpen = gelombang.status === 'open'
+              const isUpcoming = gelombang.status === 'upcoming'
+              const isClosed = gelombang.status === 'closed'
               
               return (
                 <div key={gelombang.id} className={`backdrop-blur-sm rounded-xl p-4 border ${
-                  kuotaPenuh 
+                  isClosed
+                    ? 'bg-gray-500/20 border-gray-300/30'
+                    : kuotaPenuh 
                     ? 'bg-red-500/20 border-red-300/30' 
                     : kuotaTerbatas
                     ? 'bg-yellow-500/20 border-yellow-300/30'
-                    : 'bg-white/10 border-white/20'
+                    : isUpcoming
+                    ? 'bg-blue-500/20 border-blue-300/30'
+                    : 'bg-green-500/20 border-green-300/30'
                 }`}>
                   <div className="flex items-center justify-between mb-1">
                     <p className="text-[#f4d03f] font-bold text-sm">{gelombang.gelombang}</p>
-                    {kuotaPenuh && (
+                    {isClosed && (
+                      <span className="text-[10px] font-bold text-gray-300 bg-gray-500/30 px-2 py-0.5 rounded-full">
+                        DITUTUP
+                      </span>
+                    )}
+                    {isOpen && kuotaPenuh && (
                       <span className="text-[10px] font-bold text-red-300 bg-red-500/30 px-2 py-0.5 rounded-full">
                         PENUH
                       </span>
                     )}
-                    {kuotaTerbatas && (
+                    {isOpen && kuotaTerbatas && (
                       <span className="text-[10px] font-bold text-yellow-300 bg-yellow-500/30 px-2 py-0.5 rounded-full">
                         TERBATAS
+                      </span>
+                    )}
+                    {isOpen && !kuotaPenuh && !kuotaTerbatas && (
+                      <span className="text-[10px] font-bold text-green-300 bg-green-500/30 px-2 py-0.5 rounded-full">
+                        DIBUKA
+                      </span>
+                    )}
+                    {isUpcoming && (
+                      <span className="text-[10px] font-bold text-blue-300 bg-blue-500/30 px-2 py-0.5 rounded-full">
+                        SEGERA
                       </span>
                     )}
                   </div>
@@ -87,7 +144,7 @@ export default function PPDBSection() {
                   {gelombang.kuota !== null && gelombang.sisaKuota !== undefined ? (
                     <div className="mt-2">
                       <p className={`text-xs font-semibold ${
-                        kuotaPenuh ? 'text-red-300' : kuotaTerbatas ? 'text-yellow-300' : 'text-white/80'
+                        isClosed ? 'text-gray-300' : kuotaPenuh ? 'text-red-300' : kuotaTerbatas ? 'text-yellow-300' : 'text-white/80'
                       }`}>
                         {kuotaPenuh 
                           ? `Kuota penuh (${gelombang.kuota} siswa)` 
@@ -96,7 +153,9 @@ export default function PPDBSection() {
                       </p>
                     </div>
                   ) : (
-                    <p className="text-white/80 text-xs mt-1">Kuota: Tidak terbatas</p>
+                    <p className={`text-xs mt-1 ${isClosed ? 'text-gray-300' : 'text-white/80'}`}>
+                      Kuota: Tidak terbatas
+                    </p>
                   )}
                 </div>
               )
