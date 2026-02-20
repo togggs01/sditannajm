@@ -353,78 +353,100 @@ export default function AdminPPDBPage() {
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-lg border-2 border-[#d4af37]/20 p-6">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-end justify-between">
-            <div className="flex items-end gap-2">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Tahun Ajaran</label>
-                <select
-                  value={selectedTahunAjaran}
-                  onChange={(e) => setSelectedTahunAjaran(e.target.value)}
-                  className="w-full md:w-64 px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d5016] focus:border-[#2d5016] transition-all bg-white text-gray-900 font-semibold"
-                >
-                  {tahunAjaranList.map(ta => (
-                    <option key={ta} value={ta}>{ta}</option>
-                  ))}
-                </select>
+          {tahunAjaranList.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
-              <button
-                onClick={fetchTahunAjaranList}
-                className="p-3 bg-[#2d5016] hover:bg-[#3d6b1f] text-white rounded-xl transition-all shadow-md hover:shadow-lg"
-                title="Refresh Tahun Ajaran"
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Belum Ada Gelombang PPDB</h3>
+              <p className="text-gray-600 mb-4">Silakan buat gelombang PPDB terlebih dahulu untuk melihat data pendaftar</p>
+              <a
+                href="/admin/gelombang-ppdb"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-              </button>
+                Buat Gelombang PPDB
+              </a>
             </div>
+          ) : (
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-end justify-between">
+              <div className="flex items-end gap-2">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Tahun Ajaran</label>
+                  <select
+                    value={selectedTahunAjaran}
+                    onChange={(e) => setSelectedTahunAjaran(e.target.value)}
+                    className="w-full md:w-64 px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d5016] focus:border-[#2d5016] transition-all bg-white text-gray-900 font-semibold"
+                  >
+                    {tahunAjaranList.map(ta => (
+                      <option key={ta} value={ta}>{ta}</option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  onClick={fetchTahunAjaranList}
+                  className="p-3 bg-[#2d5016] hover:bg-[#3d6b1f] text-white rounded-xl transition-all shadow-md hover:shadow-lg"
+                  title="Refresh Tahun Ajaran"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </button>
+              </div>
 
-            <div className="flex gap-2 flex-wrap">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
-                  filter === 'all'
-                    ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Semua ({stats.total})
-              </button>
-              <button
-                onClick={() => setFilter('pending')}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
-                  filter === 'pending'
-                    ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Menunggu ({stats.pending})
-              </button>
-              <button
-                onClick={() => setFilter('approved')}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
-                  filter === 'approved'
-                    ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Diterima ({stats.approved})
-              </button>
-              <button
-                onClick={() => setFilter('rejected')}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
-                  filter === 'rejected'
-                    ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Ditolak ({stats.rejected})
-              </button>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => setFilter('all')}
+                  className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+                    filter === 'all'
+                      ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Semua ({stats.total})
+                </button>
+                <button
+                  onClick={() => setFilter('pending')}
+                  className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+                    filter === 'pending'
+                      ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Menunggu ({stats.pending})
+                </button>
+                <button
+                  onClick={() => setFilter('approved')}
+                  className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+                    filter === 'approved'
+                      ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Diterima ({stats.approved})
+                </button>
+                <button
+                  onClick={() => setFilter('rejected')}
+                  className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+                    filter === 'rejected'
+                      ? 'bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f] shadow-md'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Ditolak ({stats.rejected})
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl shadow-lg border-2 border-[#d4af37]/20 overflow-hidden">
+        {/* Table - Only show if there are tahun ajaran */}
+        {tahunAjaranList.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg border-2 border-[#d4af37]/20 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gradient-to-r from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white">
@@ -561,7 +583,8 @@ export default function AdminPPDBPage() {
               </tbody>
             </table>
           </div>
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Detail Modal */}
@@ -673,12 +696,7 @@ export default function AdminPPDBPage() {
                         <div>
                           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Bahasa Sehari-hari</p>
                           <p className="text-sm font-medium text-gray-900">
-                            {selectedPPDB.bahasaSehari ? 
-                              (typeof selectedPPDB.bahasaSehari === 'string' ? 
-                                JSON.parse(selectedPPDB.bahasaSehari).join(', ') : 
-                                selectedPPDB.bahasaSehari.join(', ')
-                              ) : 'Indonesia'
-                            }
+                            {selectedPPDB.bahasaSehari || 'Indonesia'}
                           </p>
                         </div>
                       </div>

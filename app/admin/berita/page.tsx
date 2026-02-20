@@ -32,18 +32,31 @@ export default function AdminBeritaPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    console.log('Submitting berita:', {
+      judul: formData.judul,
+      penulis: formData.penulis,
+      kategori: formData.kategori,
+      hasGambar: !!formData.gambar,
+      gambarLength: formData.gambar?.length || 0,
+      gambarPreview: formData.gambar?.substring(0, 50) + '...'
+    })
+    
     if (editId) {
-      await fetch(`/api/berita?id=${editId}`, {
+      const response = await fetch(`/api/berita?id=${editId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
+      const result = await response.json()
+      console.log('Update response:', result)
     } else {
-      await fetch('/api/berita', {
+      const response = await fetch('/api/berita', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
+      const result = await response.json()
+      console.log('Create response:', result)
     }
 
     resetForm()
@@ -244,6 +257,7 @@ export default function AdminBeritaPage() {
               <thead className="bg-gradient-to-r from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold">Judul</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold">Gambar</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold">Kategori</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold">Penulis</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
@@ -253,7 +267,7 @@ export default function AdminBeritaPage() {
               <tbody className="divide-y divide-gray-200">
                 {beritaList.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center">
+                    <td colSpan={6} className="px-6 py-12 text-center">
                       <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                       </svg>
@@ -266,6 +280,21 @@ export default function AdminBeritaPage() {
                     <tr key={berita.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
                         <p className="font-semibold text-gray-900 line-clamp-2">{berita.judul}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        {berita.gambar ? (
+                          <img 
+                            src={berita.gambar} 
+                            alt={berita.judul}
+                            className="w-16 h-16 object-cover rounded-lg border-2 border-gray-200"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#1a3a0f]">

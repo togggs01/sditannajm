@@ -19,6 +19,13 @@ export default function VideoUpload({ value, onChange, label = "Upload Video" }:
       return
     }
 
+    // Check file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    if (file.size > maxSize) {
+      alert('File terlalu besar! Maksimal 50MB. Silakan kompres video terlebih dahulu.')
+      return
+    }
+
     setUploading(true)
     
     try {
@@ -37,20 +44,30 @@ export default function VideoUpload({ value, onChange, label = "Upload Video" }:
         body: formData
       })
       
+      console.log('VideoUpload: Response status:', response.status)
+      
       if (!response.ok) {
-        throw new Error('Upload failed')
+        const errorData = await response.json().catch(() => ({}))
+        const errorMessage = errorData.error || `Upload failed with status ${response.status}`
+        throw new Error(errorMessage)
       }
       
       const data = await response.json()
+      
+      if (!data.url) {
+        throw new Error('No URL in response')
+      }
+      
       const videoUrl = data.url
       
-      console.log('VideoUpload: Uploaded successfully:', videoUrl)
+      console.log('VideoUpload: Uploaded successfully:', videoUrl.substring(0, 100) + '...')
       
       onChange(videoUrl)
-      console.log('VideoUpload: Successfully called onChange with URL:', videoUrl)
+      console.log('VideoUpload: Successfully called onChange')
     } catch (error) {
       console.error('VideoUpload: Error uploading file:', error)
-      alert('Gagal mengupload video!')
+      const errorMessage = error instanceof Error ? error.message : 'Gagal mengupload video!'
+      alert(`Upload gagal: ${errorMessage}`)
     } finally {
       setUploading(false)
     }

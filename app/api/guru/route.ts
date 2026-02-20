@@ -1,30 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 export async function GET() {
-  return NextResponse.json([])
+  try {
+    const guru = await prisma.guru.findMany({
+      orderBy: { createdAt: 'desc' }
+    })
+    return NextResponse.json(guru)
+  } catch (error) {
+    console.error('Error fetching guru:', error)
+    return NextResponse.json([], { status: 200 })
+  }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    await request.json()
-    return NextResponse.json({ success: true }, { status: 201 })
+    const body = await request.json()
+    const guru = await prisma.guru.create({
+      data: body
+    })
+    return NextResponse.json(guru, { status: 201 })
   } catch (error) {
-    return NextResponse.json({ error: 'Failed' }, { status: 500 })
+    console.error('Error creating guru:', error)
+    return NextResponse.json({ error: 'Failed to create' }, { status: 500 })
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    await request.json()
-    return NextResponse.json({ success: true })
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    const body = await request.json()
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID required' }, { status: 400 })
+    }
+
+    const guru = await prisma.guru.update({
+      where: { id },
+      data: body
+    })
+    return NextResponse.json(guru)
   } catch (error) {
-    return NextResponse.json({ error: 'Failed' }, { status: 500 })
+    console.error('Error updating guru:', error)
+    return NextResponse.json({ error: 'Failed to update' }, { status: 500 })
   }
 }
 
-export async function DELETE() {
-  return NextResponse.json({ success: true })
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID required' }, { status: 400 })
+    }
+
+    await prisma.guru.delete({
+      where: { id }
+    })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting guru:', error)
+    return NextResponse.json({ error: 'Failed to delete' }, { status: 500 })
+  }
 }
