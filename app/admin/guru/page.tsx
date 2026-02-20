@@ -25,31 +25,70 @@ export default function AdminGuruPage() {
   }, [])
 
   const fetchGuru = async () => {
-    const res = await fetch('/api/guru')
-    const data = await res.json()
-    setGuruList(data)
-    setLoading(false)
+    try {
+      console.log('Fetching guru data...')
+      const res = await fetch('/api/guru', {
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      console.log('Fetch response status:', res.status)
+      
+      if (!res.ok) {
+        console.error('Fetch failed with status:', res.status)
+        setGuruList([])
+        setLoading(false)
+        return
+      }
+      
+      const data = await res.json()
+      console.log('Guru data received:', data.length, 'items')
+      setGuruList(data)
+      setLoading(false)
+    } catch (error) {
+      console.error('Fetch guru error:', error)
+      setGuruList([])
+      setLoading(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (editId) {
-      await fetch(`/api/guru?id=${editId}`, {
-        method: 'PUT',
+    try {
+      const url = editId ? `/api/guru?id=${editId}` : '/api/guru'
+      const method = editId ? 'PUT' : 'POST'
+      
+      console.log('Submitting to:', url, 'Method:', method)
+      console.log('Form data:', formData)
+      
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-    } else {
-      await fetch('/api/guru', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
+      
+      console.log('Response status:', response.status)
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('Error response:', errorData)
+        alert(`Error: ${errorData.message || errorData.error || 'Gagal menyimpan data'}`)
+        return
+      }
+      
+      const result = await response.json()
+      console.log('Success:', result)
+      
+      alert(editId ? 'Data berhasil diupdate!' : 'Data berhasil ditambahkan!')
+      resetForm()
+      fetchGuru()
+    } catch (error) {
+      console.error('Submit error:', error)
+      alert('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')
     }
-
-    resetForm()
-    fetchGuru()
   }
 
   const handleEdit = (guru: any) => {
@@ -59,9 +98,29 @@ export default function AdminGuruPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Yakin ingin menghapus data guru ini?')) {
-      await fetch(`/api/guru?id=${id}`, { method: 'DELETE' })
+    if (!confirm('Yakin ingin menghapus data guru ini?')) return
+    
+    try {
+      console.log('Deleting guru:', id)
+      const response = await fetch(`/api/guru?id=${id}`, { 
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      
+      console.log('Delete response status:', response.status)
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('Delete error:', errorData)
+        alert(`Error: ${errorData.message || errorData.error || 'Gagal menghapus data'}`)
+        return
+      }
+      
+      alert('Data berhasil dihapus!')
       fetchGuru()
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Terjadi kesalahan saat menghapus data. Silakan coba lagi.')
     }
   }
 
