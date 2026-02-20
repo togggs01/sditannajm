@@ -20,11 +20,17 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  webpack: (config) => {
+  // Optimize chunks
+  experimental: {
+    optimizePackageImports: ['@prisma/client'],
+  },
+  
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
     };
+    
     return config;
   },
 };

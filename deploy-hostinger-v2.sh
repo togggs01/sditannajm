@@ -50,6 +50,9 @@ if [ $? -ne 0 ]; then
     echo "ERROR: npm install failed"
     exit 1
 fi
+
+# Install dotenv explicitly
+npm install dotenv
 echo "✓ All dependencies installed"
 echo ""
 
@@ -105,7 +108,9 @@ echo ""
 
 # Start application with PM2
 echo "Starting application with PM2..."
-pm2 start npm --name sdit-annajm -- start
+# Create logs directory
+mkdir -p logs
+pm2 start ecosystem.config.js
 if [ $? -ne 0 ]; then
     echo "ERROR: Failed to start with PM2"
     exit 1
