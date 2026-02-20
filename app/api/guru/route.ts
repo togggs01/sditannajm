@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     
     const body = await request.json()
     
-    console.log('POST /api/guru - Body:', {
+    console.log('POST /api/guru - Body received:', {
       nama: body.nama,
       nip: body.nip,
       jabatan: body.jabatan,
@@ -43,28 +43,60 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    console.log('POST /api/guru - Creating guru...')
+    // Validate foto size (max 5MB in base64)
+    if (body.foto && body.foto.length > 7000000) {
+      console.error('POST /api/guru - Foto too large:', body.foto.length)
+      return NextResponse.json({ 
+        error: 'Foto terlalu besar',
+        message: 'Ukuran foto maksimal 5MB'
+      }, { status: 400 })
+    }
     
-    const guru = await prisma.guru.create({
-      data: {
-        nama: body.nama,
-        nip: body.nip || null,
-        jabatan: body.jabatan,
-        foto: body.foto || null,
-        email: body.email || null,
-        telepon: body.telepon || null
-      }
-    })
+    console.log('POST /api/guru - Creating guru in database...')
+    
+    // Create guru with timeout protection
+    const guru = await Promise.race([
+      prisma.guru.create({
+        data: {
+          nama: body.nama,
+          nip: body.nip || null,
+          jabatan: body.jabatan,
+          foto: body.foto || null,
+          email: body.email || null,
+          telepon: body.telepon || null
+        }
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database timeout')), 10000)
+      )
+    ]) as any
     
     console.log('POST /api/guru - Success:', guru.id)
     
     return NextResponse.json(guru, { status: 201 })
   } catch (error) {
     console.error('POST /api/guru - Error:', error)
+    
+    // Better error handling
+    if (error instanceof Error) {
+      if (error.message.includes('timeout')) {
+        return NextResponse.json({ 
+          error: 'Database timeout',
+          message: 'Koneksi database timeout, coba lagi'
+        }, { status: 504 })
+      }
+      
+      if (error.message.includes('Unique constraint')) {
+        return NextResponse.json({ 
+          error: 'Duplicate entry',
+          message: 'NIP sudah terdaftar'
+        }, { status: 409 })
+      }
+    }
+    
     return NextResponse.json({ 
       error: 'Failed to create',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      details: error
+      message: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }
