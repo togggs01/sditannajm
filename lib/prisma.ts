@@ -11,6 +11,11 @@ export const prisma =
       ? ["query", "error", "warn"] 
       : ["error"],
     errorFormat: 'minimal',
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL
+      }
+    }
   });
 
 if (process.env.NODE_ENV !== "production") {
@@ -25,6 +30,6 @@ if (typeof window === 'undefined') {
     })
     .catch((error) => {
       console.error("✗ Database connection failed:", error.message);
-      console.error("DATABASE_URL:", process.env.DATABASE_URL ? "Set" : "Not set");
+      console.error("DATABASE_URL:", process.env.DATABASE_URL ? "Set (length: " + process.env.DATABASE_URL.length + ")" : "Not set");
     });
 }
