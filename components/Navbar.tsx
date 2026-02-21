@@ -88,9 +88,7 @@ export default function Navbar() {
                 <Link href="/admin" className="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">Dashboard</Link>
                 <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition">Logout</button>
               </>
-            ) : (
-              <Link href="/login" className="ml-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-semibold transition backdrop-blur-sm">Login</Link>
-            )}
+            ) : null}
           </div>
 
           {/* Mobile: Only PPDB & Login */}
@@ -111,14 +109,7 @@ export default function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </Link>
-            ) : (
-              <Link 
-                href="/login" 
-                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2.5 rounded-xl font-semibold text-sm backdrop-blur-sm border border-white/20 transition-all transform hover:scale-105 active:scale-95"
-              >
-                Login
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

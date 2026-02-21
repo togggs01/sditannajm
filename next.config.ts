@@ -31,6 +31,14 @@ const nextConfig: NextConfig = {
       '@': path.resolve(__dirname),
     };
     
+    // Include Prisma binaries in server bundle
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        '.prisma/client/index-browser': '@prisma/client/index-browser',
+      });
+    }
+    
     // Optimize chunks untuk production
     if (!isServer) {
       config.optimization = {
