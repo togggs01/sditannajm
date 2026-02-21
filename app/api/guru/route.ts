@@ -52,19 +52,34 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    console.log('POST /api/guru - Creating guru in database...')
+    console.log('POST /api/guru - Testing database connection...')
     
-    // Test database connection first
-    try {
-      await prisma.$queryRaw`SELECT 1`
-      console.log('POST /api/guru - Database connection OK')
-    } catch (dbError) {
-      console.error('POST /api/guru - Database connection failed:', dbError)
-      return NextResponse.json({ 
-        error: 'Database connection failed',
-        message: 'Tidak dapat terhubung ke database'
-      }, { status: 503 })
+    // Test database connection with retry
+    let connectionRetries = 3
+    let connectionOk = false
+    
+    while (connectionRetries > 0 && !connectionOk) {
+      try {
+        await prisma.$queryRaw`SELECT 1`
+        connectionOk = true
+        console.log('POST /api/guru - Database connection OK')
+      } catch (dbError) {
+        connectionRetries--
+        console.error(`POST /api/guru - Database connection attempt failed (${connectionRetries} retries left):`, dbError)
+        
+        if (connectionRetries === 0) {
+          return NextResponse.json({ 
+            error: 'Database connection failed',
+            message: 'Tidak dapat terhubung ke database. Pastikan koneksi internet stabil dan database server aktif.'
+          }, { status: 503 })
+        }
+        
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
     }
+    
+    console.log('POST /api/guru - Creating guru in database...')
     
     // Create guru with timeout protection
     const guru = await Promise.race([
@@ -79,7 +94,7 @@ export async function POST(request: NextRequest) {
         }
       }),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database timeout')), 10000)
+        setTimeout(() => reject(new Error('Database timeout')), 15000)
       )
     ]) as any
     
@@ -110,6 +125,13 @@ export async function POST(request: NextRequest) {
           error: 'Database engine error',
           message: 'Prisma Client belum di-generate dengan benar. Jalankan: npx prisma generate'
         }, { status: 500 })
+      }
+      
+      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
+        return NextResponse.json({ 
+          error: 'Connection refused',
+          message: 'Tidak dapat terhubung ke database server. Periksa koneksi internet atau hubungi administrator.'
+        }, { status: 503 })
       }
     }
     
