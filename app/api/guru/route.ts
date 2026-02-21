@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import cuid from 'cuid'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,15 +27,17 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    // Create guru
+    // Create guru with manual ID generation
     const guru = await prisma.guru.create({
       data: {
+        id: cuid(),
         nama: body.nama,
         nip: body.nip || null,
         jabatan: body.jabatan,
         foto: body.foto || null,
         email: body.email || null,
-        telepon: body.telepon || null
+        telepon: body.telepon || null,
+        updatedAt: new Date()
       }
     })
     
@@ -50,24 +53,13 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    console.log('PUT /api/guru - Starting...')
-    
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     const body = await request.json()
     
     if (!id) {
-      console.error('PUT /api/guru - Missing ID')
       return NextResponse.json({ error: 'ID required' }, { status: 400 })
     }
-
-    console.log('PUT /api/guru - ID:', id)
-    console.log('PUT /api/guru - Body:', {
-      nama: body.nama,
-      nip: body.nip,
-      jabatan: body.jabatan,
-      hasFoto: !!body.foto
-    })
 
     const guru = await prisma.guru.update({
       where: { id },
@@ -77,15 +69,14 @@ export async function PUT(request: NextRequest) {
         jabatan: body.jabatan,
         foto: body.foto || null,
         email: body.email || null,
-        telepon: body.telepon || null
+        telepon: body.telepon || null,
+        updatedAt: new Date()
       }
     })
     
-    console.log('PUT /api/guru - Success')
-    
     return NextResponse.json(guru)
   } catch (error) {
-    console.error('PUT /api/guru - Error:', error)
+    console.error('Error updating guru:', error)
     return NextResponse.json({ 
       error: 'Failed to update',
       message: error instanceof Error ? error.message : 'Unknown error'
