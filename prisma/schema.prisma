@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -8,18 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Guru {
+model Admin {
   id        String   @id @default(cuid())
-  nama      String   @db.VarChar(255)
-  nip       String?  @unique @db.VarChar(100)
-  jabatan   String   @db.VarChar(255)
-  foto      String?  @db.LongText
-  email     String?  @db.VarChar(255)
-  telepon   String?  @db.VarChar(50)
+  username  String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  role      String   @default("admin") @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([nip])
+  @@index([username])
 }
 
 model Berita {
@@ -34,9 +31,9 @@ model Berita {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([slug])
   @@index([kategori])
   @@index([published])
+  @@index([slug])
 }
 
 model Galeri {
@@ -51,6 +48,35 @@ model Galeri {
 
   @@index([kategori])
   @@index([tipe])
+}
+
+model GelombangPPDB {
+  id             String   @id @default(cuid())
+  tahunAjaran    String   @db.VarChar(50)
+  gelombang      String   @db.VarChar(50)
+  tanggalMulai   String   @db.VarChar(50)
+  tanggalSelesai String   @db.VarChar(50)
+  kuota          Int?
+  aktif          Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([aktif])
+  @@index([tahunAjaran])
+}
+
+model Guru {
+  id        String   @id @default(cuid())
+  nama      String   @db.VarChar(255)
+  nip       String?  @unique @db.VarChar(100)
+  jabatan   String   @db.VarChar(255)
+  foto      String?  @db.LongText
+  email     String?  @db.VarChar(255)
+  telepon   String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([nip])
 }
 
 model PPDB {
@@ -102,34 +128,8 @@ model PPDB {
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 
-  @@index([tahunAjaran])
+  @@index([createdAt])
   @@index([gelombang])
   @@index([status])
-  @@index([createdAt])
-}
-
-model Admin {
-  id        String   @id @default(cuid())
-  username  String   @unique @db.VarChar(100)
-  password  String   @db.VarChar(255)
-  role      String   @default("admin") @db.VarChar(50)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([username])
-}
-
-model GelombangPPDB {
-  id             String   @id @default(cuid())
-  tahunAjaran    String   @db.VarChar(50)
-  gelombang      String   @db.VarChar(50)
-  tanggalMulai   String   @db.VarChar(50)
-  tanggalSelesai String   @db.VarChar(50)
-  kuota          Int?
-  aktif          Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
   @@index([tahunAjaran])
-  @@index([aktif])
 }

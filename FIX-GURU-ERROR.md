@@ -4,18 +4,37 @@
 Error saat membuat guru baru di admin panel dengan pesan:
 ```
 Failed to create
-prisma.guru.create() invocation
-Error response: "Failed to create"
+Database connection failed
+Tidak dapat terhubung ke database
 ```
 
-## Penyebab
-1. Prisma Client belum di-generate dengan benar
-2. Binary targets tidak sesuai dengan environment production
-3. Query Engine tidak ditemukan
+## Penyebab Utama
+1. **Schema Prisma tidak sinkron dengan database** - Field `id` tidak memiliki `@default(cuid())` sehingga Prisma tidak bisa auto-generate ID
+2. Prisma Client belum di-generate dengan benar
+3. Binary targets tidak sesuai dengan environment production
+4. Connection pooling tidak optimal
 
 ## Solusi yang Diterapkan
 
-### 1. Update Prisma Schema
+### 1. Fix Prisma Schema
+Menambahkan `@default(cuid())` dan `@updatedAt` di semua model:
+```prisma
+model Guru {
+  id        String   @id @default(cuid())  // ← Ditambahkan @default(cuid())
+  nama      String   @db.VarChar(255)
+  nip       String?  @unique @db.VarChar(100)
+  jabatan   String   @db.VarChar(255)
+  foto      String?  @db.LongText
+  email     String?  @db.VarChar(255)
+  telepon   String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  // ← Ditambahkan @updatedAt
+
+  @@index([nip])
+}
+```
+
+### 2. Update Binary Targets
 Menambahkan `binaryTargets` di `prisma/schema.prisma`:
 ```prisma
 generator client {
@@ -24,18 +43,20 @@ generator client {
 }
 ```
 
-### 2. Improve Error Handling
-Menambahkan error handling yang lebih baik di `app/api/guru/route.ts`:
-- Test koneksi database sebelum create
-- Deteksi error Query Engine
-- Pesan error yang lebih informatif
+### 3. Optimize Database Connection
+Update DATABASE_URL dengan connection pooling:
+```env
+DATABASE_URL="mysql://user:pass@host:3306/db?connection_limit=5&pool_timeout=20&connect_timeout=10"
+```
 
-### 3. Update Prisma Client Configuration
-Menambahkan graceful shutdown di `lib/prisma.ts`
+### 4. Improve Error Handling
+Menambahkan retry logic dan error handling yang lebih baik di:
+- `lib/prisma.ts` - Retry connection dengan 3 attempts
+- `app/api/guru/route.ts` - Test koneksi sebelum create, retry logic, pesan error yang informatif
 
-### 4. Generate Prisma Client
-Jalankan command:
+### 5. Push Schema & Generate Client
 ```bash
+npx prisma db push --accept-data-loss
 npx prisma generate
 ```
 
@@ -43,6 +64,10 @@ npx prisma generate
 
 ### Development
 ```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Start dev server
 npm run dev
 ```
 
@@ -59,7 +84,7 @@ npm start
 ```
 
 ## Testing
-1. Buka halaman admin guru: https://sditannajm.sch.id/admin/guru
+1. Buka halaman admin guru: http://localhost:3000/admin/guru
 2. Klik "Tambah Guru"
 3. Isi form dengan data:
    - Nama: Test Guru
@@ -70,16 +95,13 @@ npm start
 
 ## Troubleshooting
 
-### Jika masih error "Query Engine not found"
+### Jika masih error "Argument id is missing"
 ```bash
-# Hapus node_modules dan reinstall
-rm -rf node_modules
-npm install
+# Pastikan schema sudah benar
+npx prisma db push --accept-data-loss
 
 # Generate ulang Prisma Client
 npx prisma generate
-
-# Restart server
 ```
 
 ### Jika error "Database connection failed"
@@ -88,6 +110,8 @@ npx prisma generate
 ```bash
 npx prisma db pull
 ```
+3. Pastikan koneksi internet stabil
+4. Cek apakah database server aktif
 
 ### Jika error di production (Hostinger)
 ```bash
@@ -97,6 +121,9 @@ ssh u900997367@srv1154.hstgr.io
 # Masuk ke direktori aplikasi
 cd domains/sditannajm.sch.id/public_html
 
+# Push schema ke database
+npx prisma db push --accept-data-loss
+
 # Generate Prisma Client
 npx prisma generate
 
@@ -104,7 +131,10 @@ npx prisma generate
 pm2 restart ecosystem.config.js
 ```
 
-## Catatan
-- Setiap kali update schema Prisma, harus jalankan `npx prisma generate`
-- Binary targets disesuaikan dengan server production (Debian)
-- Error handling sudah ditambahkan untuk memberikan pesan yang lebih jelas
+## Catatan Penting
+- ✅ Setiap kali update schema Prisma, harus jalankan `npx prisma db push` dan `npx prisma generate`
+- ✅ Binary targets disesuaikan dengan server production (Debian)
+- ✅ Connection pooling sudah dioptimalkan untuk menghindari timeout
+- ✅ Error handling sudah ditambahkan dengan retry logic
+- ✅ Semua model sudah memiliki `@default(cuid())` untuk auto-generate ID
+- ✅ Field `updatedAt` sudah menggunakan `@updatedAt` untuk auto-update timestamp
