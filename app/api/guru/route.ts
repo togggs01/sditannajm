@@ -54,6 +54,18 @@ export async function POST(request: NextRequest) {
     
     console.log('POST /api/guru - Creating guru in database...')
     
+    // Test database connection first
+    try {
+      await prisma.$queryRaw`SELECT 1`
+      console.log('POST /api/guru - Database connection OK')
+    } catch (dbError) {
+      console.error('POST /api/guru - Database connection failed:', dbError)
+      return NextResponse.json({ 
+        error: 'Database connection failed',
+        message: 'Tidak dapat terhubung ke database'
+      }, { status: 503 })
+    }
+    
     // Create guru with timeout protection
     const guru = await Promise.race([
       prisma.guru.create({
@@ -91,6 +103,13 @@ export async function POST(request: NextRequest) {
           error: 'Duplicate entry',
           message: 'NIP sudah terdaftar'
         }, { status: 409 })
+      }
+      
+      if (error.message.includes('Query Engine')) {
+        return NextResponse.json({ 
+          error: 'Database engine error',
+          message: 'Prisma Client belum di-generate dengan benar. Jalankan: npx prisma generate'
+        }, { status: 500 })
       }
     }
     

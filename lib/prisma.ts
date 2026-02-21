@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
-// Test connection on startup
+// Ensure connection is established
 if (typeof window === 'undefined') {
   prisma.$connect()
     .then(() => {
@@ -27,4 +27,11 @@ if (typeof window === 'undefined') {
       console.error("✗ Database connection failed:", error.message);
       console.error("DATABASE_URL:", process.env.DATABASE_URL ? "Set" : "Not set");
     });
+}
+
+// Handle graceful shutdown
+if (typeof window === 'undefined') {
+  process.on('beforeExit', async () => {
+    await prisma.$disconnect();
+  });
 }
