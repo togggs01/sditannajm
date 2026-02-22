@@ -67,6 +67,10 @@ echo ""
 
 # Generate Prisma Client
 echo "Generating Prisma Client..."
+# Remove old Prisma Client first
+rm -rf node_modules/.prisma
+rm -rf node_modules/@prisma/client
+# Generate with all binary targets
 npx prisma generate
 if [ $? -ne 0 ]; then
     echo "ERROR: Prisma generate failed"
