@@ -1,10 +1,14 @@
 require('dotenv').config();
+const fs = require('fs');
+
+// Check if standalone build exists
+const useStandalone = fs.existsSync('.next/standalone/server.js');
 
 module.exports = {
   apps: [{
     name: 'sdit-annajm',
-    script: 'node_modules/next/dist/bin/next',
-    args: 'start',
+    script: useStandalone ? '.next/standalone/server.js' : 'node_modules/next/dist/bin/next',
+    args: useStandalone ? '' : 'start',
     cwd: './',
     instances: 1,
     autorestart: true,
