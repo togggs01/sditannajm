@@ -31,7 +31,7 @@
     "@types/xlsx": "^0.0.35",
     "baseline-browser-mapping": "^2.9.14",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1",
+    "eslint-config-next": "^15.1.4",
     "prisma": "^5.22.0",
     "tsx": "^4.7.0",
     "typescript": "5.9.3"
