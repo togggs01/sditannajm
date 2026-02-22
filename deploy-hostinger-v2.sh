@@ -115,9 +115,22 @@ echo ""
 echo "Preparing standalone deployment..."
 if [ -d ".next/standalone" ]; then
     # Copy public folder
-    cp -r public .next/standalone/
+    cp -r public .next/standalone/ 2>/dev/null || echo "No public folder"
     # Copy .next/static folder
-    cp -r .next/static .next/standalone/.next/
+    cp -r .next/static .next/standalone/.next/ 2>/dev/null || echo "No static folder"
+    
+    # Note: Prisma engine files are automatically included via outputFileTracingIncludes in next.config.ts
+    # But we'll verify they exist
+    if [ -d ".next/standalone/node_modules/.prisma/client" ]; then
+        echo "✓ Prisma engine files found in standalone"
+    else
+        echo "⚠ Warning: Prisma engine files not found, copying manually..."
+        mkdir -p .next/standalone/node_modules/.prisma
+        mkdir -p .next/standalone/node_modules/@prisma
+        cp -r node_modules/.prisma/client .next/standalone/node_modules/.prisma/ 2>/dev/null || echo "Failed to copy .prisma"
+        cp -r node_modules/@prisma/client .next/standalone/node_modules/@prisma/ 2>/dev/null || echo "Failed to copy @prisma"
+    fi
+    
     echo "✓ Standalone files prepared"
 else
     echo "WARNING: Standalone build not found, using regular build"

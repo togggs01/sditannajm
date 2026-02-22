@@ -135,8 +135,14 @@ bash fix-prisma-server.sh
 pm2 stop sdit-annajm
 rm -rf node_modules/.prisma
 rm -rf node_modules/@prisma/client
-npm install @prisma/client prisma
+rm -rf .next/standalone/node_modules/.prisma
+rm -rf .next/standalone/node_modules/@prisma
+npm install
 npx prisma generate
+
+# Copy Prisma to standalone
+bash copy-prisma-to-standalone.sh
+
 pm2 restart sdit-annajm
 ```
 
@@ -146,6 +152,19 @@ generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl", "rhel-openssl-1.0.x"]
 }
+```
+
+### Error: Engine not found in standalone build
+Jika error muncul setelah build standalone:
+```bash
+# Copy Prisma engine files ke standalone
+bash copy-prisma-to-standalone.sh
+
+# Atau manual
+mkdir -p .next/standalone/node_modules/.prisma
+mkdir -p .next/standalone/node_modules/@prisma
+cp -r node_modules/.prisma/client .next/standalone/node_modules/.prisma/
+cp -r node_modules/@prisma/client .next/standalone/node_modules/@prisma/
 ```
 
 ### Error: Prisma Client not found

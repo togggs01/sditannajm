@@ -39,14 +39,26 @@ npx prisma generate
 
 ### 4. next.config.ts
 ✅ Tambah `output: "standalone"` untuk production build
+✅ Tambah `outputFileTracingIncludes` untuk auto-copy Prisma engine files
 ```typescript
 const nextConfig: NextConfig = {
   output: "standalone",
+  
+  // Include Prisma engine files in standalone build
+  outputFileTracingIncludes: {
+    '/api/**/*': [
+      './node_modules/.prisma/client/**/*',
+      './node_modules/@prisma/client/**/*',
+    ],
+  },
   // ... other configs
 }
 ```
 
-**Benefit:** Build lebih optimal, ukuran lebih kecil, dan include semua dependencies yang diperlukan.
+**Benefit:** 
+- Build lebih optimal, ukuran lebih kecil
+- Prisma engine files OTOMATIS ter-copy ke standalone build
+- Tidak perlu copy manual lagi!
 
 ### 5. ecosystem.config.js
 ✅ Auto-detect standalone build
@@ -161,3 +173,5 @@ Prisma Client akan otomatis di-generate dengan binary targets yang benar setiap 
 - `npm install` (via postinstall script)
 - `npm run build` (via build process)
 - Deploy ke server (via deploy script)
+
+**PENTING:** Dengan `outputFileTracingIncludes` di next.config.ts, Prisma engine files akan OTOMATIS ter-copy ke standalone build. Tidak perlu copy manual lagi!
