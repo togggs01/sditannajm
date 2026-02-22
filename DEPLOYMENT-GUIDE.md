@@ -121,6 +121,31 @@ pm2 info sdit-annajm
 
 ## Troubleshooting
 
+### Error: Prisma Client could not locate the Query Engine
+Ini error paling umum saat deploy. Solusinya:
+
+**Di Server (SSH):**
+```bash
+# Quick fix dengan script
+bash fix-prisma-server.sh
+
+# Atau manual:
+pm2 stop sdit-annajm
+rm -rf node_modules/.prisma
+rm -rf node_modules/@prisma/client
+npm install @prisma/client prisma
+npx prisma generate
+pm2 restart sdit-annajm
+```
+
+**Pastikan binary targets sudah benar di `prisma/schema.prisma`:**
+```prisma
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl", "rhel-openssl-1.0.x"]
+}
+```
+
 ### Error: Prisma Client not found
 ```bash
 npx prisma generate
