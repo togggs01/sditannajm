@@ -14,6 +14,8 @@ echo ""
 echo "Removing old Prisma Client..."
 rm -rf node_modules/.prisma
 rm -rf node_modules/@prisma/client
+rm -rf .next/standalone/node_modules/.prisma
+rm -rf .next/standalone/node_modules/@prisma
 echo "✓ Old Prisma Client removed"
 echo ""
 
@@ -31,6 +33,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "✓ Prisma Client generated"
+echo ""
+
+# Copy Prisma to standalone if exists
+if [ -d ".next/standalone" ]; then
+    echo "Copying Prisma to standalone..."
+    mkdir -p .next/standalone/node_modules/.prisma
+    mkdir -p .next/standalone/node_modules/@prisma
+    cp -r node_modules/.prisma/client .next/standalone/node_modules/.prisma/
+    cp -r node_modules/@prisma/client .next/standalone/node_modules/@prisma/
+    echo "✓ Prisma copied to standalone"
+fi
 echo ""
 
 # Test database connection

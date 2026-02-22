@@ -21,6 +21,14 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
+  // Include Prisma engine files in standalone build
+  outputFileTracingIncludes: {
+    '/api/**/*': [
+      './node_modules/.prisma/client/**/*',
+      './node_modules/@prisma/client/**/*',
+    ],
+  },
+  
   experimental: {
     optimizePackageImports: ['@prisma/client'],
   },
