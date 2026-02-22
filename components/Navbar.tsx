@@ -2,27 +2,13 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import SchoolLogo from './SchoolLogo'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const router = useRouter()
-
-  const checkAuth = async () => {
-    try {
-      const res = await fetch('/api/auth/me')
-      setIsLoggedIn(res.ok)
-    } catch {
-      setIsLoggedIn(false)
-    }
-  }
 
   useEffect(() => {
-    checkAuth()
-    
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
     }
@@ -30,13 +16,6 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' })
-    setIsLoggedIn(false)
-    router.push('/')
-    router.refresh()
-  }
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-[#3a6020] shadow-xl rounded-b-3xl' : 'bg-gradient-to-r from-[#3a6020] to-[#4a7c2a] rounded-b-3xl'}`}>
@@ -82,16 +61,9 @@ export default function Navbar() {
             <Link href="/ppdb" className="ml-2 bg-gradient-to-r from-[#e6c547] to-[#f4d03f] hover:from-[#f4d03f] hover:to-[#e6c547] text-[#2d5016] px-6 py-2.5 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
               PPDB 2025
             </Link>
-            
-            {isLoggedIn ? (
-              <>
-                <Link href="/admin" className="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">Dashboard</Link>
-                <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition">Logout</button>
-              </>
-            ) : null}
           </div>
 
-          {/* Mobile: Only PPDB & Login */}
+          {/* Mobile: Only PPDB */}
           <div className="lg:hidden flex items-center space-x-3">
             <Link 
               href="/ppdb" 
@@ -99,17 +71,6 @@ export default function Navbar() {
             >
               PPDB
             </Link>
-            
-            {isLoggedIn ? (
-              <Link 
-                href="/admin" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2.5 rounded-xl font-semibold text-sm shadow-lg transition-all transform hover:scale-105 active:scale-95"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </Link>
-            ) : null}
           </div>
         </div>
       </div>
