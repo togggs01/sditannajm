@@ -34,6 +34,7 @@ rm -rf .next
 rm -rf node_modules/.cache
 rm -rf node_modules/.prisma
 rm -rf .turbo
+rm -rf prisma/migrations  # Remove old migrations to avoid provider mismatch
 echo "✓ Clean completed"
 echo ""
 
