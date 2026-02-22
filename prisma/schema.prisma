@@ -9,18 +9,18 @@ datasource db {
 }
 
 model Admin {
-  id        String   @id
+  id        String   @id @default(cuid())
   username  String   @unique @db.VarChar(100)
   password  String   @db.VarChar(255)
   role      String   @default("admin") @db.VarChar(50)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 
   @@index([username])
 }
 
 model Berita {
-  id        String   @id
+  id        String   @id @default(cuid())
   judul     String   @db.VarChar(500)
   slug      String   @unique @db.VarChar(500)
   konten    String   @db.LongText
@@ -29,7 +29,7 @@ model Berita {
   kategori  String   @db.VarChar(100)
   published Boolean  @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 
   @@index([kategori])
   @@index([published])
@@ -37,7 +37,7 @@ model Berita {
 }
 
 model Galeri {
-  id        String   @id
+  id        String   @id @default(cuid())
   judul     String   @db.VarChar(500)
   deskripsi String?  @db.Text
   gambar    String?  @db.LongText
@@ -51,7 +51,7 @@ model Galeri {
 }
 
 model GelombangPPDB {
-  id             String   @id
+  id             String   @id @default(cuid())
   tahunAjaran    String   @db.VarChar(50)
   gelombang      String   @db.VarChar(50)
   tanggalMulai   String   @db.VarChar(50)
@@ -59,14 +59,14 @@ model GelombangPPDB {
   kuota          Int?
   aktif          Boolean  @default(true)
   createdAt      DateTime @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime @updatedAt
 
   @@index([aktif])
   @@index([tahunAjaran])
 }
 
 model Guru {
-  id        String   @id
+  id        String   @id @default(cuid())
   nama      String   @db.VarChar(255)
   nip       String?  @unique @db.VarChar(100)
   jabatan   String   @db.VarChar(255)
@@ -74,13 +74,13 @@ model Guru {
   email     String?  @db.VarChar(255)
   telepon   String?  @db.VarChar(50)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 
   @@index([nip])
 }
 
 model PPDB {
-  id                     String   @id
+  id                     String   @id @default(cuid())
   namaLengkap            String   @db.VarChar(255)
   namaPanggilan          String   @db.VarChar(100)
   jenisKelamin           String   @db.VarChar(20)
@@ -126,7 +126,7 @@ model PPDB {
   gelombang              String   @db.VarChar(50)
   status                 String   @default("pending") @db.VarChar(50)
   createdAt              DateTime @default(now())
-  updatedAt              DateTime
+  updatedAt              DateTime @updatedAt
 
   @@index([createdAt])
   @@index([gelombang])

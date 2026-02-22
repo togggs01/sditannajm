@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import cuid from 'cuid'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,17 +26,15 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    // Create guru with manual ID generation
+    // Create guru - Prisma will auto-generate ID
     const guru = await prisma.guru.create({
       data: {
-        id: cuid(),
         nama: body.nama,
         nip: body.nip || null,
         jabatan: body.jabatan,
         foto: body.foto || null,
         email: body.email || null,
-        telepon: body.telepon || null,
-        updatedAt: new Date()
+        telepon: body.telepon || null
       }
     })
     
@@ -69,8 +66,7 @@ export async function PUT(request: NextRequest) {
         jabatan: body.jabatan,
         foto: body.foto || null,
         email: body.email || null,
-        telepon: body.telepon || null,
-        updatedAt: new Date()
+        telepon: body.telepon || null
       }
     })
     
