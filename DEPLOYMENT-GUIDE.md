@@ -4,15 +4,17 @@
 
 ### Setup Awal
 ```powershell
-# Install dependencies
+# Install dependencies (akan otomatis generate Prisma Client)
 npm install
 
-# Generate Prisma Client
+# Jika perlu generate manual
 npx prisma generate
 
 # Push database schema
 npx prisma db push
 ```
+
+**Note:** Script `postinstall` sudah ditambahkan di package.json, jadi Prisma Client akan otomatis di-generate setiap kali `npm install`.
 
 ### Jalankan Development Server
 ```powershell
