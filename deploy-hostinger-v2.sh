@@ -106,6 +106,19 @@ fi
 echo "✓ Build completed successfully"
 echo ""
 
+# Copy necessary files to standalone
+echo "Preparing standalone deployment..."
+if [ -d ".next/standalone" ]; then
+    # Copy public folder
+    cp -r public .next/standalone/
+    # Copy .next/static folder
+    cp -r .next/static .next/standalone/.next/
+    echo "✓ Standalone files prepared"
+else
+    echo "WARNING: Standalone build not found, using regular build"
+fi
+echo ""
+
 # Start application with PM2
 echo "Starting application with PM2..."
 # Create logs directory
