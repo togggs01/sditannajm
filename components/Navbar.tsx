@@ -28,7 +28,7 @@ export default function Navbar() {
                 <span className="text-xl font-bold text-white text-shadow">SDIT ANNAJM RABBANI</span>
               </div>
               <div className="sm:hidden">
-                <span className="text-lg font-bold text-white text-shadow">SDIT<br/>ANNAJM RABBANI</span>
+                <span className="text-sm font-bold text-white text-shadow whitespace-nowrap">SDIT ANNAJM RABBANI</span>
               </div>
             </Link>
           </div>

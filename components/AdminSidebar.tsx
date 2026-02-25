@@ -4,11 +4,28 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useSidebar } from './AdminLayoutClient'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 export default function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const { isCollapsed, setIsCollapsed } = useSidebar()
+  const [userRole, setUserRole] = useState<string>('')
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' })
+        if (res.ok) {
+          const data = await res.json()
+          setUserRole(data.user.role)
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error)
+      }
+    }
+    fetchUser()
+  }, [])
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -16,7 +33,7 @@ export default function AdminSidebar() {
     router.refresh()
   }
 
-  const menuItems = [
+  const allMenuItems = [
     { 
       href: '/admin', 
       icon: (
@@ -25,7 +42,8 @@ export default function AdminSidebar() {
         </svg>
       ),
       label: 'Dashboard',
-      badge: null
+      badge: null,
+      permission: 'dashboard'
     },
     { 
       href: '/admin/guru', 
@@ -35,7 +53,8 @@ export default function AdminSidebar() {
         </svg>
       ),
       label: 'Guru & Staff',
-      badge: null
+      badge: null,
+      permission: 'guru'
     },
     { 
       href: '/admin/berita', 
@@ -45,7 +64,8 @@ export default function AdminSidebar() {
         </svg>
       ),
       label: 'Berita',
-      badge: null
+      badge: null,
+      permission: 'berita'
     },
     { 
       href: '/admin/galeri', 
@@ -55,7 +75,8 @@ export default function AdminSidebar() {
         </svg>
       ),
       label: 'Galeri',
-      badge: null
+      badge: null,
+      permission: 'galeri'
     },
     { 
       href: '/admin/ppdb', 
@@ -65,7 +86,8 @@ export default function AdminSidebar() {
         </svg>
       ),
       label: 'Kelola PPDB',
-      badge: null
+      badge: null,
+      permission: 'ppdb'
     },
     { 
       href: '/admin/gelombang-ppdb', 
@@ -75,9 +97,24 @@ export default function AdminSidebar() {
         </svg>
       ),
       label: 'Gelombang PPDB',
-      badge: null
+      badge: null,
+      permission: 'gelombang-ppdb'
     },
   ]
+
+  // Role permissions mapping
+  const rolePermissions: Record<string, string[]> = {
+    'super_admin': ['dashboard', 'guru', 'berita', 'galeri', 'ppdb', 'gelombang-ppdb'],
+    'berita_galeri_admin': ['dashboard', 'berita', 'galeri'],
+    'ppdb_admin': ['dashboard', 'ppdb', 'gelombang-ppdb']
+  }
+
+  // Filter menu based on user role
+  const menuItems = allMenuItems.filter(item => {
+    if (!userRole) return true // Show all while loading
+    const permissions = rolePermissions[userRole] || []
+    return permissions.includes(item.permission)
+  })
 
   return (
     <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-gradient-to-b from-[#1a3a0f] via-[#2d5016] to-[#1a3a0f] min-h-screen fixed left-0 top-0 transition-all duration-300 ease-in-out z-50 flex flex-col shadow-2xl rounded-br-3xl overflow-hidden`}>

@@ -139,7 +139,7 @@ export default function GaleriPage() {
       <div className="max-w-7xl mx-auto px-4 -mt-10 pb-20 sm:px-6 lg:px-8">
         {/* Filter Section - Sticky */}
         {galeriList.length > 0 && (
-          <Card className="mb-6 sticky top-20 z-50 shadow-xl backdrop-blur-md bg-white/98 border border-white/20">
+          <Card className="mb-6 sticky top-24 z-40 shadow-2xl bg-white border-2 border-gray-200">
             <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
               {/* Search Bar */}
               <div className="flex-1 w-full md:w-auto">

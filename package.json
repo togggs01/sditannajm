@@ -7,11 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "create-admin": "tsx scripts/create-admin.ts",
+    "create-three-admins": "tsx scripts/create-three-admins.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@tailwindcss/postcss": "^4",
+    "bcryptjs": "^2.4.3",
     "cuid": "^3.0.0",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
@@ -24,6 +27,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "20.19.33",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "19.2.14",

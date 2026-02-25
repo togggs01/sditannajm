@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import cuid from 'cuid'
 
 export const dynamic = 'force-dynamic'
 
@@ -101,6 +102,7 @@ export async function POST(request: NextRequest) {
     // Create PPDB with tahunAjaran and gelombang from active gelombang
     const ppdb = await prisma.pPDB.create({
       data: {
+        id: cuid(),
         // Step 1 - Data Calon Peserta Didik
         namaLengkap: formData.get('namaLengkap') as string,
         namaPanggilan: formData.get('namaPanggilan') as string,

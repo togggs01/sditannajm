@@ -5,6 +5,11 @@ import ClientLayout from "@/components/ClientLayout";
 export const metadata: Metadata = {
   title: "SDIT ANNAJM RABBANI - Sekolah Dasar Islam Terpadu",
   description: "Sekolah Dasar Islam Terpadu yang mengintegrasikan pendidikan akademik dan nilai-nilai Islam",
+  icons: {
+    icon: '/images/LogoAnnajmRabbaniFix-01.png',
+    shortcut: '/images/LogoAnnajmRabbaniFix-01.png',
+    apple: '/images/LogoAnnajmRabbaniFix-01.png',
+  },
 };
 
 export default function RootLayout({

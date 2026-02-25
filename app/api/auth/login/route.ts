@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import bcrypt from 'bcryptjs'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-
-// Hardcoded credentials (bypass database)
-const ADMIN_USERNAME = 'admin'
-const ADMIN_PASSWORD = 'admin123'
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,8 +18,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check hardcoded credentials
-    if (username.trim() !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    // Find admin in database
+    const admin = await prisma.admin.findUnique({
+      where: { username: username.trim() }
+    })
+
+    if (!admin) {
+      return NextResponse.json(
+        { error: 'Username atau password salah' }, 
+        { status: 401 }
+      )
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, admin.password)
+
+    if (!isPasswordValid) {
       return NextResponse.json(
         { error: 'Username atau password salah' }, 
         { status: 401 }
@@ -32,9 +44,9 @@ export async function POST(request: NextRequest) {
     const expiresAt = now + 86400000 // 24 hours
     
     const sessionData = {
-      id: '1',
-      username: ADMIN_USERNAME,
-      role: 'admin',
+      id: admin.id,
+      username: admin.username,
+      role: admin.role,
       loginTime: now,
       expiresAt: expiresAt
     }
@@ -42,9 +54,9 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({ 
       success: true,
       user: {
-        id: '1',
-        username: ADMIN_USERNAME,
-        role: 'admin'
+        id: admin.id,
+        username: admin.username,
+        role: admin.role
       }
     })
 

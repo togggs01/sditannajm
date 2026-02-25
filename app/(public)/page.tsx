@@ -136,7 +136,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
             {[
               {
                 number: '01',
@@ -169,11 +169,8 @@ export default async function Home() {
                 desc: 'Pendidikan berkualitas tinggi dengan investasi terjangkau'
               }
             ].map((item, index) => (
-              <div key={index} className="group animate-slide-up" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={index} className="group animate-slide-up w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]" style={{animationDelay: `${index * 0.1}s`}}>
                 <div className="relative bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-[#2d5016]/10 hover:border-[#d4af37]/40 group-hover:-translate-y-1 h-full">
-                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-sm font-bold text-[#2d5016]">{item.number}</span>
-                  </div>
                   <div className="flex justify-center mb-4">
                     <div className="w-14 h-14 bg-gradient-to-br from-[#2d5016] to-[#3d6b1f] rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 text-white">
                       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -7,6 +7,29 @@ export interface User {
   loginTime?: number
 }
 
+// Role definitions
+export const ROLES = {
+  SUPER_ADMIN: 'super_admin',
+  BERITA_GALERI_ADMIN: 'berita_galeri_admin',
+  PPDB_ADMIN: 'ppdb_admin'
+} as const
+
+// Permission mapping
+export const ROLE_PERMISSIONS: Record<string, string[]> = {
+  [ROLES.SUPER_ADMIN]: ['dashboard', 'guru', 'berita', 'galeri', 'ppdb', 'gelombang-ppdb'],
+  [ROLES.BERITA_GALERI_ADMIN]: ['dashboard', 'berita', 'galeri'],
+  [ROLES.PPDB_ADMIN]: ['dashboard', 'ppdb', 'gelombang-ppdb']
+}
+
+export function hasPermission(role: string, page: string): boolean {
+  const permissions = ROLE_PERMISSIONS[role]
+  return permissions ? permissions.includes(page) : false
+}
+
+export function getAccessiblePages(role: string): string[] {
+  return ROLE_PERMISSIONS[role] || []
+}
+
 export async function getSession(): Promise<User | null> {
   try {
     const cookieStore = await cookies()

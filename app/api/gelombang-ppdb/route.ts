@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import cuid from 'cuid'
 
 export const dynamic = 'force-dynamic'
 
