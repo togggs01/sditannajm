@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/slugify'
+import cuid from 'cuid'
 
 export const dynamic = 'force-dynamic'
 
@@ -55,13 +56,15 @@ export async function POST(request: NextRequest) {
     
     const berita = await prisma.berita.create({
       data: {
+        id: cuid(),
         judul: body.judul,
         slug: slug,
         konten: body.konten,
         gambar: body.gambar || null,
         penulis: body.penulis,
         kategori: body.kategori,
-        published: body.published ?? true
+        published: body.published ?? true,
+        updatedAt: new Date()
       }
     })
     
@@ -106,7 +109,8 @@ export async function PUT(request: NextRequest) {
         gambar: body.gambar || null,
         penulis: body.penulis,
         kategori: body.kategori,
-        published: body.published ?? true
+        published: body.published ?? true,
+        updatedAt: new Date()
       }
     })
     

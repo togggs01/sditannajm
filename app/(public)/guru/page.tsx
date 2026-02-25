@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma'
-import Card from '@/components/Card'
 import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
@@ -17,28 +16,44 @@ export default async function GuruPage() {
   }
 
   return (
-    <div className="min-h-screen bg-yellow-50/50">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#2d5016] via-[#3d6b1f] to-[#2d5016] text-white pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-shadow">Guru & Staff</h1>
-          <p className="text-xl text-gray-200 max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header with Background Image */}
+      <div className="relative pt-32 pb-32 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/guru.jpeg"
+            alt="Guru Background"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#2d5016]/90 via-[#3d6b1f]/85 to-[#2d5016]/90"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white drop-shadow-2xl">Guru & Staff</h1>
+          <p className="text-xl text-gray-100 max-w-2xl mx-auto drop-shadow-lg">
             Tim pendidik profesional dan berdedikasi untuk membimbing generasi Qurani
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-10 pb-20 sm:px-6 lg:px-8">
+      {/* Content Section with Overlap */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 pb-20 relative z-20">
         {guruList.length === 0 ? (
-          <Card className="text-center py-12">
-            <div className="text-6xl mb-4">👨‍🏫</div>
+          <div className="bg-white rounded-3xl shadow-2xl p-12 text-center">
+            <div className="text-7xl mb-4">👨‍🏫</div>
             <p className="text-gray-600 text-lg">Belum ada data guru.</p>
-          </Card>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {guruList.map((guru) => (
-              <Card key={guru.id} className="text-center group border-2 border-[#d4af37]/30 hover:border-[#d4af37]/60 transition-colors duration-300">
-                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-[#d4af37] to-[#f4d03f] rounded-full flex items-center justify-center p-1 shadow-xl group-hover:scale-105 transition-transform">
+              <div key={guru.id} className="bg-white rounded-2xl shadow-lg p-6 text-center group hover:shadow-xl transition-all duration-300">
+                {/* Photo with thick yellow border - smaller size */}
+                <div className="w-40 h-40 mx-auto mb-4 rounded-full flex items-center justify-center p-1.5 shadow-xl group-hover:scale-105 transition-transform" style={{ border: '6px solid #e6c547' }}>
                   <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
                     {guru.foto ? (
                       <Image 
@@ -46,7 +61,7 @@ export default async function GuruPage() {
                         alt={guru.nama} 
                         fill
                         className="object-cover"
-                        sizes="128px"
+                        sizes="160px"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gray-100">
@@ -55,12 +70,22 @@ export default async function GuruPage() {
                     )}
                   </div>
                 </div>
+                
+                {/* Name */}
                 <h3 className="text-xl font-bold mb-2 text-[#2d5016]">{guru.nama}</h3>
-                {guru.nip && <p className="text-sm text-gray-500 mb-2">NIP: {guru.nip}</p>}
-                <div className="inline-block bg-gradient-to-r from-[#d4af37] to-[#f4d03f] text-[#2d5016] px-4 py-1 rounded-full text-sm font-semibold">
+                
+                {/* NIP */}
+                {guru.nip && (
+                  <p className="text-sm text-gray-500 mb-3">
+                    NIP: {guru.nip}
+                  </p>
+                )}
+                
+                {/* Jabatan Badge */}
+                <div className="inline-block bg-gradient-to-r from-[#e6c547] to-[#f4d03f] text-[#2d5016] px-6 py-2 rounded-full text-sm font-bold shadow-md">
                   {guru.jabatan}
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
