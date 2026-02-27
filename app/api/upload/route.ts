@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Configure API route to accept larger payloads
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
+// Set max body size to 120MB to accommodate 100MB video + overhead
+export const maxDuration = 60 // 60 seconds timeout
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
@@ -13,10 +20,10 @@ export async function POST(request: NextRequest) {
 
     // Check file size based on type
     const isVideo = file.type.startsWith('video/')
-    const maxSize = isVideo ? 50 * 1024 * 1024 : 5 * 1024 * 1024 // 50MB for video, 5MB for images
+    const maxSize = isVideo ? 100 * 1024 * 1024 : 5 * 1024 * 1024 // 100MB for video, 5MB for images
     
     if (file.size > maxSize) {
-      const maxSizeMB = isVideo ? '50MB' : '5MB'
+      const maxSizeMB = isVideo ? '100MB' : '5MB'
       return NextResponse.json({ 
         error: `File terlalu besar. Maksimal ${maxSizeMB}` 
       }, { status: 400 })

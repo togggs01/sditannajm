@@ -19,10 +19,10 @@ export default function VideoUpload({ value, onChange, label = "Upload Video" }:
       return
     }
 
-    // Check file size (max 50MB)
-    const maxSize = 50 * 1024 * 1024 // 50MB
+    // Check file size (max 100MB)
+    const maxSize = 100 * 1024 * 1024 // 100MB
     if (file.size > maxSize) {
-      alert('File terlalu besar! Maksimal 50MB. Silakan kompres video terlebih dahulu.')
+      alert('File terlalu besar! Maksimal 100MB. Silakan kompres video terlebih dahulu.')
       return
     }
 
@@ -172,7 +172,7 @@ export default function VideoUpload({ value, onChange, label = "Upload Video" }:
                 {uploading ? 'Mohon tunggu...' : 'Drag & drop video atau klik untuk memilih'}
               </p>
               <p className="text-xs text-gray-400">
-                Format yang didukung: MP4, WebM, AVI (Max: 50MB)
+                Format yang didukung: MP4, WebM, AVI (Max: 100MB)
               </p>
             </div>
             

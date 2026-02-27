@@ -303,20 +303,25 @@ export default function GaleriPage() {
                 </div>
 
                 {/* Content */}
-                <div className="p-4">
-                  <h3 className="font-medium text-base mb-2 text-gray-900 line-clamp-2">
+                <div className="p-5 space-y-4">
+                  {/* Title */}
+                  <h3 className="font-bold text-lg text-gray-900 line-clamp-2 leading-snug min-h-[3.5rem] pt-1">
                     {item.judul}
                   </h3>
+                  
+                  {/* Description */}
                   {item.deskripsi && (
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{item.deskripsi}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 min-h-[2.5rem]">
+                      {item.deskripsi}
+                    </p>
                   )}
                   
                   {/* Footer */}
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <span className="bg-gradient-to-r from-[#2d5016] to-[#3d6b1f] text-white px-3 py-1.5 rounded-full font-semibold text-xs">
                       {item.kategori}
                     </span>
-                    <span className="text-gray-500">{formatDate(item.createdAt)}</span>
+                    <span className="text-gray-500 text-xs font-medium">{formatDate(item.createdAt)}</span>
                   </div>
                 </div>
               </div>
