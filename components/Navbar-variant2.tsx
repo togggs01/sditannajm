@@ -39,7 +39,7 @@ export default function Navbar() {
             <Link href="/berita" className="text-[#0B6623] hover:bg-[#0B6623]/10 px-4 py-2 rounded-lg transition font-medium">Berita</Link>
             <Link href="/kontak" className="text-[#0B6623] hover:bg-[#0B6623]/10 px-4 py-2 rounded-lg transition font-medium">Kontak</Link>
             <Link href="/ppdb" className="ml-2 bg-gradient-to-r from-[#0B6623] to-[#0B6623]/90 hover:from-[#0B6623]/90 hover:to-[#0B6623] text-[#39F914] px-6 py-2.5 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-              PPDB 2025
+              PPDB 2026
             </Link>
           </div>
 
