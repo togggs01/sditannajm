@@ -9,12 +9,9 @@ export function getCurrentTahunAjaran(): string {
   const currentYear = now.getFullYear()
   const currentMonth = now.getMonth() + 1 // 0-11 -> 1-12
 
-  // Jika bulan >= Juli, tahun ajaran baru dimulai
-  if (currentMonth >= 7) {
-    return `${currentYear}/${currentYear + 1}`
-  } else {
-    return `${currentYear - 1}/${currentYear}`
-  }
+  // Jika bulan >= Januari (tahun baru), tampilkan tahun ajaran yang akan datang
+  // Contoh: Maret 2026 -> 2026/2027
+  return `${currentYear}/${currentYear + 1}`
 }
 
 /**

@@ -18,7 +18,7 @@ interface GelombangInfo {
 }
 
 export default function PPDBSection() {
-  const [tahunAjaran, setTahunAjaran] = useState('2025/2026')
+  const [tahunAjaran, setTahunAjaran] = useState('2026/2027')
   const [gelombangList, setGelombangList] = useState<GelombangInfo[]>([])
   const [loading, setLoading] = useState(true)
 
